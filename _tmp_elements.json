@@ -1,0 +1,272 @@
+[
+  {
+    "key": "c",
+    "name": "Carbon",
+    "symbol": "C",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "h",
+    "name": "Hydrogen",
+    "symbol": "H",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.01,
+    "tickMsRegular": 210000,
+    "tickMsQuick": 70000
+  },
+  {
+    "key": "he",
+    "name": "Helium",
+    "symbol": "He",
+    "tier": 2,
+    "tierLabel": "Unbounded",
+    "baseMuPerGram": 0.12,
+    "tickMsRegular": 420000,
+    "tickMsQuick": 140000
+  },
+  {
+    "key": "o",
+    "name": "Oxygen",
+    "symbol": "O",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.01,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "n",
+    "name": "Nitrogen",
+    "symbol": "N",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "si",
+    "name": "Silicon",
+    "symbol": "Si",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 240000,
+    "tickMsQuick": 80000
+  },
+  {
+    "key": "fe",
+    "name": "Iron",
+    "symbol": "Fe",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 240000,
+    "tickMsQuick": 80000
+  },
+  {
+    "key": "al",
+    "name": "Aluminum",
+    "symbol": "Al",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "cu",
+    "name": "Copper",
+    "symbol": "Cu",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.05,
+    "tickMsRegular": 300000,
+    "tickMsQuick": 100000
+  },
+  {
+    "key": "ca",
+    "name": "Calcium",
+    "symbol": "Ca",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "na",
+    "name": "Sodium",
+    "symbol": "Na",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "k",
+    "name": "Potassium",
+    "symbol": "K",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "mg",
+    "name": "Magnesium",
+    "symbol": "Mg",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "zn",
+    "name": "Zinc",
+    "symbol": "Zn",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.04,
+    "tickMsRegular": 300000,
+    "tickMsQuick": 100000
+  },
+  {
+    "key": "sn",
+    "name": "Tin",
+    "symbol": "Sn",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "s",
+    "name": "Sulfur",
+    "symbol": "S",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 300000,
+    "tickMsQuick": 100000
+  },
+  {
+    "key": "p",
+    "name": "Phosphorus",
+    "symbol": "P",
+    "tier": 5,
+    "tierLabel": "Reactive",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 210000,
+    "tickMsQuick": 70000
+  },
+  {
+    "key": "f",
+    "name": "Fluorine",
+    "symbol": "F",
+    "tier": 4,
+    "tierLabel": "Hazardous",
+    "baseMuPerGram": 0.05,
+    "tickMsRegular": null,
+    "tickMsQuick": null
+  },
+  {
+    "key": "ni",
+    "name": "Nickel",
+    "symbol": "Ni",
+    "tier": 5,
+    "tierLabel": "Reactive",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 210000,
+    "tickMsQuick": 70000
+  },
+  {
+    "key": "cr",
+    "name": "Chromium",
+    "symbol": "Cr",
+    "tier": 5,
+    "tierLabel": "Reactive",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 210000,
+    "tickMsQuick": 70000
+  },
+  {
+    "key": "ti",
+    "name": "Titanium",
+    "symbol": "Ti",
+    "tier": 5,
+    "tierLabel": "Reactive",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 210000,
+    "tickMsQuick": 70000
+  },
+  {
+    "key": "li",
+    "name": "Lithium",
+    "symbol": "Li",
+    "tier": 5,
+    "tierLabel": "Reactive",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": 210000,
+    "tickMsQuick": 70000
+  },
+  {
+    "key": "cl",
+    "name": "Chlorine",
+    "symbol": "Cl",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "pb",
+    "name": "Lead",
+    "symbol": "Pb",
+    "tier": 6,
+    "tierLabel": "Stable",
+    "baseMuPerGram": 0.02,
+    "tickMsRegular": 180000,
+    "tickMsQuick": 60000
+  },
+  {
+    "key": "ag",
+    "name": "Silver",
+    "symbol": "Ag",
+    "tier": 5,
+    "tierLabel": "Reactive",
+    "baseMuPerGram": 0.03,
+    "tickMsRegular": null,
+    "tickMsQuick": null
+  },
+  {
+    "key": "au",
+    "name": "Gold",
+    "symbol": "Au",
+    "tier": 3,
+    "tierLabel": "Distorted",
+    "baseMuPerGram": 0.08,
+    "tickMsRegular": null,
+    "tickMsQuick": null
+  },
+  {
+    "key": "u",
+    "name": "Uranium",
+    "symbol": "U",
+    "tier": 1,
+    "tierLabel": "Singular",
+    "baseMuPerGram": 0.2,
+    "tickMsRegular": null,
+    "tickMsQuick": null
+  }
+]

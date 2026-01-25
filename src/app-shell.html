@@ -1,0 +1,649 @@
+<div id="todBackdrop" aria-hidden="true"></div>
+    <div id="todNoise" aria-hidden="true"></div>
+    <div id="todStars" aria-hidden="true"></div>
+<div class="app fwm-app">
+    <!-- LEFT COLUMN -->
+    <div id="paneMenu" class="stack mobilePane">
+      <div class="panel">
+        <div class="row" style="align-items:flex-start">
+          <button id="playerMenuBtn" class="playerMenuBtn" aria-expanded="false" type="button">
+	            <div class="avatarFrame" aria-hidden="true">
+              <img id="playerAvatarImg" class="avatarImg" alt="Player avatar" />
+            </div>
+          </button>
+
+	          <div style="text-align:right;flex:1">
+		            <div class="playerHeaderRow">
+							<div id="playerName" class="title" style="margin:0"></div>
+						<span id="playerLevel" class="lvlBadge">1</span>
+						</div>
+            <div id="playerStatus" class="muted">Idle</div>
+          </div>
+        </div>
+
+        
+	        <div class="hpRow" aria-label="Health">
+	          <span class="hpLabel">HP</span>
+	          <div class="hpBar" role="progressbar" aria-label="Health bar">
+	            <div id="hpFill" class="hpFill"></div>
+	          </div>
+	          <span id="hpText" class="hpText">100/100</span>
+	        </div>
+
+
+	        <div class="oxygenBlock" aria-label="Oxygen">
+	          <div class="hpRow oxygenRow">
+	            <span class="hpLabel">O</span>
+	            <div class="hpBar oxygenBar" role="progressbar" aria-label="Oxygen bar">
+	              <div id="oxygenFill" class="hpFill oxygenFill"></div>
+	            </div>
+	            <span id="oxygenText" class="hpText">0/0</span>
+	          </div>
+	          <div class="breatheRow">
+	            <button id="breatheBtn" class="breatheBtn" type="button" title="Breathe for 5 minutes (reminds you to re-click).">Breathe</button>
+	          </div>
+	        </div>
+
+        <div id="playerMenu" class="playerMenu" aria-hidden="true">
+	          <div class="row" style="margin-top:10px;align-items:flex-end;gap:10px">
+            <div style="flex:1;min-width:160px">
+	              <div class="title" style="margin:0 0 6px 0">Player Name</div>
+              <input id="playerNameInput" class="textInput" type="text" maxlength="24" autocomplete="nickname" />
+            </div>
+            <button id="playerNameSaveBtn" style="height:34px" type="button">Update</button>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div class="muted small">Choose Character</div>
+          </div>
+          <div id="avatarGrid" class="avatarGrid" style="margin-top:10px"></div>
+
+	          <div class="row" style="margin-top:10px;justify-content:flex-start;gap:8px;flex-wrap:wrap">
+            <button id="resetLevelsBtn" class="dangerBtn" type="button" title="Reset levels/XP only (keeps your inventory, blueprints, and story progress).">Reset Levels</button>
+            <button id="resetBtn" class="dangerBtn" type="button" title="Reset all progress (overwrites your current save).">Full Reset</button>
+          </div>
+        </div>
+
+	        <div class="row" style="align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+	          <div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap">
+	            <button id="exportJsonBtn" type="button">Export JSON</button>
+	            <input id="importJsonFile" type="file" accept="application/json" style="display:none" />
+	            <button id="importJsonBtn" type="button">Import JSON</button>
+	          </div>
+
+	          <div class="row" style="justify-content:flex-end;gap:8px">
+	            <button id="todBtn" title="World Time" type="button">🌓</button>
+	            <button id="settingsBtn" title="Settings" type="button">⚙️</button>
+	          </div>
+	        </div>
+	        <div id="saveTransferStatus" class="muted small" style="margin-top:8px"></div>
+
+      </div>
+
+      <div id="leftModules" class="stack">
+
+      <div class="panel" id="statsPanel" data-left-panel="statsPanel">
+        <button id="statsToggle" class="panelToggle" type="button" aria-expanded="true">
+          <div class="panelToggleLeft">
+            <div class="title" style="margin:0">Attributes</div>
+          </div>
+          <div class="panelToggleRight" aria-hidden="true">
+            <span class="chev">▾</span>
+          </div>
+        </button>
+        <div id="statsBody" class="panelCollapse open">
+          <div class="panelCollapseInner">
+            <div id="statsGrid" class="statsGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="invPanel" data-left-panel="invPanel">
+        <button id="invToggle" class="panelToggle" type="button" aria-expanded="true">
+          <div class="panelToggleLeft">
+            <div class="title" style="margin:0">Inventory</div>
+            <div class="muted small invSubtitle"><span id="invSlotsLabel">16 slots</span></div>
+          </div>
+          <div class="panelToggleRight" aria-hidden="true">
+            <span class="chev">▾</span>
+          </div>
+        </button>
+        <div id="invBody" class="panelCollapse open">
+          <div class="panelCollapseInner">
+            <div id="inventoryMiniGrid" class="miniGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="quickPanel" data-left-panel="quickPanel">
+        <button id="quickToggle" class="panelToggle" type="button" aria-expanded="true">
+          <div class="panelToggleLeft">
+            <div class="title" style="margin:0">Quick Gather</div>
+            <div class="muted small quickSubtitle">Pinned: <span id="pinnedBadges"></span></div>
+          </div>
+          <div class="panelToggleRight" aria-hidden="true">
+            <span class="chev">▾</span>
+          </div>
+        </button>
+        <div id="quickBody" class="panelCollapse open">
+          <div class="panelCollapseInner">
+            <div id="quickNodesList" class="stack"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Quick Scavenge -->
+      <div class="panel" id="scavengePanel" data-left-panel="scavengePanel">
+        <button id="scavengeToggle" class="panelToggle" type="button" aria-expanded="true">
+          <div class="panelToggleLeft">
+            <div class="title" style="margin:0">Quick Scavenge</div>
+            <!-- removed from: Short activities. -->
+          </div>
+          <div class="panelToggleRight" aria-hidden="true">
+            <span class="chev">▾</span>
+          </div>
+        </button>
+        <div id="scavengeBody" class="panelCollapse open">
+          <div class="panelCollapseInner">
+            <div id="repeatableEventsList" class="repeatableGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="historyPanel" data-left-panel="historyPanel">
+        <button id="historyToggle" class="panelToggle" type="button" aria-expanded="true">
+          <div class="panelToggleLeft">
+            <div class="title" style="margin:0">History</div>
+          </div>
+          <div class="panelToggleRight" aria-hidden="true">
+            <span class="chev">▾</span>
+          </div>
+        </button>
+        <div id="historyBody" class="panelCollapse open">
+          <div class="panelCollapseInner">
+            <div id="historyList" class="historyList"></div>
+          </div>
+        </div>
+      </div>
+
+      </div> <!-- /leftModules -->
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div id="paneGame" class="panel mobilePane">
+      <div id="navRow" class="navRow"></div>
+
+      <!-- Page viewport: active pages render inside this framed, scrollable area -->
+      <div id="pageViewport" class="pageViewport">
+
+      <!-- PAGES -->
+      <!-- Default to Story visible even if JS fails to boot, so the right column never appears "missing" -->
+
+<div id="pageStory" class="page active">
+  <div class="storyShell">
+    <!-- Top bar lives in both Hub + In-Chapter views -->
+    <div class="storyTopBar">
+      <button id="storyBackBtn" class="storyTopBtn" type="button" title="Back to chapters">← Hub</button>
+
+      <div class="storyTopMeta">
+        <div class="storyTopTitle">Story</div>
+        <div class="muted small">Chapter: <span id="chapterLabel">—</span></div>
+      </div>
+
+      <div class="storyTopActions">
+        <button id="storyLogBtn" class="storyTopBtn" type="button" disabled title="Coming soon">Log</button>
+        <button id="storySaveBtn" class="storyTopBtn" type="button" disabled title="Coming soon">Save</button>
+        <button id="storyMoreBtn" class="storyTopBtn" type="button" disabled title="Coming soon">⋯</button>
+      </div>
+    </div>
+
+    <!-- IN-CHAPTER: stage + dialogue (the shell never changes) -->
+    <div id="storyPlay" class="storyPlay storyWindow--scene">
+      <div class="storyStageWrap">
+        <div class="storyStage" aria-label="Story stage">
+          <div class="storyScene" aria-hidden="true">
+            <img id="storySceneImg" class="storySceneImg vnBgImg" alt="" />
+            <img id="vnCgImg" class="vnCgImg" alt="" />
+            <div class="vnChars" aria-hidden="true">
+              <img id="vnCharLeft" class="vnChar vnChar--left" alt="" />
+              <img id="vnCharCenter" class="vnChar vnChar--center" alt="" />
+              <img id="vnCharRight" class="vnChar vnChar--right" alt="" />
+            </div>
+          </div>
+
+          <!-- Battle UI (Monster Brawl) mounts here -->
+          <div id="battleWrap" class="battleWrap" aria-label="Battle" hidden></div>
+        </div>
+      </div>
+
+      <div class="storyDialog" aria-label="Dialogue">
+        <div id="storySpeaker" class="storySpeaker" aria-label="Speaker"></div>
+        <div id="storyText" class="storyText"></div>
+        <div id="choices" class="choices"></div>
+      </div>
+    </div>
+
+    <!-- HUB: chapter map / repeatables -->
+    <div id="storyHub" class="storyHub">
+      <div class="storyHubHeader">
+        <div class="storyContinueCard" id="storyContinueCard">
+          <div class="storyContinueText">
+            <div class="storyContinueTitle">Continue</div>
+            <div class="muted small" id="storyContinueMeta">Pick a chapter to begin.</div>
+          </div>
+          <button id="storyContinueBtn" type="button">Continue</button>
+        </div>
+      </div>
+
+      <div class="storyHubSection">
+        <div class="row" style="margin:0">
+          <div class="title" style="margin:0">Chapter Map</div>
+          <div class="muted small">Chapters can behave differently (VN / Combat / Explore).</div>
+        </div>
+        <div id="chaptersList" class="chaptersGrid"></div>
+      </div>
+</div>
+  </div>
+</div>
+
+<div id="pageGathering" class="page">
+        <div class="row">
+          <div class="title" style="margin:0">Gather</div>
+          <div class="muted small">Regular gathering speed. Pin up to 3 elements here for Quick Gather (2× faster).</div>
+        </div>
+        <div class="row" style="justify-content:flex-start;flex-wrap:wrap;margin-top:10px">
+          <button id="gatherAllBtn">Gather All Unlocked</button>
+          <button id="collectAllBtn">Collect All Ready</button>
+        </div>
+        <div id="gatherNodesList" class="stack" style="margin-top:10px"></div>
+      </div>
+
+      <div id="pageInventory" class="page">
+        <div class="row">
+          <div class="title" style="margin:0">Inventory</div>
+          <div class="muted small">Shows items only when you have more than 0.</div>
+        </div>
+
+        <!-- Equipped (collapsible) -->
+        <div class="invSection">
+          <button id="equipToggle" class="panelToggle" type="button" aria-expanded="true">
+            <div class="panelToggleLeft">
+              <div class="title" style="margin:0">Equipped</div>
+              <div class="muted small">Gear slots</div>
+            </div>
+            <div class="panelToggleRight" aria-hidden="true"><span class="chev">▾</span></div>
+          </button>
+          <div id="equipBody" class="panelCollapse open">
+            <div class="panelCollapseInner">
+              <div id="equipGrid" class="equipGrid"></div>
+            </div>
+          </div>
+        </div>
+
+<!-- Toolbelt (collapsible) -->
+<div class="invSection">
+  <button id="toolbeltToggle" class="panelToggle" type="button" aria-expanded="true">
+    <div class="panelToggleLeft">
+      <div class="title" style="margin:0">Toolbelt</div>
+      <div class="muted small">Tools: <span id="toolbeltCount">0</span>/<span id="toolbeltTotal">0</span></div>
+    </div>
+    <div class="panelToggleRight" aria-hidden="true"><span class="chev">▾</span></div>
+  </button>
+  <div id="toolbeltBody" class="panelCollapse open">
+    <div class="panelCollapseInner">
+      <div id="toolbeltGrid" class="equipGrid toolbeltGrid"></div>
+    </div>
+  </div>
+</div>
+
+        <!-- Backpack (collapsible) -->
+        <div class="invSection">
+          <button id="backpackToggle" class="panelToggle" type="button" aria-expanded="true">
+            <div class="panelToggleLeft">
+              <div class="title" style="margin:0">Backpack</div>
+              <div class="muted small">Slots: <span id="invSlotsLabel2">16</span></div>
+            </div>
+            <div class="panelToggleRight" aria-hidden="true"><span class="chev">▾</span></div>
+          </button>
+          <div id="backpackBody" class="panelCollapse open">
+            <div class="panelCollapseInner">
+              <div class="row" style="margin:0 0 10px 0;align-items:center;gap:10px;flex-wrap:wrap">
+                <div class="muted small">Sort</div>
+                <select id="invBackpackSort" class="selectSmall">
+                  <option value="type">Type</option>
+                  <option value="tier">Tier</option>
+                  <option value="name">Name</option>
+                </select>
+              </div>
+              <div id="invBackpackWrap" class="backpackGridWrap">
+                <div id="invSlotsGrid" class="grid16 backpackSmall"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pageRefining" class="page">
+        <div class="row">
+          <div class="title" style="margin:0">Distillery</div>
+          <div class="muted small">Experimental mode: always available.</div>
+        </div>
+
+        <!-- Distiller (collapsible) -->
+        <div class="invSection" style="margin-top:10px">
+          <button id="distillerToggle" class="panelToggle" type="button" aria-expanded="true">
+            <div class="panelToggleLeft">
+              <div class="title" style="margin:0">Distiller</div>
+            </div>
+            <div class="panelToggleRight" aria-hidden="true"><span class="chev">▾</span></div>
+          </button>
+          <div id="distillerBody" class="panelCollapse open">
+            <div class="panelCollapseInner">
+              <div class="muted small" style="margin:0 0 10px 0">Remembered scraps</div>
+              <div id="distillerKnownGrid" class="miniGrid" style="grid-template-columns:repeat(auto-fill, minmax(70px, 1fr));gap:10px"></div>
+
+              <div class="muted small" style="margin:12px 0 10px 0">Choose a scrap to distill</div>
+              <div id="distillerScrapGrid" class="storeGrid"></div>
+              <div id="distillerEmpty" class="muted small" style="margin-top:8px;display:none">No scraps to distill yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Distillery Cabinet (element storage) (collapsible) -->
+        <div class="invSection" style="margin-top:14px">
+          <button id="cabinetToggle" class="panelToggle" type="button" aria-expanded="true">
+            <div class="panelToggleLeft">
+              <div class="title" style="margin:0">Distillery Cabinet</div>
+            </div>
+            <div class="panelToggleRight" aria-hidden="true"><span class="chev">▾</span></div>
+          </button>
+          <div id="cabinetBody" class="panelCollapse open">
+            <div class="panelCollapseInner">
+              <div class="row" style="margin:0 0 6px 0;align-items:center;gap:10px;flex-wrap:wrap">
+                <button id="cabinetUnloadBtn" title="Move elements from your backpack into the cabinet">Unload Inventory</button>
+                <div style="flex:1"></div>
+                <div class="sortControl">
+                  <div class="muted small">Sort</div>
+                  <div id="cabinetSortChips" class="sortChipsMount"></div>
+                  <!-- Keep the native select for state + accessibility; it's visually hidden and driven by the chips UI. -->
+                  <select id="cabinetSort" class="selectSmall sortSelectHidden" aria-hidden="true" tabindex="-1">
+                    <option value="order">Order</option>
+                    <option value="name">Alphabetical</option>
+                    <option value="tier">Tier</option>
+                    <option value="rarity">Rarity</option>
+                  </select>
+                </div>
+              </div>
+              <div class="muted small" style="margin:0 0 12px 0">Hint: 'Oxygen is your friend.'</div>
+              <div id="distilleryCabinetGrid" class="storeGrid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pageCraft" class="page">
+        <div class="row">
+          <div class="title" style="margin:0">Craft</div>
+          <div class="muted small">Build gear and upgrades from blueprints you own.</div>
+        </div>
+
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px">
+          <div class="title" style="margin:0">Gear</div>
+        </div>
+        <div id="craftGearGrid" class="storeGrid"></div>
+        <div id="craftGearEmpty" class="muted small" style="margin-top:8px;display:none">No gear blueprints yet.</div>
+
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px">
+          <div class="title" style="margin:0">Gadgets</div>
+        </div>
+        <div id="craftGadgetsGrid" class="storeGrid"></div>
+        <div id="craftGadgetsEmpty" class="muted small" style="margin-top:8px;display:none">No gadget blueprints yet.</div>
+
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px">
+          <div class="title" style="margin:0">Utilities</div>
+          <div class="muted small">Packaging & overflow items.</div>
+        </div>
+        <div id="craftUtilitiesList" class="list" style="margin-top:10px"></div>
+        <div id="craftUtilitiesEmpty" class="muted small" style="margin-top:8px;display:none">No utilities yet.</div>
+
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px">
+          <div class="title" style="margin:0">Tools</div>
+        </div>
+        <div id="craftToolsGrid" class="storeGrid"></div>
+        <div id="craftToolsEmpty" class="muted small" style="margin-top:8px;display:none">No tool blueprints yet.</div>
+
+      </div>
+
+      <div id="pageStore" class="page">
+        <div class="row">
+          <div class="title" style="margin:0">General Store</div>
+          <!-- Tagline removed: inspector + actions convey intent -->
+        </div>
+
+        <div class="row" style="margin-top:8px;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="muted">Mass Units: <span id="storeCredits">0</span></div>
+          <div style="flex:1"></div>
+          <button id="storeUndoBtn" class="subtleBtn" style="display:none">Undo last sale</button>
+</div>
+
+        <!-- A1 (Shapeshifter) — Storekeeper presence (Store-only) -->
+        <div id="storeA1Card" class="panel a1Card" role="region" aria-label="A1 — Storekeeper">
+          <div class="a1Top">
+            <div class="a1Portrait a1-holo-gradient" aria-hidden="true"></div>
+            <div class="a1Meta">
+              <div class="a1NameRow">
+                <div class="a1Name">A1</div>
+                <span class="a1Pill">Shopkeeper</span>
+                <span class="a1Pill a1PillAlt">Shapeshifter</span>
+              </div>
+              <div id="storeA1Line" class="a1Line">…</div>
+              <div id="storeA1Subline" class="muted small a1Subline" style="display:none"></div>
+            </div>
+          </div>
+          <div class="a1Actions" role="group" aria-label="A1 actions">
+            <button id="storeA1TalkBtn" class="subtleBtn" type="button">Talk</button>
+            <button id="storeA1AskBtn" class="subtleBtn" type="button" disabled title="Coming soon">Ask</button>
+            <button id="storeA1RumorsBtn" class="subtleBtn" type="button" disabled title="Coming soon">Rumors</button>
+            <button id="storeA1UpgradesBtn" class="subtleBtn" type="button">Upgrades</button>
+          </div>
+
+          <div id="storeA1UpgradesPanel" class="a1Upgrades" style="display:none">
+            <div class="a1UpSection">
+              <div class="a1UpHead">
+                <div>
+                  <div class="a1UpTitle">Storage Expansion</div>
+                  <div id="a1StorageMeta" class="muted small">…</div>
+                </div>
+                <button id="a1StorageUpgradeBtn" class="subtleBtn" type="button">Build Module</button>
+              </div>
+              <div class="a1UpBar" aria-hidden="true"><div id="a1StorageBarFill" class="a1UpBarFill"></div></div>
+              <div id="a1StorageNeeds" class="a1Needs"></div>
+            </div>
+
+            <div class="a1UpSection">
+              <div class="a1UpHead">
+                <div>
+                  <div class="a1UpTitle">Astarr Link</div>
+                  <div id="a1LinkMeta" class="muted small">…</div>
+                </div>
+                <button id="a1LinkUpgradeBtn" class="subtleBtn" type="button">Strengthen Link</button>
+              </div>
+              <div class="a1UpBar" aria-hidden="true"><div id="a1LinkBarFill" class="a1UpBarFill"></div></div>
+              <div id="a1LinkNeeds" class="a1Needs"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap">
+  <div class="title" style="margin:0">Buy</div>
+  <div style="flex:1"></div>
+
+  <div class="sortControl">
+    <div class="muted small">Sort</div>
+    <div id="storeBuySortChips" class="sortChipsMount"></div>
+    <!-- Keep the native select for state + accessibility; it's visually hidden and driven by the chips UI. -->
+    <select id="storeBuySort" class="selectSmall sortSelectHidden" aria-hidden="true" tabindex="-1">
+      <option value="type">Type</option>
+      <option value="tier">Tier</option>
+      <option value="name">Name</option>
+    </select>
+  </div>
+</div>
+<div id="storeBuyGrid" class="storeGrid"></div>
+
+        <div class="storeSellWrap">
+          <div class="title" style="margin-bottom:6px">Sell</div>
+<div id="storeSellGrid" class="storeGrid"></div>
+        </div>
+      </div>
+
+      <div id="pageBlueprints" class="page">
+        <div class="row">
+          <div class="title" style="margin:0">Blueprints</div>
+          <div class="muted small">Blueprint storage. Craft items on the Craft page.</div>
+        </div>
+
+        
+        <div class="row">
+          <div class="title" style="margin:0">Blueprint Storage</div>
+          <div class="muted small">16 slots</div>
+        </div>
+        <div id="bpSlotsGrid" class="grid16" style="margin-top:10px"></div>
+
+<div class="row" style="align-items:center;gap:10px;flex-wrap:wrap">
+  <div>
+    <div class="title" style="margin:0">Blueprint Library</div>
+    <div class="muted small">All blueprints in the game (owned + unowned).</div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="muted small">Sort</div>
+  <select id="bpCatalogSort" class="selectSmall">
+    <option value="type">Type</option>
+    <option value="tier">Tier</option>
+    <option value="name">Name</option>
+  </select>
+</div>
+<div id="bpCatalogList" class="list" style="margin-top:10px"></div>
+
+      </div>
+
+      <div id="pageGlossary" class="page">
+        <div id="wikiDesktopMount"></div>
+      </div>
+
+      <div id="pageAttribute" class="page">
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap">
+          <button id="attrPageBackBtn" class="subtleBtn" type="button" title="Return to your previous page">← Back</button>
+          <div style="flex:1">
+            <div class="title" style="margin:0">Attribute</div>
+            <div id="attrPageHint" class="muted small">Click an attribute on the left to view details.</div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <div class="inspectorHeader">
+            <div class="inspectorHeaderMain">
+              <div class="inspectorHeaderLeft" style="align-items:center">
+                <div class="avatarFrame" aria-hidden="true" style="width:44px;height:44px">
+                  <img id="attrPageIcon" class="avatarImg" alt="" />
+                </div>
+                <div class="inspectorHeaderText">
+                  <div class="inspectorTitleRow">
+                    <div id="attrPageTitle" class="inspectorTitle">—</div>
+                  </div>
+                  <div id="attrPageSub" class="muted small">Details</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="attrPageMeta" class="inspectorMeta" style="margin-top:10px"></div>
+          <div id="attrPageDesc" class="inspectorDesc"></div>
+          <div id="attrPageSummary" class="inspectorFound"></div>
+          <div id="attrPagePath" class="attrPath"></div>
+        </div>
+      </div>
+
+
+      </div><!-- /pageViewport -->
+
+    </div>
+    <!-- WIKI PANE (mobile swipe panel) -->
+    <div id="paneWiki" class="panel mobilePane wikiPane">
+      <div id="wikiMobileMount"></div>
+    </div>
+
+  </div>
+
+
+  <!-- ITEM INSPECTOR
+
+  <div id="mobilePaneUI" class="mobilePaneUI" aria-hidden="true">
+    <div id="paneDots" class="paneDots" aria-hidden="true"></div>
+    <button id="paneToggleBtn" class="paneToggleBtn" type="button" aria-label="Switch panel">⇄</button>
+  </div>
+ (hover) -->
+  <div id="itemInspector" class="itemInspector" aria-hidden="true">
+    <div class="inspectorHeader">
+      <div class="inspectorHeaderMain">
+        <div class="inspectorHeaderGrid">
+          <div class="inspectorTitleRow">
+            <div id="inspectTitle" class="inspectorTitle"></div>
+            <div id="inspectTierBadge" class="tierBadge" style="display:none"></div>
+          </div>
+          <div id="inspectIcon" class="inspectIcon" aria-hidden="true"></div>
+          <div id="inspectMeta" class="inspectorMeta inspectorMeta--header"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="inspectDesc" class="inspectorDesc"></div>
+    <div id="inspectFound" class="inspectorFound"></div>
+
+    <div class="inspectorActions">
+      <button id="inspectPrimaryBtn" type="button">Action</button>
+      <button id="inspectMultiBtn" type="button">Multiple</button>
+      <div id="inspectGadgetActions" class="inspectGadgetActions" hidden>
+        <button id="inspectChargeBtn" type="button">Charge</button>
+        <button id="inspectUpgradeBtn" type="button">Upgrade</button>
+      </div>
+      <!-- Distillery Cabinet actions (elements only) -->
+      <div id="inspectCabinetActions" class="inspectGadgetActions" hidden>
+        <button id="inspectBottleBtn" type="button">Bottle</button>
+        <button id="inspectBottleSellBtn" type="button">Bottle &amp; Sell</button>
+      </div>
+      <div class="inspectorIconRow inspectorIconRow--bottom">
+        <button id="inspectLockBtn" class="iconBtn" type="button" aria-label="Lock"></button>
+        <button id="inspectDeleteBtn" class="iconBtn" type="button" aria-label="Delete">🗑️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ATTRIBUTE INSPECTOR (hover/click) -->
+  <div id="attrInspector" class="itemInspector attrInspector" aria-hidden="true">
+    <div class="inspectorHeader">
+      <div class="inspectorHeaderMain">
+        <div class="inspectorHeaderLeft">
+          <div class="inspectorHeaderText">
+            <div class="inspectorTitleRow">
+              <div id="attrTitle" class="inspectorTitle"></div>
+            </div>
+          </div>
+        </div>
+        <div class="inspectorHeaderRight">
+          <div class="inspectorIconRow">
+            <button id="attrCloseBtn" class="iconBtn" type="button" aria-label="Close">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="attrScroll" class="attrInspectorScroll">
+      <div id="attrScrollInner" class="attrInspectorInner">
+        <div id="attrMeta" class="inspectorMeta"></div>
+        <div id="attrDesc" class="inspectorDesc"></div>
+        <div id="attrSummary" class="inspectorFound"></div>
+        <div id="attrPath" class="attrPath"></div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,3215 @@
+:root{--fwm-base:"/";}
+/*
+  Fun With Matter — UI Design System Overrides
+  ------------------------------------------------
+  Goal: reduce styling "chaos" by making ONE design layer authoritative.
+  - Scoped to .fwm (theme boundary)
+  - Loaded after app.css (wins load order)
+  - Works even if JS applies Tailwind utilities; we override key surfaces and borders.
+*/
+
+:root{
+  /* Theme palette (Tailwind-friendly): swap these to change the whole vibe.
+     Values are space-separated RGB triplets.
+     Example: --fwm-sky: 14 165 233; (tailwind sky-500) */
+  --fwm-sky: 56 189 248;      /* sky-400 */
+  --fwm-purple: 168 85 247;   /* purple-500 */
+  --fwm-amber: 245 158 11;    /* amber-500 */
+
+  --fwm-light-1: 248 250 252; /* slate-50 */
+  --fwm-light-2: 241 245 249; /* slate-100 */
+  --fwm-dark-1: 2 6 23;       /* slate-950 */
+  --fwm-dark-2: 0 0 0;
+  --fwm-ink: 15 23 42;        /* slate-900 */
+  --fwm-paper: 255 255 255;
+
+  /* Canon tier colors (OKLCH components: L C H).
+     Use as: oklch(var(--tier-1) / 1) or oklch(var(--tier-1) / 0.12) */
+  --tier-1: 50.5% 0.213 27.518;   /* Singular (Highest) — Red */
+  --tier-2: 68.1% 0.162 75.834;   /* Unbounded — Gold */
+  --tier-3: 49.6% 0.265 301.924;  /* Distorted — Purple */
+  --tier-4: 48.8% 0.243 264.376;  /* Hazardous — Blue */
+  --tier-5: 64.8% 0.2 131.684;    /* Reactive — Green */
+  --tier-6: 44.4% 0.011 73.639;   /* Stable (Lowest) — Grey */
+
+  /* Semantic aliases (same values, clearer intent in CSS/JS) */
+  --tier-singular: var(--tier-1);
+  --tier-unbounded: var(--tier-2);
+  --tier-distorted: var(--tier-3);
+  --tier-hazardous: var(--tier-4);
+  --tier-reactive: var(--tier-5);
+  --tier-stable: var(--tier-6);
+
+  /* HP status colors (separate meaning from tiers; may reuse values) */
+  --hp-low: var(--tier-1);         /* 0–19% */
+  --hp-mid: 90.5% 0.182 98.111;    /* 20–49% — Yellow */
+  --hp-high: var(--tier-5);        /* 50–100% */
+
+
+  /* A1 presence — reusable holo gradient token */
+  --a1-holo-bg: radial-gradient(120% 120% at 28% 22%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.25) 32%, rgba(255,255,255,0.00) 58%),
+                 linear-gradient(135deg, rgba(56,189,248,0.65) 0%, rgba(167,139,250,0.55) 45%, rgba(34,211,238,0.40) 100%);
+  --a1-holo-bg-dark: radial-gradient(120% 120% at 28% 22%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 34%, rgba(255,255,255,0.00) 60%),
+                      linear-gradient(135deg, rgba(56,189,248,0.40) 0%, rgba(167,139,250,0.36) 45%, rgba(34,211,238,0.26) 100%);
+}
+
+
+/* =====================
+   Base shell
+===================== */
+body.fwm{
+  margin:0;
+  min-height:100vh;
+  font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Arial, sans-serif;
+
+  /* =====================
+     World Time Theme Tokens (Step 1)
+     - The UI is driven entirely by body.tod-* classes.
+     - Components should consume these variables instead of hard-coding light/dark rules.
+  ===================== */
+
+  /* Text */
+  --ui-text-rgb: 15 23 42;        /* slate-900 */
+  --ui-muted-rgb: 71 85 105;      /* slate-600 */
+
+  /* Surfaces (glass) */
+  --ui-panel-rgb: 255 255 255;
+  --ui-panel-a: 0.60;
+  --ui-panel-shadow: 0 1px 0 rgba(15,23,42,0.06) inset, 0 18px 40px rgba(15,23,42,0.08);
+
+  --ui-viewport-rgb: 255 255 255;
+  --ui-viewport-a: 0.42;
+  --ui-viewport-shadow: 0 1px 0 rgba(15,23,42,0.06) inset, 0 0 0 1px rgba(15,23,42,0.06) inset;
+
+  --ui-header-rgb: 255 255 255;
+  --ui-header-a: 0.70;
+
+  /* Readability scrims (for text-dense zones inside glass UI) */
+  --ui-scrim-rgb: 255 255 255;
+  --ui-scrim-a: 0.22;
+  --ui-scrim-border-rgb: 15 23 42;
+  --ui-scrim-border-a: 0.10;
+  --ui-scrim-blur: 10px;
+
+  /* Modals should be more solid than panels */
+  --ui-modal-rgb: 255 255 255;
+  --ui-modal-a: 0.78;
+
+
+  /* Page backdrop */
+  --bg-top-rgb: var(--fwm-light-1);
+  --bg-bottom-rgb: var(--fwm-light-2);
+  --bg-sky-a: 0.16;
+  --bg-purple-a: 0.12;
+  --bg-amber-a: 0.08;
+
+  /* Sky colors (allow OKLCH per time-of-day) */
+  /* Gradient anchors (used for dawn/dusk mixing via --tod-pct set by JS) */
+  --tod-day-top: oklch(47% 0.135 241.966);
+  --tod-day-mid: oklch(58.8% 0.158 241.966);
+  --tod-day-bottom: oklch(84% 0.055 240);
+
+  /* A cool, readable night sky (kept subtle so the UI remains the hero) */
+  --tod-night-top: oklch(18% 0.055 254);
+  --tod-night-mid: oklch(12% 0.055 258);
+  --tod-night-bottom: oklch(6% 0.040 270);
+
+  /* Dawn/dusk interpolation knobs (0..1 and 0%..100%) */
+  --tod-p: 0;
+  --tod-pct: 0%;
+
+  --bg-top-color: rgb(var(--bg-top-rgb));
+  --bg-mid-color: rgb(var(--bg-top-rgb));
+  --bg-bottom-color: rgb(var(--bg-bottom-rgb));
+
+  /* Daytime effects */
+  --tod-sun: rgba(255,255,255,0);
+  --tod-haze: rgba(255,255,255,0);
+  --tod-noise-opacity: 0.00;
+
+  /* =====================
+     Ambient Backdrop (Step 2)
+     - A single overlay behind the UI that tints the world (medium strength).
+  ===================== */
+  --tod-tint: rgba(0,0,0,0);
+  --tod-backdrop-opacity: 0.00;
+  --tod-vignette: 0.00;
+  --tod-stars-opacity: 0.0;
+  --tod-clouds-opacity: 0.0;
+  --tod-sun-opacity: 0.0;
+  --tod-sunrise-opacity: 0.0;
+
+  color: rgb(var(--ui-text-rgb));
+  background:
+    radial-gradient(1100px 720px at 74% 6%, var(--tod-sun), transparent 62%),
+    radial-gradient(1600px 900px at 50% 110%, var(--tod-haze), transparent 66%),
+    radial-gradient(1200px 600px at 20% 0%, rgb(var(--fwm-sky) / var(--bg-sky-a)), transparent 55%),
+    radial-gradient(900px 600px at 90% 20%, rgb(var(--fwm-purple) / var(--bg-purple-a)), transparent 55%),
+    radial-gradient(1100px 700px at 50% 110%, rgb(var(--fwm-amber) / var(--bg-amber-a)), transparent 60%),
+    linear-gradient(180deg, var(--bg-top-color) 0%, var(--bg-mid-color) 46%, var(--bg-bottom-color) 100%);
+  transition: color 650ms ease, background 650ms ease;
+}
+
+/* =====================
+   Time of Day (World Time)
+   - World Time drives ALL theme tokens via body.tod-* classes.
+   - The backdrop overlay adds ambient tint behind the UI (medium strength).
+===================== */
+
+/* World Time bands (tokens) */
+body.fwm.tod-dawn{
+  /* Dawn: cool morning haze */
+  --bg-sky-a: 0.18;
+  --bg-purple-a: 0.11;
+  --bg-amber-a: 0.10;
+
+  /* Smooth night → day blend (progress from JS via --tod-pct) */
+  --bg-top-color: color-mix(in oklab, var(--tod-night-top) calc(100% - var(--tod-pct)), var(--tod-day-top) var(--tod-pct));
+  --bg-mid-color: color-mix(in oklab, var(--tod-night-mid) calc(100% - var(--tod-pct)), var(--tod-day-mid) var(--tod-pct));
+  --bg-bottom-color: color-mix(in oklab, var(--tod-night-bottom) calc(100% - var(--tod-pct)), var(--tod-day-bottom) var(--tod-pct));
+
+  --ui-panel-a: 0.26;
+  --ui-viewport-a: 0.14;
+
+  --tod-tint: rgba(150, 195, 255, 1);
+  --tod-backdrop-opacity: 0.08;
+  --tod-vignette: 0.06;
+  --tod-stars-opacity: 0.0;
+
+  --ui-header-a: 0.20;
+
+  --ui-scrim-rgb: 255 255 255;
+  --ui-scrim-a: 0.24;
+  --ui-scrim-border-rgb: 15 23 42;
+  --ui-scrim-border-a: 0.10;
+
+  --ui-modal-rgb: 255 255 255;
+  --ui-modal-a: 0.82;
+
+}
+
+body.fwm.tod-day{
+  /* Day: blue sky + soft bloom (medium) */
+  --bg-sky-a: 0.22;
+  --bg-purple-a: 0.06;
+  --bg-amber-a: 0.05;
+
+  /* Sky gradient (anchors live in :root for smooth mixing) */
+  --bg-top-color: var(--tod-day-top);
+  --bg-mid-color: var(--tod-day-mid);
+  --bg-bottom-color: var(--tod-day-bottom);
+
+  /* Sun bloom + horizon haze */
+  --tod-sun: oklch(92% 0.06 85 / 0.28);
+  --tod-haze: oklch(88% 0.03 230 / 0.22);
+  --tod-noise-opacity: 0.045;
+
+  --ui-panel-a: 0.24;
+  --ui-viewport-a: 0.13;
+
+  /* Ambient tint stays subtle so the sky reads as the hero */
+  --tod-tint: rgba(110, 176, 255, 1);
+  --tod-backdrop-opacity: 0.08;
+  --tod-vignette: 0.04;
+  --tod-stars-opacity: 0.0;
+
+  --ui-header-a: 0.18;
+
+  --ui-scrim-rgb: 255 255 255;
+  --ui-scrim-a: 0.22;
+  --ui-scrim-border-rgb: 15 23 42;
+  --ui-scrim-border-a: 0.10;
+
+  --ui-modal-rgb: 255 255 255;
+  --ui-modal-a: 0.80;
+
+}
+
+
+body.fwm.tod-dusk{
+  /* Dusk: golden-hour warmth */
+  --ui-text-rgb: 241 245 249;      /* slate-100 */
+  --ui-muted-rgb: 148 163 184;     /* slate-400 */
+
+  --ui-panel-rgb: 2 6 23;          /* slate-950 */
+  --ui-panel-a: 0.22;
+  --ui-panel-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 18px 40px rgba(0,0,0,0.38);
+
+  --ui-viewport-rgb: 2 6 23;
+  --ui-viewport-a: 0.12;
+  --ui-viewport-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.06) inset;
+
+  --ui-header-rgb: 2 6 23;
+  --ui-header-a: 0.18;
+
+  --bg-top-rgb: var(--fwm-dark-1);
+  --bg-bottom-rgb: var(--fwm-dark-2);
+  --bg-sky-a: 0.18;
+  --bg-purple-a: 0.16;
+  --bg-amber-a: 0.12;
+
+  /* Smooth day → night blend (progress from JS via --tod-pct) */
+  --bg-top-color: color-mix(in oklab, var(--tod-day-top) calc(100% - var(--tod-pct)), var(--tod-night-top) var(--tod-pct));
+  --bg-mid-color: color-mix(in oklab, var(--tod-day-mid) calc(100% - var(--tod-pct)), var(--tod-night-mid) var(--tod-pct));
+  --bg-bottom-color: color-mix(in oklab, var(--tod-day-bottom) calc(100% - var(--tod-pct)), var(--tod-night-bottom) var(--tod-pct));
+
+  --tod-tint: rgba(255, 170, 90, 1);
+  --tod-backdrop-opacity: 0.16;
+  --tod-vignette: 0.16;
+  --tod-stars-opacity: 0.18;
+
+  --ui-scrim-rgb: 2 6 23;
+  --ui-scrim-a: 0.34;
+  --ui-scrim-border-rgb: 255 255 255;
+  --ui-scrim-border-a: 0.12;
+
+  --ui-modal-rgb: 2 6 23;
+  --ui-modal-a: 0.86;
+
+}
+
+body.fwm.tod-night{
+  /* Night: cool, readable dark glass */
+  --ui-text-rgb: 241 245 249;      /* slate-100 */
+  --ui-muted-rgb: 148 163 184;     /* slate-400 */
+
+  --ui-panel-rgb: 2 6 23;          /* slate-950 */
+  --ui-panel-a: 0.24;
+  --ui-panel-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 18px 44px rgba(0,0,0,0.46);
+
+  --ui-viewport-rgb: 2 6 23;
+  --ui-viewport-a: 0.13;
+  --ui-viewport-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.06) inset;
+
+  --ui-header-rgb: 2 6 23;
+  --ui-header-a: 0.19;
+
+  --bg-top-rgb: var(--fwm-dark-1);
+  --bg-bottom-rgb: var(--fwm-dark-2);
+  --bg-sky-a: 0.18;
+  --bg-purple-a: 0.16;
+  --bg-amber-a: 0.10;
+
+  /* Night sky gradient anchors (kept stable so the UI remains readable) */
+  --bg-top-color: var(--tod-night-top);
+  --bg-mid-color: var(--tod-night-mid);
+  --bg-bottom-color: var(--tod-night-bottom);
+
+  --tod-tint: rgba(20, 55, 120, 1);
+  --tod-backdrop-opacity: 0.10;
+  --tod-vignette: 0.28;
+  --tod-stars-opacity: 0.80;
+
+  --ui-scrim-rgb: 2 6 23;
+  --ui-scrim-a: 0.38;
+  --ui-scrim-border-rgb: 255 255 255;
+  --ui-scrim-border-a: 0.12;
+
+  --ui-modal-rgb: 2 6 23;
+  --ui-modal-a: 0.88;
+
+}
+
+/* Backdrop overlay */
+#todBackdrop{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1200px 900px at 50% 20%, rgba(0,0,0,var(--tod-vignette)), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,var(--tod-vignette))),
+    var(--tod-tint);
+  opacity: var(--tod-backdrop-opacity);
+  transition: opacity 650ms ease, background 650ms ease;
+}
+
+/* Dawn / sunset glow (horizon cue) */
+#todSunrise{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--tod-sunrise-opacity, 0);
+  transition: opacity 650ms ease;
+  mix-blend-mode: screen;
+  filter: saturate(1.05);
+}
+
+#todSunrise::before{
+  content:"";
+  position:absolute;
+  inset:-12%;
+  background:
+    radial-gradient(1200px 460px at 50% 96%, rgba(255, 176, 120, 0.70), transparent 62%),
+    radial-gradient(880px 380px at 62% 92%, rgba(255, 210, 165, 0.50), transparent 65%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 160, 110, 0.20) 70%, transparent 100%);
+  filter: blur(8px);
+}
+
+/* Sunlight (disc + rays) */
+#todSun{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: var(--tod-sun-opacity, 0);
+  transition: opacity 650ms ease;
+  mix-blend-mode: screen;
+  filter: saturate(1.03);
+}
+
+#todSun::before{
+  content:"";
+  position:absolute;
+  inset:-12%;
+  background:
+    radial-gradient(760px 520px at 74% 10%, rgba(255,255,255,0.55), transparent 62%),
+    radial-gradient(420px 300px at 74% 10%, rgba(255,255,255,0.40), transparent 62%);
+  filter: blur(1px);
+}
+
+#todSun::after{
+  content:"";
+  position:absolute;
+  inset:-18%;
+  background: repeating-conic-gradient(from 0deg at 74% 10%, rgba(255,255,255,0.12) 0 8deg, transparent 8deg 20deg);
+  -webkit-mask-image: radial-gradient(520px 520px at 74% 10%, rgba(0,0,0,1) 0 52%, transparent 72%);
+  mask-image: radial-gradient(520px 520px at 74% 10%, rgba(0,0,0,1) 0 52%, transparent 72%);
+  filter: blur(0.6px);
+  animation: todSunPulse 9s ease-in-out infinite;
+}
+
+@keyframes todSunPulse{
+  0%{ opacity: 0.45; transform: scale(1) translate3d(0,0,0); }
+  50%{ opacity: 0.65; transform: scale(1.01) translate3d(-3px,2px,0); }
+  100%{ opacity: 0.45; transform: scale(1) translate3d(0,0,0); }
+}
+
+/* Clouds (daytime presence) */
+#todClouds{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: var(--tod-clouds-opacity, 0);
+  transition: opacity 650ms ease;
+  mix-blend-mode: screen;
+  filter: saturate(1.02);
+}
+
+#todClouds::before{
+  content:"";
+  position:absolute;
+  inset:-24%;
+  background-image:
+    radial-gradient(160px 80px at 12% 22%, rgba(255,255,255,0.42), transparent 72%),
+    radial-gradient(200px 90px at 26% 28%, rgba(255,255,255,0.28), transparent 74%),
+    radial-gradient(180px 86px at 44% 18%, rgba(255,255,255,0.32), transparent 74%),
+    radial-gradient(220px 96px at 62% 30%, rgba(255,255,255,0.26), transparent 76%),
+    radial-gradient(190px 88px at 78% 20%, rgba(255,255,255,0.34), transparent 74%),
+    radial-gradient(230px 98px at 90% 34%, rgba(255,255,255,0.22), transparent 76%);
+  background-size: 720px 360px;
+  background-repeat: repeat;
+  filter: blur(10px);
+  opacity: 0.95;
+  animation: todCloudsDrift 75s linear infinite;
+}
+
+#todClouds::after{
+  content:"";
+  position:absolute;
+  inset:-28%;
+  background-image:
+    radial-gradient(240px 120px at 18% 54%, rgba(255,255,255,0.18), transparent 78%),
+    radial-gradient(260px 130px at 42% 62%, rgba(255,255,255,0.14), transparent 80%),
+    radial-gradient(240px 120px at 68% 58%, rgba(255,255,255,0.16), transparent 80%),
+    radial-gradient(280px 140px at 86% 66%, rgba(255,255,255,0.12), transparent 82%);
+  background-size: 980px 520px;
+  background-repeat: repeat;
+  filter: blur(14px);
+  opacity: 0.85;
+  animation: todCloudsDrift2 110s linear infinite;
+}
+
+@keyframes todCloudsDrift{
+  0%{ transform: translate3d(0,0,0); }
+  100%{ transform: translate3d(-280px, 24px, 0); }
+}
+
+@keyframes todCloudsDrift2{
+  0%{ transform: translate3d(0,0,0); }
+  100%{ transform: translate3d(-180px, -18px, 0); }
+}
+
+/* Fine noise (daytime texture)
+   - Separate layer so it isn't affected by #todBackdrop opacity.
+*/
+#todNoise{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: var(--tod-noise-opacity, 0);
+  transition: opacity 650ms ease;
+  mix-blend-mode: overlay;
+  filter: saturate(0.9);
+}
+
+#todNoise::before{
+  content:"";
+  position:absolute;
+  inset:-10%;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%3E%0A%3Cfilter%20id='n'%3E%0A%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='.8'%20numOctaves='3'%20stitchTiles='stitch'/%3E%0A%3C/filter%3E%0A%3Crect%20width='160'%20height='160'%20filter='url(%23n)'%20opacity='.25'/%3E%0A%3C/svg%3E");
+  background-size: 220px 220px;
+  background-repeat: repeat;
+}
+/* Ensure the app sits above the backdrop overlay */
+body.fwm .app.fwm-app{
+  position: relative;
+  z-index: 10;
+}
+
+/* Starfield overlay (Step 3)
+   - Separate layer so it can be animated/tuned without touching layout.
+   - Opacity is driven by --tod-stars-opacity (set per tod-* class).
+*/
+#todStars{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: var(--tod-stars-opacity, 0);
+  transition: opacity 650ms ease;
+  mix-blend-mode: screen;
+  filter: saturate(0.9);
+}
+
+/* Dense stars (static) */
+#todStars::before{
+  content:"";
+  position:absolute;
+  inset:-10%;
+  /* BIG + medium star mix (noticeable) */
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 14%,  rgba(255,255,255,0.80), transparent 60%),
+    radial-gradient(1.5px 1.5px at 18% 32%, rgba(255,255,255,0.62), transparent 60%),
+    radial-gradient(2.5px 2.5px at 27% 9%,  rgba(255,255,255,0.58), transparent 60%),
+    radial-gradient(1.5px 1.5px at 33% 48%, rgba(255,255,255,0.55), transparent 60%),
+    radial-gradient(1.5px 1.5px at 46% 22%, rgba(255,255,255,0.48), transparent 60%),
+    radial-gradient(2.5px 2.5px at 52% 66%, rgba(255,255,255,0.44), transparent 60%),
+    radial-gradient(1.5px 1.5px at 61% 41%, rgba(255,255,255,0.60), transparent 60%),
+    radial-gradient(1.5px 1.5px at 68% 18%, rgba(255,255,255,0.52), transparent 60%),
+    radial-gradient(2.5px 2.5px at 74% 71%, rgba(255,255,255,0.42), transparent 60%),
+    radial-gradient(1.5px 1.5px at 82% 38%, rgba(255,255,255,0.54), transparent 60%),
+    radial-gradient(1.5px 1.5px at 89% 83%, rgba(255,255,255,0.40), transparent 60%),
+    radial-gradient(2.5px 2.5px at 93% 12%, rgba(255,255,255,0.62), transparent 60%),
+    radial-gradient(1.5px 1.5px at 12% 78%, rgba(255,255,255,0.46), transparent 60%),
+    radial-gradient(1.5px 1.5px at 41% 86%, rgba(255,255,255,0.38), transparent 60%),
+    radial-gradient(1.5px 1.5px at 71% 92%, rgba(255,255,255,0.36), transparent 60%);
+  background-size: 340px 340px;
+  background-repeat: repeat;
+  opacity: 1;
+  transform: translate3d(0,0,0);
+}
+
+/* Twinkle + slight drift (subtle, medium-strength) */
+#todStars::after{
+  content:"";
+  position:absolute;
+  inset:-15%;
+  /* Micro stars + twinkle layer */
+  background-image:
+    radial-gradient(1px 1px at 6% 26%,  rgba(255,255,255,0.70), transparent 60%),
+    radial-gradient(1px 1px at 14% 58%, rgba(255,255,255,0.50), transparent 60%),
+    radial-gradient(1px 1px at 22% 10%, rgba(255,255,255,0.55), transparent 60%),
+    radial-gradient(1px 1px at 31% 36%, rgba(255,255,255,0.46), transparent 60%),
+    radial-gradient(1px 1px at 39% 72%, rgba(255,255,255,0.40), transparent 60%),
+    radial-gradient(1px 1px at 48% 15%, rgba(255,255,255,0.52), transparent 60%),
+    radial-gradient(1px 1px at 56% 47%, rgba(255,255,255,0.44), transparent 60%),
+    radial-gradient(1px 1px at 63% 84%, rgba(255,255,255,0.38), transparent 60%),
+    radial-gradient(1px 1px at 71% 30%, rgba(255,255,255,0.48), transparent 60%),
+    radial-gradient(1px 1px at 79% 63%, rgba(255,255,255,0.42), transparent 60%),
+    radial-gradient(1px 1px at 87% 18%, rgba(255,255,255,0.55), transparent 60%),
+    radial-gradient(1px 1px at 94% 46%, rgba(255,255,255,0.40), transparent 60%),
+    radial-gradient(2px 2px at 88% 27%, rgba(255,255,255,0.40), transparent 60%);
+  background-size: 520px 520px;
+  background-repeat: repeat;
+  opacity: 0.92;
+  filter: blur(0.10px);
+  animation: todTwinkle 7.5s ease-in-out infinite;
+  transform: translate3d(0,0,0);
+}
+
+@keyframes todTwinkle{
+  0%   { opacity: 0.72; transform: translate3d(0,0,0) scale(1); }
+  50%  { opacity: 0.92; transform: translate3d(-6px, 4px, 0) scale(1.01); }
+  100% { opacity: 0.72; transform: translate3d(0,0,0) scale(1); }
+}
+
+
+/* =====================
+   App layout (left/right panes)
+   =====================
+   Re-establish a deterministic 2-column desktop layout.
+   Without this, the right pane can stack below the left pane on wide screens,
+   making the page navigation appear "under" the left column.
+*/
+.fwm .app.fwm-app{
+  width: min(1320px, 96vw);
+  margin: 0 auto;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: clamp(320px, 26vw, 420px) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+/* Focus Wiki (desktop): overlay the Wiki across BOTH columns without reflowing the grid.
+   IMPORTANT: Do NOT collapse the grid to 1 column. The left column must remain in place underneath.
+   We achieve this by letting the right pane span both columns and visually dimming the left pane.
+*/
+@media (min-width: 981px){
+  /* Focus Wiki (desktop): the Wiki should fill the whole app width.
+     We collapse the layout to a single column while focused (desktop only).
+     This avoids grid auto-placement quirks and prevents blank space.
+  */
+  body.focusWiki.fwm .app.fwm-app{
+    grid-template-columns: 1fr;
+  }
+
+  body.focusWiki.fwm #paneMenu{
+    display: none;
+  }
+
+  body.focusWiki.fwm #paneGame{
+    grid-column: 1 / -1;
+    grid-row: 1;
+    z-index: 40;
+  }
+
+  /* Give the docs a bit more room when focused */
+  body.focusWiki.fwm #pageViewport.pageViewport{ padding: 12px; }
+  body.focusWiki.fwm .wikiMain{ grid-template-columns: 340px minmax(0, 1fr); }
+}
+
+/* Desktop: hide the mobile wiki swipe pane.
+   If this is visible on desktop it will auto-place into the grid and appear
+   underneath the game, making the layout look "pushed down" and broken. */
+@media (min-width: 981px){
+  .fwm #paneWiki{ display: none; }
+}
+
+/* Mobile: wiki is a separate swipe pane. */
+@media (max-width: 980px){
+  .fwm #paneWiki{ display: block; }
+}
+
+
+/* Ensure panes can shrink properly inside the grid */
+.fwm #paneMenu,
+.fwm #paneGame,
+.fwm #paneWiki{
+  min-width: 0;
+}
+
+@media (max-width: 980px){
+  .fwm .app.fwm-app{
+    grid-template-columns: 1fr;
+    width: min(980px, 96vw);
+    padding: 10px;
+  }
+}
+
+/* =====================
+   Surfaces
+===================== */
+/* Panels: no loud borders; use barely-visible surfaces */
+
+.fwm .panel{
+  border: none !important;
+  background: rgb(var(--ui-panel-rgb) / var(--ui-panel-a)) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--ui-panel-shadow);
+}
+
+
+/* =====================
+   Readability scrims
+   - Keep the UI "mostly transparent" while ensuring text stays readable.
+   - Applied to text-dense zones (wiki body, story dialogue, collapsible panel inners, modals).
+===================== */
+
+.fwm :where(.panelCollapseInner, .wikiContent, #pageStory .storyDialog, .lootModal){
+  position: relative;
+}
+
+.fwm :where(.panelCollapseInner, .wikiContent, #pageStory .storyDialog, .lootModal)::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: rgb(var(--ui-scrim-rgb) / var(--ui-scrim-a));
+  box-shadow: 0 0 0 1px rgb(var(--ui-scrim-border-rgb) / var(--ui-scrim-border-a)) inset;
+  -webkit-backdrop-filter: blur(var(--ui-scrim-blur));
+  backdrop-filter: blur(var(--ui-scrim-blur));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fwm :where(.panelCollapseInner, .wikiContent, #pageStory .storyDialog, .lootModal) > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* Story dialogue: let the scrim do the work (keeps sky readable behind) */
+.fwm #pageStory .storyDialog{
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Loot modal: more solid than panels, still glassy */
+.fwm .lootModal{
+  background: rgb(var(--ui-modal-rgb) / var(--ui-modal-a)) !important;
+  color: rgb(var(--ui-text-rgb)) !important;
+  border: 1px solid rgb(var(--ui-scrim-border-rgb) / 0.12) !important;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.fwm .lootCloseBtn,
+.fwm .lootActions button{
+  background: rgb(var(--ui-scrim-border-rgb) / 0.06) !important;
+  border-color: rgb(var(--ui-scrim-border-rgb) / 0.14) !important;
+  color: rgb(var(--ui-text-rgb)) !important;
+}
+
+/* Tiny readability boost on sky-heavy backgrounds */
+.fwm #pageStory .storySpeaker,
+.fwm #pageStory .storyText{
+  text-shadow: 0 1px 1px rgba(0,0,0,0.22);
+}
+body.fwm.tod-night .fwm #pageStory .storySpeaker,
+body.fwm.tod-night .fwm #pageStory .storyText,
+body.fwm.tod-dusk .fwm #pageStory .storySpeaker,
+body.fwm.tod-dusk .fwm #pageStory .storyText{
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+
+/* Nav row: keep icons horizontal; allow horizontal scroll on small screens */
+.fwm .navRow{
+  display:flex;
+  flex-wrap:nowrap;
+  gap:10px;
+  padding:6px 2px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* =====================
+   Right column shell
+   =====================
+   Keep navigation at the top and frame all pages inside a single
+   scrollable viewport underneath it.
+*/
+.fwm #paneGame{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.fwm #pageViewport.pageViewport{
+  flex: 1 1 auto;
+  min-height: 0; /* critical for scrolling inside flex */
+  overflow: auto;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgb(var(--ui-viewport-rgb) / var(--ui-viewport-a));
+  box-shadow: var(--ui-viewport-shadow);
+}
+
+.fwm #pageViewport .page{ width:100%; }
+
+/* =====================
+   Wiki (Framework-docs styling)
+   ===================== */
+
+.fwm .wikiApp{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+.fwm .wikiHeader{
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgb(var(--ui-header-rgb) / var(--ui-header-a));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 1px 0 rgba(15,23,42,0.06) inset,
+    0 14px 28px rgba(15,23,42,0.08);
+}
+
+.fwm .wikiHeaderTop{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fwm .wikiBack{
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+}
+
+.fwm .wikiTitle{
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: 16px;
+}
+
+.fwm .wikiHeaderSpacer{ flex: 1; }
+
+.fwm .wikiSearch{
+  flex: 1;
+  min-width: 220px;
+  height: 38px;
+  border-radius: 12px;
+  padding: 0 12px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.75);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.08) inset;
+}
+body.fwm.tod-night .fwm .wikiSearch,
+body.fwm.tod-dusk .fwm .wikiSearch{
+  background: rgba(2,6,23,0.55);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset;
+  color: rgba(241,245,249,0.95);
+}
+
+.fwm .wikiFocusBtn{
+  height: 38px;
+  border-radius: 12px;
+  padding: 0 12px;
+}
+.fwm .wikiFocusBtn.active{
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(15,23,42,0.10) inset,
+    0 10px 18px rgba(15,23,42,0.14);
+}
+
+.fwm .wikiCatRow{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.fwm .wikiChip{
+  display:inline-flex;
+  align-items:center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: none;
+  background: rgba(255,255,255,0.60);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.08) inset;
+  cursor: pointer;
+}
+body.fwm.tod-night .fwm .wikiChip,
+body.fwm.tod-dusk .fwm .wikiChip{
+  background: rgba(2,6,23,0.45);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.12) inset;
+  color: rgba(241,245,249,0.92);
+}
+
+.fwm .wikiChip.active{
+  background: rgba(59,130,246,0.18);
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.40) inset;
+}
+
+.fwm .wikiMain{
+  display:grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 12px;
+  align-items:start;
+}
+
+.fwm .wikiSidebar{
+  position: sticky;
+  top: 110px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+  border-radius: 18px;
+  padding: 10px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.07) inset;
+}
+body.fwm.tod-night .fwm .wikiSidebar,
+body.fwm.tod-dusk .fwm .wikiSidebar{
+  background: rgba(2,6,23,0.38);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset;
+}
+
+.fwm .wikiSectionHeader{
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  padding: 10px 10px 6px;
+}
+
+.fwm .wikiItem{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select:none;
+}
+
+.fwm .wikiItem:hover{
+  background: rgba(59,130,246,0.10);
+}
+
+.fwm .wikiItem.active{
+  background: rgba(59,130,246,0.16);
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.32) inset;
+}
+
+.fwm .wikiCaret,
+.fwm .wikiCaretSpacer{
+  width: 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.fwm .wikiItemTitle{
+  font-size: 13px;
+  line-height: 1.2;
+  flex: 1;
+}
+
+.fwm .wikiContent{
+  border-radius: 18px;
+  padding: 16px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.fwm .wikiBody{
+  max-width: 880px;
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.fwm .wikiBody h1{
+  font-size: 28px;
+  letter-spacing: -0.03em;
+  margin: 6px 0 14px;
+}
+.fwm .wikiBody h2{
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin: 18px 0 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(15,23,42,0.10);
+}
+body.fwm.tod-night .fwm .wikiBody h2,
+body.fwm.tod-dusk .fwm .wikiBody h2{
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+.fwm .wikiBody h3{
+  font-size: 15px;
+  margin: 14px 0 8px;
+}
+
+.fwm .wikiBody p{ margin: 10px 0; }
+.fwm .wikiBody ul{ margin: 10px 0 10px 20px; }
+.fwm .wikiBody li{ margin: 6px 0; }
+
+.fwm .wikiLink{
+  color: rgba(59,130,246,0.95);
+  font-weight: 400;
+  cursor: pointer;
+}
+.fwm .wikiLink:hover{ text-decoration: underline; }
+
+.fwm .wikiBody code{
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.92em;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(15,23,42,0.06);
+}
+body.fwm.tod-night .fwm .wikiBody code,
+body.fwm.tod-dusk .fwm .wikiBody code{
+  background: rgba(255,255,255,0.08);
+}
+
+.fwm .wikiCode{
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: rgba(2,6,23,0.88);
+  color: rgba(241,245,249,0.95);
+  overflow: auto;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+.fwm .wikiCode code{
+  background: transparent !important;
+  padding: 0;
+  color: inherit;
+}
+
+.fwm .wikiBody blockquote{
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-left: 4px solid rgba(59,130,246,0.55);
+  background: rgba(59,130,246,0.08);
+  border-radius: 12px;
+}
+
+.fwm .wikiTable{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.08) inset;
+}
+body.fwm.tod-night .fwm .wikiTable,
+body.fwm.tod-dusk .fwm .wikiTable{
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset;
+}
+.fwm .wikiTable th,
+.fwm .wikiTable td{
+  padding: 10px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.fwm .wikiTable thead th{
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  background: rgba(15,23,42,0.04);
+}
+body.fwm.tod-night .fwm .wikiTable thead th,
+body.fwm.tod-dusk .fwm .wikiTable thead th{
+  background: rgba(255,255,255,0.06);
+}
+.fwm .wikiTable tbody tr:nth-child(even){
+  background: rgba(15,23,42,0.03);
+}
+body.fwm.tod-night .fwm .wikiTable tbody tr:nth-child(even),
+body.fwm.tod-dusk .fwm .wikiTable tbody tr:nth-child(even){
+  background: rgba(255,255,255,0.04);
+}
+
+@media (max-width: 860px){
+  .fwm .wikiMain{ grid-template-columns: 1fr; }
+  .fwm .wikiSidebar{ position: relative; top: auto; max-height: none; }
+  .fwm .wikiContent{ padding: 14px; }
+  .fwm .wikiBody{ max-width: 100%; }
+}
+
+/* Nav buttons: subtle plates, not stark borders */
+.fwm .navBtn{
+  border:none !important;
+  background: rgba(255,255,255,0.55) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 1px 0 rgba(15,23,42,0.06) inset,
+    0 10px 24px rgba(15,23,42,0.10);
+
+  /* Keep the nav stable: prevent a large icon (e.g., story image) from blowing out the row */
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 20px;
+}
+body.fwm.tod-night .fwm .navBtn,
+body.fwm.tod-dusk .fwm .navBtn{
+  background: rgba(2,6,23,0.40) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* Nav icon sizing (prevents "only story shows" when the story icon is an <img>) */
+.fwm .navBtn .icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  font-size: 28px;
+}
+.fwm .navIconImg{
+  width: 34px;
+  height: 34px;
+  display:block;
+  object-fit: contain;
+}
+
+/* Subtle active emphasis without breaking layout */
+.fwm .navBtn.active{
+  transform: scale(1.08);
+}
+
+/* When the buttons get larger, give the row a little more breathing room */
+.fwm .navRow{ padding: 10px 2px; gap: 12px; }
+
+/* Generic buttons: quiet by default */
+.fwm button{
+  border:none !important;
+  box-shadow: 0 1px 0 rgba(15,23,42,0.06) inset;
+}
+
+/* =====================
+   Tier accents (inspectors + badges)
+===================== */
+/* Tier mapping: 1 Singular, 2 Unbounded, 3 Distorted, 4 Hazardous, 5 Reactive, 6 Stable */
+.fwm .tier-1{ --tier-accent: var(--tier-1); }
+.fwm .tier-2{ --tier-accent: var(--tier-2); }
+.fwm .tier-3{ --tier-accent: var(--tier-3); }
+.fwm .tier-4{ --tier-accent: var(--tier-4); }
+.fwm .tier-5{ --tier-accent: var(--tier-5); }
+.fwm .tier-6{ --tier-accent: var(--tier-6); }
+
+/* Tier badge pill */
+.fwm .tierBadge.tier-1,
+.fwm .tierBadge.tier-2,
+.fwm .tierBadge.tier-3,
+.fwm .tierBadge.tier-4,
+.fwm .tierBadge.tier-5,
+.fwm .tierBadge.tier-6{
+  display:inline-flex !important;
+  align-items:center;
+  height:20px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:.02em;
+  background:
+    radial-gradient(120% 120% at 28% 22%,
+      oklch(var(--tier-accent) / 0.26),
+      transparent 68%),
+    linear-gradient(135deg,
+      oklch(var(--tier-accent) / 0.16),
+      oklch(var(--tier-accent) / 0.10));
+  color: oklch(var(--tier-accent) / 1);
+  box-shadow: 0 0 0 1px oklch(var(--tier-accent) / 0.24) inset;
+}
+
+/* Inspector tier theming: accent strip + soft glow */
+.fwm .itemInspector.tier-1,
+.fwm .itemInspector.tier-2,
+.fwm .itemInspector.tier-3,
+.fwm .itemInspector.tier-4,
+.fwm .itemInspector.tier-5,
+.fwm .itemInspector.tier-6{
+  border:none !important;
+  /* Tier gradient background (vivid in light mode; matches icon tiles) */
+  background:
+    radial-gradient(140% 140% at 32% 18%,
+      color-mix(in oklch, var(--tier) 78%, white 22%) 0%,
+      color-mix(in oklch, var(--tier) 46%, transparent 54%) 55%,
+      transparent 72%),
+    linear-gradient(135deg,
+      color-mix(in oklch, var(--tier) 92%, white 8%) 0%,
+      color-mix(in oklch, var(--tier) 82%, black 18%) 100%),
+    linear-gradient(180deg,
+      rgba(255,255,255,0.28),
+      rgba(255,255,255,0.18));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.10) inset,
+    0 20px 50px rgba(15,23,42,0.18);
+
+}
+body.fwm.tod-night .fwm .itemInspector.tier-1,
+body.fwm.tod-dusk .fwm .itemInspector.tier-1,
+body.fwm.tod-night .fwm .itemInspector.tier-2,
+body.fwm.tod-dusk .fwm .itemInspector.tier-2,
+body.fwm.tod-night .fwm .itemInspector.tier-3,
+body.fwm.tod-dusk .fwm .itemInspector.tier-3,
+body.fwm.tod-night .fwm .itemInspector.tier-4,
+body.fwm.tod-dusk .fwm .itemInspector.tier-4,
+body.fwm.tod-night .fwm .itemInspector.tier-5,
+body.fwm.tod-dusk .fwm .itemInspector.tier-5,
+body.fwm.tod-night .fwm .itemInspector.tier-6,
+body.fwm.tod-dusk .fwm .itemInspector.tier-6{
+  background:
+    radial-gradient(140% 140% at 30% 18%,
+      color-mix(in oklch, var(--tier) 42%, black 58%) 0%,
+      color-mix(in oklch, var(--tier) 22%, transparent 78%) 55%,
+      transparent 72%),
+    linear-gradient(135deg,
+      rgba(2,6,23,0.78) 0%,
+      rgba(2,6,23,0.56) 100%),
+    rgba(2,6,23,0.72) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 22px 60px rgba(0,0,0,0.45);
+}
+
+/* =====================
+   Floating windows — open/close motion
+   Subtle scale + fade for a "premium HUD" feel.
+   Works with Tailwind's .hidden (display:none) by animating BEFORE we re-add .hidden.
+===================== */
+.fwm .itemInspector{
+  transform-origin: top left;
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(6px) scale(0.985);
+  transition:
+    opacity 140ms ease,
+    transform 160ms cubic-bezier(.2,.8,.2,1);
+}
+.fwm .itemInspector.open{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.fwm .itemInspector.closing{
+  opacity: 0;
+  transform: translateY(6px) scale(0.985);
+}
+@media (prefers-reduced-motion: reduce){
+  .fwm .itemInspector{ transition:none; transform:none; }
+}
+
+/* Attribute tiles: ensure icons inherit readable contrast (SVG uses currentColor). */
+.fwm .attrTile{ color: rgba(15,23,42,0.90); }
+body.fwm.tod-night .fwm .attrTile,
+body.fwm.tod-dusk .fwm .attrTile{ color: rgba(241,245,249,0.92); }
+.fwm .attrTileIcon svg{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+/* Inspector header: icon box on the LEFT; title row to the right; meta spans underneath */
+.fwm #itemInspector .inspectorHeaderGrid{
+  display:grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: start;
+}
+.fwm #itemInspector .inspectorHeaderGrid .inspectorTitleRow{
+  grid-column: 2;
+  grid-row: 1;
+}
+.fwm #itemInspector .inspectorHeaderGrid #inspectMeta{
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+
+/* =====================
+   Inspector content hierarchy (titles vs body)
+   - Meta (item type) acts as a section header
+   - Description + details are smaller body text
+   - "Found / Components / Requires / Upgrade" render as label + value stacks
+===================== */
+.fwm #itemInspector{
+  height: auto;
+  max-height: none;
+}
+
+.fwm #itemInspector .inspectorMeta--header{
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: .02em;
+  line-height: 1.15;
+}
+
+.fwm #itemInspector .inspectorDesc{
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+  margin-top: 10px;
+}
+
+.fwm #itemInspector .inspectorFound{
+  margin-top: 10px;
+}
+
+.fwm #itemInspector .inspectorFound .inspLabel{
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .02em;
+  line-height: 1.15;
+}
+
+.fwm #itemInspector .inspectorFound .inspValue{
+  margin-top: 4px;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.fwm #itemInspector .inspectorFound .inspSub{
+  margin-top: 4px;
+  font-size: 10.5px;
+  font-weight: 400;
+  line-height: 1.25;
+  opacity: 0.92;
+}
+
+/* Make sure legacy small/muted styles don't overpower the new hierarchy inside the inspector */
+.fwm #itemInspector .inspectorFound .muted,
+.fwm #itemInspector .inspectorFound .small{
+  font-weight: inherit;
+  font-size: inherit;
+  opacity: inherit;
+}
+
+/* =====================
+   Item inspector content polish
+   - Consistent vertical rhythm between meta/desc/details
+   - Better handling of multi-line descriptions
+===================== */
+.fwm #itemInspector .inspectorHeaderGrid{
+  row-gap: 8px;
+}
+
+.fwm #itemInspector .inspectorDesc{
+  white-space: pre-line;
+}
+
+.fwm #itemInspector .inspectorDesc,
+.fwm #itemInspector .inspectorFound{
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.fwm #itemInspector .inspectorFound{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fwm #itemInspector .inspectorFound .inspValue{
+  margin-top: 0;
+}
+
+
+/* =====================
+   Inspector text contrast (LIGHT MODE)
+   Keep the existing layout/UI; only adjust text and link colors so they read
+   cleanly on vivid tier backgrounds.
+===================== */
+body.fwm.tod-day .fwm #itemInspector,
+body.fwm.tod-dawn .fwm #itemInspector{
+  color: rgba(15,23,42,0.92);
+}
+
+body.fwm.tod-day .fwm #itemInspector .inspectorTitle,
+body.fwm.tod-dawn .fwm #itemInspector .inspectorTitle{
+  color: rgba(15,23,42,0.96);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+
+body.fwm.tod-day .fwm #itemInspector .inspectorMeta,
+body.fwm.tod-dawn .fwm #itemInspector .inspectorMeta{
+  color: rgba(15,23,42,0.78);
+  font-weight: 400;
+}
+
+body.fwm.tod-day .fwm #itemInspector .inspectorDesc,
+body.fwm.tod-dawn .fwm #itemInspector .inspectorDesc,
+body.fwm.tod-day .fwm #itemInspector .inspectorFound,
+body.fwm.tod-dawn .fwm #itemInspector .inspectorFound{
+  color: rgba(15,23,42,0.90);
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* Links inside the inspector (wiki cross-links, etc.) */
+body.fwm.tod-day .fwm #itemInspector a,
+body.fwm.tod-dawn .fwm #itemInspector a{
+  color: #0ea5e9;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+
+/* =====================
+   Inspector text contrast (LIGHT MODE) — tiers except Unbounded
+   Request: in light mode, use white text for tiered inspectors except tier-2 (Unbounded),
+   keeping the existing UI/layout unchanged.
+===================== */
+body.fwm.tod-day .fwm #itemInspector.tier-1,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1,
+body.fwm.tod-day .fwm #itemInspector.tier-3,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3,
+body.fwm.tod-day .fwm #itemInspector.tier-4,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4,
+body.fwm.tod-day .fwm #itemInspector.tier-5,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5,
+body.fwm.tod-day .fwm #itemInspector.tier-6,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6{
+  color: rgba(255,255,255,0.92);
+}
+
+body.fwm.tod-day .fwm #itemInspector.tier-1 .inspectorTitle,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 .inspectorTitle,
+body.fwm.tod-day .fwm #itemInspector.tier-3 .inspectorTitle,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 .inspectorTitle,
+body.fwm.tod-day .fwm #itemInspector.tier-4 .inspectorTitle,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 .inspectorTitle,
+body.fwm.tod-day .fwm #itemInspector.tier-5 .inspectorTitle,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 .inspectorTitle,
+body.fwm.tod-day .fwm #itemInspector.tier-6 .inspectorTitle,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 .inspectorTitle{
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+body.fwm.tod-day .fwm #itemInspector.tier-1 .inspectorMeta,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 .inspectorMeta,
+body.fwm.tod-day .fwm #itemInspector.tier-3 .inspectorMeta,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 .inspectorMeta,
+body.fwm.tod-day .fwm #itemInspector.tier-4 .inspectorMeta,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 .inspectorMeta,
+body.fwm.tod-day .fwm #itemInspector.tier-5 .inspectorMeta,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 .inspectorMeta,
+body.fwm.tod-day .fwm #itemInspector.tier-6 .inspectorMeta,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 .inspectorMeta{
+  color: rgba(255,255,255,0.86);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.30);
+}
+
+body.fwm.tod-day .fwm #itemInspector.tier-1 .inspectorDesc,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 .inspectorDesc,
+body.fwm.tod-day .fwm #itemInspector.tier-1 .inspectorFound,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 .inspectorFound,
+body.fwm.tod-day .fwm #itemInspector.tier-3 .inspectorDesc,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 .inspectorDesc,
+body.fwm.tod-day .fwm #itemInspector.tier-3 .inspectorFound,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 .inspectorFound,
+body.fwm.tod-day .fwm #itemInspector.tier-4 .inspectorDesc,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 .inspectorDesc,
+body.fwm.tod-day .fwm #itemInspector.tier-4 .inspectorFound,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 .inspectorFound,
+body.fwm.tod-day .fwm #itemInspector.tier-5 .inspectorDesc,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 .inspectorDesc,
+body.fwm.tod-day .fwm #itemInspector.tier-5 .inspectorFound,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 .inspectorFound,
+body.fwm.tod-day .fwm #itemInspector.tier-6 .inspectorDesc,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 .inspectorDesc,
+body.fwm.tod-day .fwm #itemInspector.tier-6 .inspectorFound,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 .inspectorFound{
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+}
+
+/* Ensure the label/value children inside inspectorFound inherit the same legibility shadow in tiered light-mode popups */
+body.fwm.tod-day .fwm #itemInspector.tier-1 .inspectorFound *,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 .inspectorFound *,
+body.fwm.tod-day .fwm #itemInspector.tier-3 .inspectorFound *,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 .inspectorFound *,
+body.fwm.tod-day .fwm #itemInspector.tier-4 .inspectorFound *,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 .inspectorFound *,
+body.fwm.tod-day .fwm #itemInspector.tier-5 .inspectorFound *,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 .inspectorFound *,
+body.fwm.tod-day .fwm #itemInspector.tier-6 .inspectorFound *,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 .inspectorFound *{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+}
+
+/* Links inside tiered inspectors (non-unbounded): keep readable by inheriting white */
+body.fwm.tod-day .fwm #itemInspector.tier-1 a,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 a,
+body.fwm.tod-day .fwm #itemInspector.tier-3 a,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 a,
+body.fwm.tod-day .fwm #itemInspector.tier-4 a,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 a,
+body.fwm.tod-day .fwm #itemInspector.tier-5 a,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 a,
+body.fwm.tod-day .fwm #itemInspector.tier-6 a,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 a{
+  color: rgba(255,255,255,0.98);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Tier pill text inside tiered inspectors (non-unbounded): white for clarity */
+body.fwm.tod-day .fwm #itemInspector.tier-1 .tierBadge,
+body.fwm.tod-dawn .fwm #itemInspector.tier-1 .tierBadge,
+body.fwm.tod-day .fwm #itemInspector.tier-3 .tierBadge,
+body.fwm.tod-dawn .fwm #itemInspector.tier-3 .tierBadge,
+body.fwm.tod-day .fwm #itemInspector.tier-4 .tierBadge,
+body.fwm.tod-dawn .fwm #itemInspector.tier-4 .tierBadge,
+body.fwm.tod-day .fwm #itemInspector.tier-5 .tierBadge,
+body.fwm.tod-dawn .fwm #itemInspector.tier-5 .tierBadge,
+body.fwm.tod-day .fwm #itemInspector.tier-6 .tierBadge,
+body.fwm.tod-dawn .fwm #itemInspector.tier-6 .tierBadge{
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.30);
+}
+
+/* Inspector header icon box (sits only beside the title + tier pill row) */
+.fwm #itemInspector .inspectIcon{
+  grid-column: 1;
+  grid-row: 1;
+  width:56px;
+  height:56px;
+  border-radius:18px;
+  padding:8px;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+  background:
+    radial-gradient(120% 120% at 32% 28%,
+      color-mix(in oklch, var(--tier) 78%, white 22%) 0%,
+      color-mix(in oklch, var(--tier) 46%, transparent 54%) 55%,
+      transparent 70%),
+    linear-gradient(135deg,
+      color-mix(in oklch, var(--tier) 92%, white 8%) 0%,
+      color-mix(in oklch, var(--tier) 82%, black 18%) 100%);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--tier) 28%, transparent 72%),
+    0 14px 26px rgba(0,0,0,0.12);
+}
+body.fwm.tod-night .fwm #itemInspector .inspectIcon,
+body.fwm.tod-dusk .fwm #itemInspector .inspectIcon{
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--tier) 20%, transparent 80%),
+    0 18px 40px rgba(0,0,0,0.46);
+}
+
+/* Remove the old decorative "rarity stripe" from the header.
+   The icon box now communicates tier, and this space is reserved visually for the header layout. */
+.fwm .itemInspector.tier-1 .inspectorHeader::before,
+.fwm .itemInspector.tier-2 .inspectorHeader::before,
+.fwm .itemInspector.tier-3 .inspectorHeader::before,
+.fwm .itemInspector.tier-4 .inspectorHeader::before,
+.fwm .itemInspector.tier-5 .inspectorHeader::before,
+.fwm .itemInspector.tier-6 .inspectorHeader::before{
+  content: none;
+}
+
+
+
+/* =====================
+   Inspector actions layout
+   - Buttons sit side-by-side when space allows
+   - Wrap to a second line when needed
+   - Add breathing room above the actions
+   - Keep lock/trash aligned with primary buttons when possible
+===================== */
+.fwm #itemInspector .inspectorActions{
+  margin-top: 10px;
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Promote nested action groups' buttons into the same wrap flow */
+.fwm #itemInspector .inspectorActions .inspectGadgetActions:not([hidden]),
+.fwm #itemInspector .inspectorActions #inspectCabinetActions:not([hidden]){
+  display: contents;
+}
+
+/* Main action buttons share width; icon buttons stay compact */
+.fwm #itemInspector .inspectorActions button:not(.iconBtn){
+  flex: 1 1 150px;
+  min-width: 150px;
+}
+
+/* Inspector icon buttons: consistent square hit-area */
+.fwm #itemInspector .inspectorActions .iconBtn{
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+
+/* Lock + delete live on the SAME row as primary actions when there's room.
+   On narrow widths, they'll wrap naturally underneath. */
+.fwm #itemInspector .inspectorActions .inspectorIconRow--bottom{
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
+}
+
+
+/* =====================
+   Store confirm windows (Sell / Sell Multiple)
+   Replace browser confirm/prompt with an in-game modal.
+===================== */
+.fwm .actionOverlay{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  z-index: 11000;
+}
+.fwm .actionBackdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+}
+.fwm .actionModal{
+  position: relative;
+  z-index: 1;
+  width: min(560px, 96%);
+  border-radius: 22px;
+  padding: 14px;
+  border: 1px solid rgba(148,163,184,0.18);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.28);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* Tier background for action modals: match the vivid tile/inspector gradients. */
+.fwm .actionModal.tier-1,
+.fwm .actionModal.tier-2,
+.fwm .actionModal.tier-3,
+.fwm .actionModal.tier-4,
+.fwm .actionModal.tier-5,
+.fwm .actionModal.tier-6{
+  background:
+    radial-gradient(140% 140% at 32% 18%,
+      color-mix(in oklch, var(--tier) 78%, white 22%) 0%,
+      color-mix(in oklch, var(--tier) 46%, transparent 54%) 55%,
+      transparent 72%),
+    linear-gradient(135deg,
+      color-mix(in oklch, var(--tier) 92%, white 8%) 0%,
+      color-mix(in oklch, var(--tier) 82%, black 18%) 100%),
+    linear-gradient(180deg,
+      rgba(255,255,255,0.22),
+      rgba(255,255,255,0.14));
+}
+body.fwm.tod-night .fwm .actionModal.tier-1,
+body.fwm.tod-dusk .fwm .actionModal.tier-1,
+body.fwm.tod-night .fwm .actionModal.tier-2,
+body.fwm.tod-dusk .fwm .actionModal.tier-2,
+body.fwm.tod-night .fwm .actionModal.tier-3,
+body.fwm.tod-dusk .fwm .actionModal.tier-3,
+body.fwm.tod-night .fwm .actionModal.tier-4,
+body.fwm.tod-dusk .fwm .actionModal.tier-4,
+body.fwm.tod-night .fwm .actionModal.tier-5,
+body.fwm.tod-dusk .fwm .actionModal.tier-5,
+body.fwm.tod-night .fwm .actionModal.tier-6,
+body.fwm.tod-dusk .fwm .actionModal.tier-6{
+  background:
+    radial-gradient(140% 140% at 30% 18%,
+      color-mix(in oklch, var(--tier) 42%, black 58%) 0%,
+      color-mix(in oklch, var(--tier) 22%, transparent 78%) 55%,
+      transparent 72%),
+    linear-gradient(135deg,
+      rgba(2,6,23,0.78) 0%,
+      rgba(2,6,23,0.56) 100%),
+    rgba(2,6,23,0.72);
+}
+
+/* Light-mode contrast: white text for tiered action modals except Unbounded (tier-2). */
+body.fwm.tod-day .fwm .actionModal.tier-1,
+body.fwm.tod-dawn .fwm .actionModal.tier-1,
+body.fwm.tod-day .fwm .actionModal.tier-3,
+body.fwm.tod-dawn .fwm .actionModal.tier-3,
+body.fwm.tod-day .fwm .actionModal.tier-4,
+body.fwm.tod-dawn .fwm .actionModal.tier-4,
+body.fwm.tod-day .fwm .actionModal.tier-5,
+body.fwm.tod-dawn .fwm .actionModal.tier-5,
+body.fwm.tod-day .fwm .actionModal.tier-6,
+body.fwm.tod-dawn .fwm .actionModal.tier-6{
+  color: rgba(255,255,255,0.94);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+}
+body.fwm.tod-day .fwm .actionModal.tier-2,
+body.fwm.tod-dawn .fwm .actionModal.tier-2{
+  color: rgba(15,23,42,0.92);
+  text-shadow: none;
+}
+
+.fwm .actionHeader{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.fwm .actionTitle{ font-size: 16px; letter-spacing: -0.01em; }
+.fwm .actionCloseBtn{
+  height: 34px;
+  width: 34px;
+  border-radius: 14px;
+  border: 1px solid rgba(148,163,184,0.22);
+  background: rgba(255,255,255,0.10);
+  color: inherit;
+}
+.fwm .actionBody{ margin-top: 10px; display:flex; flex-direction:column; gap:10px; }
+.fwm .actionRow{ display:flex; align-items:center; gap:12px; }
+.fwm .actionTileWrap{ flex: 0 0 auto; }
+.fwm .actionModal .fwm-tile{ --tile-size: 84px; }
+.fwm .actionText{ flex: 1 1 auto; min-width: 200px; display:flex; flex-direction:column; gap:6px; }
+.fwm .actionItemName{ opacity: 0.98; }
+.fwm .actionLabel{ font-size: 12px; opacity: 0.86; }
+.fwm .actionQtyBlock{ margin-top: 2px; display:flex; flex-direction:column; gap:8px; }
+.fwm .actionLine{ opacity: 0.92; }
+.fwm .actionMeta{ opacity: 0.82; font-size: 12px; line-height: 1.3; }
+.fwm .actionTotal{ font-size: 13px; opacity: 0.92; }
+
+.fwm .actionQtyRow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+/* =====================
+   Store Sell — "Battery" energy-bar slider
+   - Range input is invisible (for accessibility + keyboard),
+     while a segmented HUD track shows the value.
+===================== */
+.fwm .energyBar{
+  flex: 1 1 240px;
+  position: relative;
+  height: 38px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.10);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.10) inset,
+    0 10px 20px rgba(15,23,42,0.10);
+}
+body.fwm.tod-day .fwm .actionModal.tier-2 .energyBar,
+body.fwm.tod-dawn .fwm .actionModal.tier-2 .energyBar{
+  border: 1px solid rgba(15,23,42,0.18);
+  background: rgba(15,23,42,0.05);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.08) inset,
+    0 10px 20px rgba(15,23,42,0.08);
+}
+.fwm .energyBar:focus-within{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.16) inset,
+    0 0 0 3px rgba(255,255,255,0.10),
+    0 10px 20px rgba(15,23,42,0.10);
+}
+body.fwm.tod-day .fwm .actionModal.tier-2 .energyBar:focus-within,
+body.fwm.tod-dawn .fwm .actionModal.tier-2 .energyBar:focus-within{
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.12) inset,
+    0 0 0 3px rgba(15,23,42,0.10),
+    0 10px 20px rgba(15,23,42,0.08);
+}
+
+.fwm .energyBar .batterySegments{
+  position:absolute;
+  inset: 6px;
+  display:grid;
+  grid-template-columns: repeat(var(--segs, 20), 1fr);
+  gap: 3px;
+  pointer-events:none;
+}
+.fwm .energyBar .batterySegments .seg{
+  border-radius: 7px;
+  /* Unlit cells should read as neutral "battery casing", not energy. */
+  background: rgba(148,163,184,0.22);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.10) inset,
+    0 1px 0 rgba(255,255,255,0.18) inset;
+}
+body.fwm.tod-night .fwm .energyBar .batterySegments .seg,
+body.fwm.tod-dusk .fwm .energyBar .batterySegments .seg{
+  background: rgba(148,163,184,0.10);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 1px 0 rgba(255,255,255,0.06) inset;
+}
+
+
+
+/* Battery segments: intentionally "radioactive" green for strong game-HUD energy.
+   Use a fixed color so it pops in both light and dark mode (and doesn't depend on tier vars).
+*/
+.fwm .energyBar{
+  --energy: oklch(64.8% 0.2 131.684);
+}
+
+.fwm .energyBar .batterySegments .seg.on{
+  background: linear-gradient(180deg,
+    color-mix(in oklch, var(--energy) 92%, white 8%),
+    color-mix(in oklch, var(--energy) 88%, black 12%));
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--energy) 64%, transparent 36%) inset,
+    0 10px 22px color-mix(in oklch, var(--energy) 44%, transparent 56%);
+}
+
+body.fwm.tod-night .fwm .energyBar .batterySegments .seg.on,
+body.fwm.tod-dusk .fwm .energyBar .batterySegments .seg.on{
+  background: linear-gradient(180deg,
+    color-mix(in oklch, var(--energy) 96%, white 4%),
+    color-mix(in oklch, var(--energy) 90%, black 10%));
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--energy) 70%, transparent 30%) inset,
+    0 12px 26px color-mix(in oklch, var(--energy) 52%, transparent 48%);
+}
+.fwm .energyBar .energyThumb{
+  position:absolute;
+  top: 50%;
+  /* Prefer exact pixel snapping to the center of a segment (set by JS). */
+  left: var(--thumbX, calc(var(--p, 0) * 1%));
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--energy) 76%, white 24%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.30) inset,
+    0 10px 24px color-mix(in oklch, var(--energy) 48%, transparent 52%);
+  pointer-events:none;
+}
+/* Keep the energy HUD consistent across tiers (no special-casing in light mode). */
+
+.fwm .energyBar input.energyRange{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+}
+.fwm .actionQtyRow input[type="number"]{
+  width: 92px;
+  background: transparent;
+  color: inherit;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.22);
+  padding: 10px 12px;
+  line-height: 1;
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset;
+  -webkit-appearance: none;
+  appearance: none;
+}
+body.fwm.tod-day .fwm .actionModal.tier-2 .actionQtyRow input[type="number"],
+body.fwm.tod-dawn .fwm .actionModal.tier-2 .actionQtyRow input[type="number"]{
+  border: 1px solid rgba(15,23,42,0.22);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.10) inset;
+}
+.fwm .actionQtyRow input[type="number"]:focus{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.18) inset,
+    0 0 0 3px rgba(255,255,255,0.10);
+}
+body.fwm.tod-day .fwm .actionModal.tier-2 .actionQtyRow input[type="number"]:focus,
+body.fwm.tod-dawn .fwm .actionModal.tier-2 .actionQtyRow input[type="number"]:focus{
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.18) inset,
+    0 0 0 3px rgba(15,23,42,0.10);
+}
+
+.fwm .actionError{
+  font-size: 12px;
+  line-height: 1.25;
+  padding: 6px 0 2px;
+  color: color-mix(in oklch, oklch(58% 0.22 27.518) 92%, white 8%);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+}
+body.fwm.tod-day .fwm .actionModal.tier-2 .actionError,
+body.fwm.tod-dawn .fwm .actionModal.tier-2 .actionError{
+  color: color-mix(in oklch, oklch(52% 0.21 27.518) 88%, black 12%);
+  text-shadow: none;
+}
+
+.fwm .actionActions{
+  margin-top: 12px;
+  padding-top: 10px;
+  display:flex;
+  gap: 8px;
+  justify-content:flex-end;
+  flex-wrap: wrap;
+}
+.fwm .actionActions button{ flex: 1 1 160px; min-width: 160px; }
+.fwm .actionActions button{
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.10);
+  color: inherit;
+  transition: transform 140ms cubic-bezier(.2,.8,.2,1), filter 140ms ease, box-shadow 140ms ease;
+}
+@media (hover:hover){
+  .fwm .actionActions button:hover{ transform: translateY(-1px) scale(1.01); filter: brightness(1.05); }
+}
+.fwm .actionActions button.isDisabled,
+.fwm .actionActions button:disabled{
+  opacity: 0.55;
+  filter: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.fwm .actionActions button.actionCancel{
+  --btn: oklch(50.5% 0.213 27.518);
+  background: linear-gradient(135deg,
+      color-mix(in oklch, var(--btn) 92%, white 8%) 0%,
+      color-mix(in oklch, var(--btn) 76%, black 24%) 100%);
+  border-color: color-mix(in oklch, var(--btn) 50%, white 50%);
+  color: rgba(255,255,255,0.95);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.32);
+}
+
+.fwm .actionActions button.actionConfirm{
+  --btn: oklch(68.1% 0.162 75.834);
+  background: linear-gradient(135deg,
+      color-mix(in oklch, var(--btn) 92%, white 8%) 0%,
+      color-mix(in oklch, var(--btn) 78%, black 22%) 100%);
+  border-color: color-mix(in oklch, var(--btn) 55%, white 45%);
+  color: rgba(15,23,42,0.92);
+  text-shadow: none;
+}
+
+/* Light mode: make tiered action modals readable with white text (except tier-2). */
+body.fwm.tod-day .fwm .actionModal.tier-1,
+body.fwm.tod-dawn .fwm .actionModal.tier-1,
+body.fwm.tod-day .fwm .actionModal.tier-3,
+body.fwm.tod-dawn .fwm .actionModal.tier-3,
+body.fwm.tod-day .fwm .actionModal.tier-4,
+body.fwm.tod-dawn .fwm .actionModal.tier-4,
+body.fwm.tod-day .fwm .actionModal.tier-5,
+body.fwm.tod-dawn .fwm .actionModal.tier-5,
+body.fwm.tod-day .fwm .actionModal.tier-6,
+body.fwm.tod-dawn .fwm .actionModal.tier-6{
+  color: rgba(255,255,255,0.94);
+}
+body.fwm.tod-day .fwm .actionModal.tier-2,
+body.fwm.tod-dawn .fwm .actionModal.tier-2{
+  color: rgba(15,23,42,0.92);
+}
+
+/* Motion: match inspector's subtle open/close */
+.fwm .actionModal{ opacity: 0; transform: translateY(6px) scale(0.985); transition: opacity 140ms ease, transform 160ms cubic-bezier(.2,.8,.2,1); }
+.fwm .actionModal.open{ opacity: 1; transform: translateY(0) scale(1); }
+.fwm .actionModal.closing{ opacity: 0; transform: translateY(6px) scale(0.985); }
+
+/* =====================
+   Icon sizing fixes
+===================== */
+
+/* Player avatar in the left column header */
+.fwm .avatarFrame{
+  /* Happy medium: larger than the small fix, but not the old "huge" avatar */
+  width:72px;
+  height:72px;
+  border-radius:22px;
+  overflow:hidden;
+  background: rgba(255,255,255,0.45);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.10) inset,
+    0 14px 32px rgba(15,23,42,0.14);
+}
+body.fwm.tod-night .fwm .avatarFrame,
+body.fwm.tod-dusk .fwm .avatarFrame{
+  background: rgba(2,6,23,0.32);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 18px 44px rgba(0,0,0,0.45);
+}
+.fwm .avatarImg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 35%;
+}
+
+/* Attribute tiles */
+.fwm .attrTilesGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+.fwm .attrTile{
+  position:relative;
+  overflow:hidden;
+  min-height:64px;
+  aspect-ratio:1 / 1;
+  border-radius:18px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.10) inset;
+}
+body.fwm.tod-night .fwm .attrTile,
+body.fwm.tod-dusk .fwm .attrTile{
+  background: rgba(2,6,23,0.32);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+/* Icon should fill the tile like a background (but still centered & readable). */
+.fwm .attrTileIcon{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:10px;
+  opacity:0.98;
+  z-index:1;
+  pointer-events:none;
+}
+.fwm .attrSvg,
+.fwm .attrTileIcon img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* Training crosshair: top-right, always clickable */
+.fwm .trainTarget{
+  position:absolute;
+  top:6px;
+  right:6px;
+  z-index:3;
+  font-weight:400;
+  font-size:14px;
+  line-height:1;
+  padding:4px 6px;
+  border-radius:999px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.10) inset;
+  user-select:none;
+}
+body.fwm.tod-night .fwm .trainTarget,
+body.fwm.tod-dusk .fwm .trainTarget{
+  background: rgba(2,6,23,0.45);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+.fwm .trainTarget.active{
+  box-shadow: 0 0 0 1px rgba(56,189,248,0.45) inset, 0 0 0 2px rgb(var(--fwm-sky) / 0.18);
+}
+
+/* Level badge: bottom-right, above the icon */
+.fwm .attrTileLevel{
+  position:absolute;
+  right:6px;
+  bottom:6px;
+  z-index:3;
+  font-weight:400;
+  font-size:12px;
+  line-height:1;
+  padding:4px 7px;
+  border-radius:999px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.10) inset;
+  opacity:0.95;
+}
+body.fwm.tod-night .fwm .attrTileLevel,
+body.fwm.tod-dusk .fwm .attrTileLevel{
+  background: rgba(2,6,23,0.45);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+@media (max-width:520px){
+  .fwm .avatarFrame{width:62px;height:62px;border-radius:20px}
+  .fwm .attrTile{min-height:60px;aspect-ratio:1 / 1}
+  .fwm .attrTileIcon{padding:9px}
+  .fwm .trainTarget{top:5px;right:5px}
+  .fwm .attrTileLevel{right:5px;bottom:5px}
+}
+
+/* =====================
+   Player bars (HP / Oxygen)
+===================== */
+
+.fwm .hpRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+}
+
+.fwm .hpLabel{
+  width:34px;
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:-0.01em;
+  opacity:0.80;
+}
+
+.fwm .hpBar{
+  position:relative;
+  flex:1;
+  height:10px;
+  border-radius:999px;
+  overflow:hidden;
+  background: rgba(255,255,255,0.38);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.10) inset,
+    0 1px 0 rgba(255,255,255,0.35);
+}
+body.fwm.tod-night .fwm .hpBar,
+body.fwm.tod-dusk .fwm .hpBar{
+  background: rgba(2,6,23,0.32);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 1px 0 rgba(255,255,255,0.06);
+}
+
+.fwm .hpFill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  transition: width 200ms ease, background-color 200ms ease;
+}
+
+.fwm .hpText{
+  min-width:72px;
+  text-align:right;
+  font-size:12px;
+  font-weight:400;
+  opacity:0.78;
+}
+
+/* Bring HP + Oxygen closer together */
+.fwm .oxygenRow{ margin-top:6px; }
+
+/* Breathe button lives on its own line under Oxygen */
+.fwm .breatheRow{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:6px;
+}
+
+.fwm .breatheBtn{
+  /* Invisible button: keep the text hard-right aligned with the other right-aligned stats */
+  display:block;
+  margin-left:auto;
+  padding:8px 0;
+  border-radius:12px;
+  text-align:right;
+  box-shadow:none;
+  border:none;
+}
+
+/* =====================
+   Left column alignment + mini UI polish
+===================== */
+
+
+/* Panel toggle text contrast (fixes dark-mode Inventory heading) */
+.fwm .panelToggle{ color: rgb(var(--ui-text-rgb)); }
+
+/* Consistent header alignment inside collapsible panels */
+.fwm .panelToggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-align:left;
+}
+.fwm .panelToggleLeft{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
+}
+.fwm .panelToggleRight{ display:flex; align-items:center; }
+
+/* Hide left-column subtitles the user doesn't want, but keep the DOM nodes for JS */
+.fwm .invSubtitle,
+.fwm .quickSubtitle{ display:none; }
+
+/* Mini inventory slots (including empty placeholders) */
+.fwm .miniSlot{
+  position:relative;
+  height:56px;
+  border-radius:18px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(15,23,42,0.10);
+  background: rgba(255,255,255,0.45);
+  box-shadow:
+    0 1px 0 rgba(15,23,42,0.06) inset,
+    0 10px 24px rgba(15,23,42,0.10);
+}
+body.fwm.tod-night .fwm .miniSlot,
+body.fwm.tod-dusk .fwm .miniSlot{
+  border-color:rgba(148,163,184,0.14);
+  background: rgba(2,6,23,0.26);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 12px 30px rgba(0,0,0,0.35);
+}
+.fwm .miniSlot.is-empty{
+  background: rgba(255,255,255,0.22);
+  border-style:dashed;
+  opacity:0.70;
+}
+body.fwm.tod-night .fwm .miniSlot.is-empty,
+body.fwm.tod-dusk .fwm .miniSlot.is-empty{
+  background: rgba(2,6,23,0.18);
+}
+
+.fwm .miniSymbol{
+  font-weight:400;
+  font-size:18px;
+  line-height:1;
+}
+.fwm .miniCount{
+  position:absolute;
+  top:6px;
+  right:8px;
+  font-weight:400;
+  font-size:11px;
+  opacity:0.85;
+}
+
+/* History: two-column list with breathing room */
+.fwm .historyList{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.fwm .historyItem{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap:12px;
+  align-items:baseline;
+  padding:6px 0;
+  border-bottom:1px solid rgba(15,23,42,0.08);
+}
+body.fwm.tod-night .fwm .historyItem,
+body.fwm.tod-dusk .fwm .historyItem{
+  border-bottom-color:rgba(148,163,184,0.10);
+}
+.fwm .historyKey{ opacity:0.78; font-weight:400; }
+.fwm .historyValue{ text-align:right; font-weight:400; }
+
+/* HP color states (set by JS on #hpFill) */
+.fwm .hpFill.hpGood{ background: linear-gradient(90deg, oklch(var(--hp-high) / 0.95), oklch(var(--hp-high) / 0.65)); }
+.fwm .hpFill.hpWarn{ background: linear-gradient(90deg, oklch(var(--hp-mid) / 0.95), oklch(var(--hp-mid) / 0.65)); }
+.fwm .hpFill.hpDanger{ background: linear-gradient(90deg, oklch(var(--hp-low) / 0.95), oklch(var(--hp-low) / 0.65)); }
+
+/* Oxygen: deep sky blue (cool + calming) */
+.fwm .oxygenFill{
+  background: linear-gradient(90deg, rgba(0,191,255,0.92), rgba(56,189,248,0.55));
+}
+
+
+
+/* -------------------------------------------------
+   Dev drafting controls (Wiki)
+   ------------------------------------------------- */
+.fwm .wikiPublishBtn,
+.fwm .wikiClearSceneBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 14px;
+  border: 1px solid oklch(var(--border) / 0.9);
+  background: oklch(var(--panel) / 0.9);
+  color: oklch(var(--text) / 1);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 2px 10px oklch(0% 0 0 / 0.08);
+}
+
+.fwm .wikiPublishBtn:hover{ box-shadow: 0 4px 16px oklch(0% 0 0 / 0.12); }
+.fwm .wikiClearSceneBtn{ background: oklch(var(--tier-1) / 0.08); border-color: oklch(var(--tier-1) / 0.25); }
+.fwm .wikiPublishBtn{ background: oklch(var(--tier-4) / 0.08); border-color: oklch(var(--tier-4) / 0.25); }
+
+body.fwm.tod-night .fwm .wikiPublishBtn,
+body.fwm.tod-dusk .fwm .wikiPublishBtn,
+body.fwm.tod-night .fwm .wikiClearSceneBtn,
+body.fwm.tod-dusk .fwm .wikiClearSceneBtn{
+  box-shadow: 0 2px 12px oklch(0% 0 0 / 0.35);
+}
+
+.fwm .wikiNewDraftSceneBtn,
+.fwm .wikiEditDevPageBtn,
+.fwm .wikiDeleteDevPageBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 14px;
+  border: 1px solid oklch(var(--border) / 0.9);
+  background: oklch(var(--panel) / 0.9);
+  color: oklch(var(--text) / 1);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 2px 10px oklch(0% 0 0 / 0.08);
+}
+
+.fwm .wikiNewDraftSceneBtn{
+  background: oklch(var(--tier-5) / 0.10);
+  border-color: oklch(var(--tier-5) / 0.25);
+}
+
+.fwm .wikiEditDevPageBtn{
+  background: oklch(var(--tier-2) / 0.10);
+  border-color: oklch(var(--tier-2) / 0.25);
+}
+
+.fwm .wikiDeleteDevPageBtn{
+  background: oklch(var(--tier-1) / 0.10);
+  border-color: oklch(var(--tier-1) / 0.25);
+}
+
+.fwm .wikiDevBar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin: 4px 0 12px;
+}
+
+.fwm .wikiTinyTag{
+  display:inline-flex;
+  align-items:center;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid oklch(var(--border) / 0.8);
+  background: oklch(var(--panel) / 0.85);
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.fwm .wikiDevEditor{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.fwm .wikiDevEditorTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.fwm .wikiDevEditorTitle{
+  font-weight: 400;
+  opacity: 0.92;
+}
+
+.fwm .wikiDevEditorBtns{
+  display:flex;
+  gap:10px;
+}
+
+.fwm .wikiDevTextarea{
+  width:100%;
+  min-height: 420px;
+  resize: vertical;
+  padding: 12px 12px;
+  border-radius: 16px;
+  border: 1px solid oklch(var(--border) / 0.9);
+  background: oklch(var(--panel) / 0.92);
+  color: oklch(var(--text) / 1);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.fwm .wikiDevEditorFoot{
+  margin-top: -2px;
+}
+
+
+/* =========================================================
+   Icon Tile System (Unified)
+   ========================================================= */
+
+
+.fwm{
+  /* Global icon tile size (most grids). */
+  --tile-size: 92px;
+  --tile-radius: 20px;
+  --tile-gap: 10px;
+  --tile-border: rgba(15,23,42,0.12);
+  --tile-shadow: 0 10px 24px rgba(15,23,42,0.12);
+  --tile-fg: rgba(255,255,255,0.94);
+
+  /* Badge (extra info text) styling */
+  --badge-fg: rgba(255,255,255,0.96);
+  --badge-shadow: rgba(0,0,0,0.75);
+  /* Default badge shadow stack ("premium HUD" readability). Override per tier if needed. */
+  --badge-textshadow:
+    0 1px 0 rgba(0,0,0,0.35),
+    0 3px 10px var(--badge-shadow),
+    0 0 2px rgba(0,0,0,0.85);
+  /* "Premium HUD" micro-typography for counts/prices */
+  --badge-inset: 7px;
+  --badge-size: clamp(11px, calc(var(--tile-size) * 0.13), 14px);
+  --badge-weight: 400;
+  --badge-track: -0.03em;
+}
+body.fwm.tod-night .fwm,
+body.fwm.tod-dusk .fwm{
+  /* Reduce bright edging in dark mode (prevents a "faint white border"). */
+  --tile-border: rgba(255,255,255,0.10);
+  --tile-shadow: 0 14px 34px rgba(0,0,0,0.35);
+  --tile-fg: rgba(255,255,255,0.94);
+
+  /* Badge readability in dark mode */
+  --badge-fg: rgba(255,255,255,0.96);
+  --badge-shadow: rgba(0,0,0,0.85);
+}
+
+/* Equipment + toolbelt tiles should stay a bit tighter than the rest. */
+.fwm .equipGrid{
+  --tile-size: 80px;
+  --badge-inset: 6px;
+  --badge-size: 11px;
+}
+
+/* Icon containers */
+.fwm .storeGrid,
+.fwm .grid16,
+.fwm .miniGrid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--tile-gap);
+  align-items:flex-start;
+  justify-content:flex-start;
+}
+
+/* =====================
+   Store page spacing polish
+   - Make sections breathe a little more
+   - Keep spacing uniform without touching HTML
+===================== */
+.fwm #pageStore.page.active{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Kill the few inline row margins on the Store page so the gap system stays consistent */
+.fwm #pageStore .row{
+  margin: 0 !important;
+}
+.fwm #pageStore .row[style*="margin-top"]{
+  margin-top: 0 !important;
+}
+
+.fwm #pageStore .storeGrid{
+  padding-top: 2px;
+}
+
+.fwm #pageStore .storeSellWrap .title{
+  margin-bottom: 4px !important;
+}
+
+/* =====================
+   A1 Storekeeper Card (Store-only)
+   - A small, persistent character presence at the top of the Store page
+===================== */
+.fwm .a1Card{
+  padding: 12px 14px;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fwm .a1Top{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+
+.fwm .a1-holo-gradient{
+  background: var(--a1-holo-bg);
+}
+body.fwm.tod-night .fwm .a1-holo-gradient,
+body.fwm.tod-dusk .fwm .a1-holo-gradient{
+  background: var(--a1-holo-bg-dark);
+}
+
+.fwm .a1Portrait{
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  flex: 0 0 auto;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.10) inset,
+    0 12px 22px rgba(15,23,42,0.10);
+  background: var(--a1-holo-bg);
+}
+body.fwm.tod-night .fwm .a1Portrait,
+body.fwm.tod-dusk .fwm .a1Portrait{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 14px 26px rgba(0,0,0,0.35);
+  background: var(--a1-holo-bg-dark);
+}
+
+/* Subtle "shapeshift" shimmer */
+.fwm .a1Portrait::after{
+  content: "";
+  position: absolute;
+  inset: -30% -60%;
+  transform: rotate(18deg);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  opacity: 0.55;
+  animation: a1Shimmer 6s ease-in-out infinite;
+}
+body.fwm.tod-night .fwm .a1Portrait::after,
+body.fwm.tod-dusk .fwm .a1Portrait::after{
+  opacity: 0.38;
+}
+
+@keyframes a1Shimmer{
+  0%{ transform: translateX(-18%) rotate(18deg); }
+  50%{ transform: translateX(18%) rotate(18deg); }
+  100%{ transform: translateX(-18%) rotate(18deg); }
+}
+
+.fwm .a1Meta{ min-width: 0; }
+
+.fwm .a1NameRow{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fwm .a1Name{
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-size: 14px;
+}
+
+.fwm .a1Pill{
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(15,23,42,0.12);
+  background: rgba(255,255,255,0.55);
+}
+body.fwm.tod-night .fwm .a1Pill,
+body.fwm.tod-dusk .fwm .a1Pill{
+  border-color: rgba(148,163,184,0.18);
+  background: rgba(2,6,23,0.25);
+}
+
+.fwm .a1PillAlt{
+  border-color: rgba(56,189,248,0.28);
+  background: rgba(56,189,248,0.10);
+}
+body.fwm.tod-night .fwm .a1PillAlt,
+body.fwm.tod-dusk .fwm .a1PillAlt{
+  border-color: rgba(56,189,248,0.18);
+  background: rgba(56,189,248,0.06);
+}
+
+.fwm .a1Line{
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.fwm .a1Subline{
+  margin-top: 6px;
+}
+
+.fwm .a1Actions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fwm .a1Actions .subtleBtn{
+  padding: 6px 10px;
+}
+
+.fwm .a1Actions .subtleBtn[disabled]{
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* A1 Upgrades (Store) */
+.fwm .a1Upgrades{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fwm .a1UpSection{
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  background: rgba(0,0,0,0.18);
+  padding: 10px;
+}
+
+.fwm .a1UpHead{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fwm .a1UpTitle{
+  font-weight: 400;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.fwm .a1UpBar{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.fwm .a1UpBarFill{
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(91,211,255,0.95), rgba(153,120,255,0.95), rgba(255,156,90,0.95));
+}
+
+.fwm .a1Needs{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.fwm .a1NeedRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+}
+
+.fwm .a1NeedRight{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.fwm .a1TransferBtn{
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.fwm .a1NeedLeft{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fwm .a1NeedSym{
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.fwm .a1NeedName{
+  font-size: 12px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fwm .a1NeedCount{
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.fwm .storeSlot.is-empty{
+  opacity: 0.55;
+}
+
+.fwm .slotEmpty{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.65);
+}
+
+
+/* The tile: used by .slot and .miniSlot across the whole app */
+.fwm .slot,
+.fwm .miniSlot,
+.fwm .fwm-tile{
+  position:relative;
+  width:var(--tile-size);
+  height:var(--tile-size);
+  border-radius:var(--tile-radius);
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  user-select:none;
+  cursor:pointer;
+  border:none;
+  outline:none;
+
+  /* Default tier for untiered tiles */
+  --tier: oklch(65% 0.03 250);
+  color: var(--tile-fg);
+
+  /* Light mode: keep tiers vivid (less white mixing) while maintaining legibility. */
+  background:
+    radial-gradient(120% 120% at 32% 28%,
+      color-mix(in oklch, var(--tier) 78%, white 22%) 0%,
+      color-mix(in oklch, var(--tier) 46%, transparent 54%) 55%,
+      transparent 70%),
+    linear-gradient(135deg,
+      color-mix(in oklch, var(--tier) 92%, white 8%) 0%,
+      color-mix(in oklch, var(--tier) 82%, black 18%) 100%);
+  /* Ring: use tier-tinted transparency instead of mixing with a neutral border.
+     This prevents the "odd edge" look on some panels in light mode. */
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--tier) 32%, transparent 68%),
+    var(--tile-shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+body.fwm.tod-night .fwm .slot,
+body.fwm.tod-dusk .fwm .slot,
+body.fwm.tod-night .fwm .miniSlot,
+body.fwm.tod-dusk .fwm .miniSlot,
+body.fwm.tod-night .fwm .fwm-tile,
+body.fwm.tod-dusk .fwm .fwm-tile{
+  /* Dark mode can tolerate a slightly softer tint; keep it smooth. */
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--tier) 24%, transparent 76%),
+    var(--tile-shadow);
+}
+
+/* Remembered scraps: mute content without filtering the whole tile (prevents halo borders). */
+.fwm .miniSlot.muted{
+  cursor: pointer;
+}
+.fwm .miniSlot.muted .miniContent{
+  filter: grayscale(1) saturate(0.15) brightness(0.95);
+}
+.fwm .miniSlot.muted .miniCount{
+  opacity: 0.65;
+}
+
+@media (hover:hover){
+  .fwm .slot:hover,
+  .fwm .miniSlot:hover,
+  .fwm .fwm-tile:hover{
+    transform: translateY(-1px) scale(1.05);
+    filter: saturate(1.05) brightness(1.03);
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--tier) 45%, transparent 55%),
+      0 18px 42px rgba(0,0,0,0.18);
+  }
+}
+
+.fwm .slot:active,
+.fwm .miniSlot:active,
+.fwm .fwm-tile:active{
+  transform: translateY(0) scale(1.01);
+}
+
+/* Empty tiles */
+.fwm .slot.is-empty,
+.fwm .miniSlot.is-empty{
+  cursor:default;
+  opacity:0.45;
+  border-style:dashed;
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,0.35),
+      rgba(255,255,255,0.15));
+}
+body.fwm.tod-night .fwm .slot.is-empty,
+body.fwm.tod-dusk .fwm .slot.is-empty,
+body.fwm.tod-night .fwm .miniSlot.is-empty,
+body.fwm.tod-dusk .fwm .miniSlot.is-empty{
+  background:
+    linear-gradient(135deg,
+      rgba(2,6,23,0.35),
+      rgba(2,6,23,0.18));
+}
+
+/* Centered icon content */
+.fwm .slotSymbol,
+.fwm .miniSymbol,
+.fwm .icon{
+  display:grid;
+  place-items:center;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+}
+
+/* Store sell lock: float it so it never affects icon centering */
+.fwm .lockBtn{
+  position:absolute;
+  right:6px;
+  bottom:6px;
+  z-index:12;
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  border:none;
+  outline:none;
+  padding:0;
+  display:grid;
+  place-items:center;
+  font-size:14px;
+  line-height:1;
+  cursor:pointer;
+  background: rgba(0,0,0,0.20);
+  color: rgba(255,255,255,0.95);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.20);
+}
+body.fwm.tod-night .fwm .lockBtn,
+body.fwm.tod-dusk .fwm .lockBtn{
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.95);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+}
+.fwm .lockBtn.unlocked{ opacity: 0.75; }
+@media (hover:hover){
+  .fwm .lockBtn:hover{ transform: scale(1.06); }
+}
+
+/* Text-only icons are intentionally a touch smaller than image icons */
+.fwm .slotSymbol{
+  font-weight: 400;
+  font-size: clamp(18px, calc(var(--tile-size) * 0.42), 38px);
+  line-height: 1;
+}
+.fwm .miniSymbol{
+  font-weight:400;
+  font-size: clamp(16px, calc(var(--tile-size) * 0.38), 34px);
+  line-height:1;
+}
+
+/* Image icons fill most of the tile */
+.fwm .slotSymbol img,
+.fwm .icon img{
+  width: 86%;
+  height: 86%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.28));
+}
+
+/* Badges (extra info text) - no pill background, rely on contrast + shadow */
+.fwm .slotCount,
+.fwm .miniCount,
+.fwm .count{
+  position:absolute;
+  top:var(--badge-inset);
+  right:var(--badge-inset);
+  padding: 0;
+  border-radius: 0;
+  font-weight: var(--badge-weight);
+  font-size: var(--badge-size);
+  line-height: 1;
+  color: var(--badge-fg);
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--badge-track);
+  text-align: right;
+  min-width: 2ch;
+  pointer-events: none;
+  text-shadow: var(--badge-textshadow);
+}
+.fwm .slotPrice{
+  position:absolute;
+  top:var(--badge-inset);
+  left:var(--badge-inset);
+  padding: 0;
+  border-radius: 0;
+  font-weight: var(--badge-weight);
+  font-size: var(--badge-size);
+  line-height: 1;
+  color: var(--badge-fg);
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--badge-track);
+  text-align: left;
+  min-width: 2ch;
+  pointer-events: none;
+  text-shadow: var(--badge-textshadow);
+}
+
+/* Slight "HUD" snap on hover (desktop only) */
+@media (hover:hover){
+  .fwm .slot:hover .slotCount,
+  .fwm .slot:hover .slotPrice,
+  .fwm .miniSlot:hover .miniCount{
+    transform: translateY(-0.5px);
+    filter: brightness(1.06);
+  }
+}
+.fwm .slotTier,
+.fwm .miniTier{
+  /* Tier is communicated via color/gradient on the tile; keep UI clean. */
+  display:none;
+}
+
+/* Layout helpers used by some tiles */
+.fwm .slotTop{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
+}
+
+.fwm .slotName{
+  position:absolute;
+  bottom:6px;
+  left:6px;
+  right:6px;
+  text-align:center;
+  font-weight:400;
+  font-size: 11px;
+  line-height:1.1;
+  opacity:0.95;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* Locked states */
+.fwm .cabinetLocked{ opacity:0.72; }
+.fwm .isLocked{ opacity:0.55; filter: grayscale(1); }
+
+/* Tier palette (OKLCH) */
+.fwm .slot.tier-1, .fwm .miniSlot.tier-1, .fwm .fwm-tile.tier-1, .fwm .itemInspector.tier-1, .fwm .actionModal.tier-1{ --tier: oklch(50.5% 0.213 27.518); }
+.fwm .slot.tier-2, .fwm .miniSlot.tier-2, .fwm .fwm-tile.tier-2, .fwm .itemInspector.tier-2, .fwm .actionModal.tier-2{
+  --tier: oklch(68.1% 0.162 75.834);
+  /* Gold tiles: use dark text but avoid heavy "border" shadow that muddies it. */
+  --badge-fg: rgba(0,0,0,0.92);
+  --badge-shadow: rgba(255,255,255,0.55);
+  --badge-textshadow:
+    0 1px 0 rgba(255,255,255,0.28),
+    0 2px 10px rgba(0,0,0,0.18);
+}
+.fwm .slot.tier-3, .fwm .miniSlot.tier-3, .fwm .fwm-tile.tier-3, .fwm .itemInspector.tier-3, .fwm .actionModal.tier-3{ --tier: oklch(49.6% 0.265 301.924); }
+.fwm .slot.tier-4, .fwm .miniSlot.tier-4, .fwm .fwm-tile.tier-4, .fwm .itemInspector.tier-4, .fwm .actionModal.tier-4{ --tier: oklch(48.8% 0.243 264.376); }
+.fwm .slot.tier-5, .fwm .miniSlot.tier-5, .fwm .fwm-tile.tier-5, .fwm .itemInspector.tier-5, .fwm .actionModal.tier-5{ --tier: oklch(64.8% 0.2 131.684); }
+.fwm .slot.tier-6, .fwm .miniSlot.tier-6, .fwm .fwm-tile.tier-6, .fwm .itemInspector.tier-6, .fwm .actionModal.tier-6{ --tier: oklch(44.4% 0.011 73.639); }
+
+\n/* =====================\n   Sort Chips (Store / Distillery)
+   - Replaces plain <select> sorting with game-styled segmented pills.
+===================== */
+.fwm .sortControl{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.fwm .sortChipsMount{ display:flex; align-items:center; }
+
+/* Visually hide native selects (still present for state + compatibility). */
+.fwm .sortSelectHidden{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
+.fwm .sortChips{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.10);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.10) inset,
+    0 10px 20px rgba(15,23,42,0.10);
+}
+body.fwm.tod-day .fwm .sortChips,
+body.fwm.tod-dawn .fwm .sortChips{
+  border:1px solid rgba(15,23,42,0.14);
+  background: rgba(15,23,42,0.04);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.70) inset,
+    0 10px 20px rgba(15,23,42,0.06);
+}
+.fwm .sortChips:focus-within{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.16) inset,
+    0 0 0 3px rgba(56,189,248,0.22),
+    0 10px 20px rgba(15,23,42,0.10);
+}
+body.fwm.tod-day .fwm .sortChips:focus-within,
+body.fwm.tod-dawn .fwm .sortChips:focus-within{
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.12) inset,
+    0 0 0 3px rgba(56,189,248,0.20),
+    0 10px 20px rgba(15,23,42,0.06);
+}
+
+.fwm .sortChip{
+  border:0;
+  background: transparent;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:-0.01em;
+  opacity:0.86;
+  line-height:1;
+}
+.fwm .sortChip:hover{
+  background: rgba(148,163,184,0.14);
+  opacity:1;
+}
+body.fwm.tod-day .fwm .sortChip:hover,
+body.fwm.tod-dawn .fwm .sortChip:hover{
+  background: rgba(15,23,42,0.06);
+}
+
+.fwm .sortChip.is-active{
+  opacity:1;
+  color: rgba(255,255,255,0.95);
+  background:
+    linear-gradient(135deg, rgba(56,189,248,0.55) 0%, rgba(37,99,235,0.45) 100%);
+  box-shadow:
+    0 0 0 1px rgba(125,211,252,0.35) inset,
+    0 8px 14px rgba(2,6,23,0.18);
+}
+body.fwm.tod-day .fwm .sortChip.is-active,
+body.fwm.tod-dawn .fwm .sortChip.is-active{
+  color: rgba(2,6,23,0.92);
+  background:
+    linear-gradient(135deg, rgba(186,230,253,0.95) 0%, rgba(191,219,254,0.85) 100%);
+  box-shadow:
+    0 0 0 1px rgba(56,189,248,0.35) inset,
+    0 8px 14px rgba(15,23,42,0.10);
+}
+
+.fwm .sortChip:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.35);
+}
+
+/* =========================================================
+   Junkyard card (Quick Scavenge)
+   ========================================================= */
+
+
+.fwm .nodeCard--junkyard{
+  border: none !important;
+  background: rgb(var(--ui-panel-rgb) / var(--ui-panel-a)) !important;
+
+  box-shadow: var(--ui-panel-shadow);
+  border-radius: 20px;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 14px; /* consistent inset so bottom ~= right */
+  min-height: 138px;
+}
+
+/* Ghosted junkyard image */
+.fwm .nodeCard--junkyard::before{
+  content: "";
+  position: absolute;
+  inset: -18% -10% -18% -10%;
+  background-image: url(var(--fwm-base)assets/sprites/bg/junkyard_bg.webp);
+  background-size: cover;
+  background-position: 44% 55%;
+  filter: saturate(0.85) contrast(1.25);
+
+  /* Fade edges so it doesn't fight text */
+  -webkit-mask-image: radial-gradient(closest-side at 44% 55%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 92%);
+  mask-image: radial-gradient(closest-side at 44% 55%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 92%);
+}
+
+
+
+
+
+
+
+
+
+
+/* Day: full photo visibility */
+body.fwm.tod-day .fwm .nodeCard--junkyard::before{
+  opacity: 1 !important;
+}
+
+/* Gentle readability scrim (kept light so the photo still reads) */
+.fwm .nodeCard--junkyard::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Light scrim + a subtle “frame” so the photo reads like a border */
+  background:
+    linear-gradient(180deg,
+      rgb(var(--ui-scrim-rgb) / 0.10) 0%,
+      transparent 45%,
+      rgb(var(--ui-scrim-rgb) / 0.14) 100%
+    ),
+    radial-gradient(120% 120% at 50% 40%,
+      transparent 0%,
+      transparent 58%,
+      rgb(var(--ui-scrim-rgb) / 0.18) 86%,
+      rgb(var(--ui-scrim-rgb) / 0.26) 100%
+    );
+  box-shadow:
+    0 0 0 1px rgb(var(--ui-border-rgb) / 0.14) inset,
+    0 16px 32px rgba(2,6,23,0.10);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fwm .nodeCard--junkyard > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* Top row: title + tagline/countdown on the same line, top-aligned */
+.fwm .nodeCard--junkyard .jyTopRow{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.fwm .nodeCard--junkyard .jyTitle{
+  font-family: "Archivo Black", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.12rem;
+  line-height: 1; /* top edge alignment */
+  letter-spacing: -0.5px;
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.55), 0 10px 26px rgba(0,0,0,0.12);
+}
+
+.fwm .nodeCard--junkyard .nodeSubtitle{
+  font-family: "VT323", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.98rem;
+  line-height: 1; /* align top edge with title */
+  letter-spacing: 0.6px;
+  color: rgb(var(--ui-text-rgb) / 0.72);
+  white-space: nowrap;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.55), 0 10px 26px rgba(0,0,0,0.10);
+}
+
+body.fwm.tod-night .fwm .nodeCard--junkyard .jyTitle,
+body.fwm.tod-night .fwm .nodeCard--junkyard .nodeSubtitle,
+body.fwm.tod-dusk  .fwm .nodeCard--junkyard .jyTitle,
+body.fwm.tod-dusk  .fwm .nodeCard--junkyard .nodeSubtitle{
+  text-shadow: 0 10px 26px rgba(0,0,0,0.28);
+}
+
+/* Button: bottom-right, no underline, bold-on-hover */
+.fwm .nodeCard--junkyard .nodeBtns{
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0;
+}
+
+.fwm .nodeCard--junkyard .jyBtn{
+  appearance: none;
+  background: transparent !important;
+  border: none !important;
+  padding: 0;
+  margin: 0;
+  color: rgb(var(--ui-text-rgb) / 0.88);
+  font-weight: 400;
+  text-decoration: none !important;
+  cursor: pointer;
+  transform-origin: 100% 100%;
+  transition: transform 220ms ease, filter 220ms ease, text-shadow 220ms ease;
+}
+
+.fwm .nodeCard--junkyard .jyBtn:hover{
+  font-weight: 400;
+  transform: scale(1.06);
+  filter: brightness(1.08);
+  text-shadow: 0 8px 18px rgba(0,0,0,0.14);
+}
+
+.fwm .nodeCard--junkyard .jyBtn:disabled{
+  cursor: default;
+  opacity: 0.55;
+  transform: none;
+  filter: none;
+  font-weight: 400;
+  text-shadow: none;
+}
+

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.zip
+*.psd
+*.blend
+*.wav
+*.mp4
+*.mov

@@ -1,0 +1,1088 @@
+{
+  "version": 1,
+  "nav": [
+    {
+      "title": "Start",
+      "id": "start",
+      "children": [
+        {
+          "title": "Reference",
+          "id": "start_reference",
+          "file": "wiki/pages/start/reference.md"
+        },
+        {
+          "title": "Design Pillars",
+          "id": "start_design_pillars",
+          "file": "wiki/pages/start/design_pillars.md"
+        },
+        {
+          "title": "Canon & Retcons",
+          "id": "start_canon_retcons",
+          "file": "wiki/pages/start/canon_retcons.md"
+        },
+        {
+          "title": "Naming & UI Voice",
+          "id": "start_naming_ui_voice",
+          "file": "wiki/pages/start/naming_ui_voice.md"
+        },
+        {
+          "title": "UI Design System",
+          "id": "start_ui_design_system",
+          "file": "wiki/pages/start/ui_design_system.md"
+        }
+      ]
+    },
+    {
+      "title": "Systems",
+      "id": "systems",
+      "children": [
+        {
+          "title": "Store",
+          "id": "systems_general_store",
+          "file": "wiki/pages/systems/general_store.md"
+        },
+        {
+          "title": "Inventory",
+          "id": "systems_inventory",
+          "file": "wiki/pages/systems/inventory.md"
+        },
+        {
+          "title": "Combat",
+          "id": "systems_combat",
+          "file": "wiki/pages/systems/combat.md",
+          "children": [
+            {
+              "title": "Mechanics",
+              "id": "systems_combat_mechanics",
+              "file": "wiki/pages/systems/combat/mechanics.md"
+            },
+            {
+              "title": "Moves",
+              "id": "systems_combat_moves",
+              "file": "wiki/pages/systems/combat/moves.md",
+              "children": [
+                {
+                  "title": "Strike",
+                  "id": "systems_combat_moves_strike",
+                  "file": "wiki/pages/systems/combat/moves/strike.md"
+                },
+                {
+                  "title": "Twin Swing",
+                  "id": "systems_combat_moves_twin_swing",
+                  "file": "wiki/pages/systems/combat/moves/twin_swing.md"
+                },
+                {
+                  "title": "Feint",
+                  "id": "systems_combat_moves_feint",
+                  "file": "wiki/pages/systems/combat/moves/feint.md"
+                },
+                {
+                  "title": "Overcharge",
+                  "id": "systems_combat_moves_overcharge",
+                  "file": "wiki/pages/systems/combat/moves/overcharge.md"
+                },
+                {
+                  "title": "Show Off",
+                  "id": "systems_combat_moves_show_off",
+                  "file": "wiki/pages/systems/combat/moves/show_off.md"
+                },
+                {
+                  "title": "Spit",
+                  "id": "systems_combat_moves_spit",
+                  "file": "wiki/pages/systems/combat/moves/spit.md"
+                },
+                {
+                  "title": "Shoulder Charge",
+                  "id": "systems_combat_moves_shoulder_charge",
+                  "file": "wiki/pages/systems/combat/moves/shoulder_charge.md"
+                },
+                {
+                  "title": "Glare",
+                  "id": "systems_combat_moves_glare",
+                  "file": "wiki/pages/systems/combat/moves/glare.md"
+                },
+                {
+                  "title": "Clothesline",
+                  "id": "systems_combat_moves_clothesline",
+                  "file": "wiki/pages/systems/combat/moves/clothesline.md"
+                },
+                {
+                  "title": "Breakdown",
+                  "id": "systems_combat_moves_breakdown",
+                  "file": "wiki/pages/systems/combat/moves/breakdown.md"
+                },
+                {
+                  "title": "Resolve",
+                  "id": "systems_combat_moves_resolve",
+                  "file": "wiki/pages/systems/combat/moves/resolve.md"
+                },
+                {
+                  "title": "Zap",
+                  "id": "systems_combat_moves_zap",
+                  "file": "wiki/pages/systems/combat/moves/zap.md"
+                },
+                {
+                  "title": "Squirt",
+                  "id": "systems_combat_moves_squirt",
+                  "file": "wiki/pages/systems/combat/moves/squirt.md"
+                },
+                {
+                  "title": "Soak",
+                  "id": "systems_combat_moves_soak",
+                  "file": "wiki/pages/systems/combat/moves/soak.md"
+                }
+              ]
+            },
+            {
+              "title": "HP",
+              "id": "systems_combat_hp",
+              "file": "wiki/pages/systems/combat/hp.md"
+            },
+            {
+              "title": "Attack",
+              "id": "systems_combat_attack",
+              "file": "wiki/pages/systems/combat/attack.md"
+            },
+            {
+              "title": "Strength",
+              "id": "systems_combat_strength",
+              "file": "wiki/pages/systems/combat/strength.md"
+            },
+            {
+              "title": "Defense",
+              "id": "systems_combat_defense",
+              "file": "wiki/pages/systems/combat/defense.md"
+            }
+          ]
+        },
+        {
+          "title": "Tiers",
+          "id": "systems_tiers",
+          "file": "wiki/pages/systems/tiers.md"
+        },
+        {
+          "title": "Trading",
+          "id": "systems_trading",
+          "file": "wiki/pages/systems/trading.md"
+        },
+        {
+          "title": "Minion loot pool",
+          "id": "systems_minion_loot_pool",
+          "file": "wiki/pages/systems/minion_loot_pool.md"
+        }
+      ]
+    },
+    {
+      "title": "World",
+      "id": "world",
+      "children": [
+        {
+          "title": "Areas",
+          "id": "world_areas",
+          "file": "wiki/pages/world/areas.md",
+          "children": [
+            {
+              "title": "Junkyard",
+              "id": "world_areas_junkyard",
+              "file": "wiki/pages/world/areas/junkyard.md"
+            },
+            {
+              "title": "Vulkraine",
+              "id": "world_areas_vulkraine",
+              "file": "wiki/pages/world/areas/vulkraine.md"
+            }
+          ]
+        },
+        {
+          "title": "Chapters",
+          "id": "world_chapters",
+          "file": "wiki/pages/world/chapters.md",
+          "children": [
+            {
+              "title": "Monster Brawl",
+              "id": "world_chapters_monster_brawl",
+              "file": "wiki/pages/world/chapters/monster_brawl.md"
+            }
+          ]
+        },
+        {
+          "title": "Characters",
+          "id": "world_characters",
+          "file": "wiki/pages/world/characters.md",
+          "children": [
+            {
+              "title": "Jackson",
+              "id": "world_characters_jackson",
+              "file": "wiki/pages/world/characters/jackson.md"
+            },
+            {
+              "title": "Colt",
+              "id": "world_characters_colt",
+              "file": "wiki/pages/world/characters/colt.md"
+            },
+            {
+              "title": "Victoria",
+              "id": "world_characters_victoria",
+              "file": "wiki/pages/world/characters/victoria.md"
+            },
+            {
+              "title": "Lily",
+              "id": "world_characters_lily",
+              "file": "wiki/pages/world/characters/lily.md"
+            },
+            {
+              "title": "A1",
+              "id": "world_characters_a1",
+              "file": "wiki/pages/world/characters/a1.md"
+            }
+          ]
+        },
+        {
+          "title": "Lore",
+          "id": "world_lore",
+          "file": "wiki/pages/world/lore.md"
+        },
+        {
+          "title": "Species",
+          "id": "world_species",
+          "file": "wiki/pages/world/species.md",
+          "children": [
+            {
+              "title": "Astarr",
+              "id": "world_species_astarr",
+              "file": "wiki/pages/world/species/astarr.md"
+            },
+            {
+              "title": "Vulkraine",
+              "id": "world_species_vulkraine",
+              "file": "wiki/pages/world/species/vulkraine.md",
+              "children": [
+                {
+                  "title": "Minion",
+                  "id": "world_species_vulkraine_minion",
+                  "file": "wiki/pages/world/species/vulkraine/minion.md"
+                }
+              ]
+            },
+            {
+              "title": "Riz-haat",
+              "id": "world_species_riz_haat",
+              "file": "wiki/pages/world/species/riz_haat.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Items",
+      "id": "items",
+      "children": [
+        {
+          "title": "Blueprints",
+          "id": "items_blueprints",
+          "file": "wiki/pages/items/blueprints.md"
+        },
+        {
+          "title": "Elements",
+          "id": "items_elements",
+          "file": "wiki/pages/items/Elements/index.md",
+          "children": [
+            {
+              "title": "Hydrogen (H)",
+              "id": "items_elements_hydrogen",
+              "file": "wiki/pages/items/Elements/hydrogen.md"
+            },
+            {
+              "title": "Helium (He)",
+              "id": "items_elements_helium",
+              "file": "wiki/pages/items/Elements/helium.md"
+            },
+            {
+              "title": "Lithium (Li)",
+              "id": "items_elements_lithium",
+              "file": "wiki/pages/items/Elements/lithium.md"
+            },
+            {
+              "title": "Beryllium (Be)",
+              "id": "items_elements_beryllium",
+              "file": "wiki/pages/items/Elements/beryllium.md"
+            },
+            {
+              "title": "Boron (B)",
+              "id": "items_elements_boron",
+              "file": "wiki/pages/items/Elements/boron.md"
+            },
+            {
+              "title": "Carbon (C)",
+              "id": "items_elements_carbon",
+              "file": "wiki/pages/items/Elements/carbon.md"
+            },
+            {
+              "title": "Nitrogen (N)",
+              "id": "items_elements_nitrogen",
+              "file": "wiki/pages/items/Elements/nitrogen.md"
+            },
+            {
+              "title": "Oxygen (O)",
+              "id": "items_elements_oxygen",
+              "file": "wiki/pages/items/Elements/oxygen.md"
+            },
+            {
+              "title": "Fluorine (F)",
+              "id": "items_elements_fluorine",
+              "file": "wiki/pages/items/Elements/fluorine.md"
+            },
+            {
+              "title": "Neon (Ne)",
+              "id": "items_elements_neon",
+              "file": "wiki/pages/items/Elements/neon.md"
+            },
+            {
+              "title": "Sodium (Na)",
+              "id": "items_elements_sodium",
+              "file": "wiki/pages/items/Elements/sodium.md"
+            },
+            {
+              "title": "Magnesium (Mg)",
+              "id": "items_elements_magnesium",
+              "file": "wiki/pages/items/Elements/magnesium.md"
+            },
+            {
+              "title": "Aluminum (Al)",
+              "id": "items_elements_aluminum",
+              "file": "wiki/pages/items/Elements/aluminum.md"
+            },
+            {
+              "title": "Silicon (Si)",
+              "id": "items_elements_silicon",
+              "file": "wiki/pages/items/Elements/silicon.md"
+            },
+            {
+              "title": "Phosphorus (P)",
+              "id": "items_elements_phosphorus",
+              "file": "wiki/pages/items/Elements/phosphorus.md"
+            },
+            {
+              "title": "Sulfur (S)",
+              "id": "items_elements_sulfur",
+              "file": "wiki/pages/items/Elements/sulfur.md"
+            },
+            {
+              "title": "Chlorine (Cl)",
+              "id": "items_elements_chlorine",
+              "file": "wiki/pages/items/Elements/chlorine.md"
+            },
+            {
+              "title": "Argon (Ar)",
+              "id": "items_elements_argon",
+              "file": "wiki/pages/items/Elements/argon.md"
+            },
+            {
+              "title": "Potassium (K)",
+              "id": "items_elements_potassium",
+              "file": "wiki/pages/items/Elements/potassium.md"
+            },
+            {
+              "title": "Calcium (Ca)",
+              "id": "items_elements_calcium",
+              "file": "wiki/pages/items/Elements/calcium.md"
+            },
+            {
+              "title": "Scandium (Sc)",
+              "id": "items_elements_scandium",
+              "file": "wiki/pages/items/Elements/scandium.md"
+            },
+            {
+              "title": "Titanium (Ti)",
+              "id": "items_elements_titanium",
+              "file": "wiki/pages/items/Elements/titanium.md"
+            },
+            {
+              "title": "Vanadium (V)",
+              "id": "items_elements_vanadium",
+              "file": "wiki/pages/items/Elements/vanadium.md"
+            },
+            {
+              "title": "Chromium (Cr)",
+              "id": "items_elements_chromium",
+              "file": "wiki/pages/items/Elements/chromium.md"
+            },
+            {
+              "title": "Manganese (Mn)",
+              "id": "items_elements_manganese",
+              "file": "wiki/pages/items/Elements/manganese.md"
+            },
+            {
+              "title": "Iron (Fe)",
+              "id": "items_elements_iron",
+              "file": "wiki/pages/items/Elements/iron.md"
+            },
+            {
+              "title": "Cobalt (Co)",
+              "id": "items_elements_cobalt",
+              "file": "wiki/pages/items/Elements/cobalt.md"
+            },
+            {
+              "title": "Nickel (Ni)",
+              "id": "items_elements_nickel",
+              "file": "wiki/pages/items/Elements/nickel.md"
+            },
+            {
+              "title": "Copper (Cu)",
+              "id": "items_elements_copper",
+              "file": "wiki/pages/items/Elements/copper.md"
+            },
+            {
+              "title": "Zinc (Zn)",
+              "id": "items_elements_zinc",
+              "file": "wiki/pages/items/Elements/zinc.md"
+            },
+            {
+              "title": "Gallium (Ga)",
+              "id": "items_elements_gallium",
+              "file": "wiki/pages/items/Elements/gallium.md"
+            },
+            {
+              "title": "Germanium (Ge)",
+              "id": "items_elements_germanium",
+              "file": "wiki/pages/items/Elements/germanium.md"
+            },
+            {
+              "title": "Arsenic (As)",
+              "id": "items_elements_arsenic",
+              "file": "wiki/pages/items/Elements/arsenic.md"
+            },
+            {
+              "title": "Selenium (Se)",
+              "id": "items_elements_selenium",
+              "file": "wiki/pages/items/Elements/selenium.md"
+            },
+            {
+              "title": "Bromine (Br)",
+              "id": "items_elements_bromine",
+              "file": "wiki/pages/items/Elements/bromine.md"
+            },
+            {
+              "title": "Krypton (Kr)",
+              "id": "items_elements_krypton",
+              "file": "wiki/pages/items/Elements/krypton.md"
+            },
+            {
+              "title": "Rubidium (Rb)",
+              "id": "items_elements_rubidium",
+              "file": "wiki/pages/items/Elements/rubidium.md"
+            },
+            {
+              "title": "Strontium (Sr)",
+              "id": "items_elements_strontium",
+              "file": "wiki/pages/items/Elements/strontium.md"
+            },
+            {
+              "title": "Yttrium (Y)",
+              "id": "items_elements_yttrium",
+              "file": "wiki/pages/items/Elements/yttrium.md"
+            },
+            {
+              "title": "Zirconium (Zr)",
+              "id": "items_elements_zirconium",
+              "file": "wiki/pages/items/Elements/zirconium.md"
+            },
+            {
+              "title": "Niobium (Nb)",
+              "id": "items_elements_niobium",
+              "file": "wiki/pages/items/Elements/niobium.md"
+            },
+            {
+              "title": "Molybdenum (Mo)",
+              "id": "items_elements_molybdenum",
+              "file": "wiki/pages/items/Elements/molybdenum.md"
+            },
+            {
+              "title": "Technetium (Tc)",
+              "id": "items_elements_technetium",
+              "file": "wiki/pages/items/Elements/technetium.md"
+            },
+            {
+              "title": "Ruthenium (Ru)",
+              "id": "items_elements_ruthenium",
+              "file": "wiki/pages/items/Elements/ruthenium.md"
+            },
+            {
+              "title": "Rhodium (Rh)",
+              "id": "items_elements_rhodium",
+              "file": "wiki/pages/items/Elements/rhodium.md"
+            },
+            {
+              "title": "Palladium (Pd)",
+              "id": "items_elements_palladium",
+              "file": "wiki/pages/items/Elements/palladium.md"
+            },
+            {
+              "title": "Silver (Ag)",
+              "id": "items_elements_silver",
+              "file": "wiki/pages/items/Elements/silver.md"
+            },
+            {
+              "title": "Cadmium (Cd)",
+              "id": "items_elements_cadmium",
+              "file": "wiki/pages/items/Elements/cadmium.md"
+            },
+            {
+              "title": "Indium (In)",
+              "id": "items_elements_indium",
+              "file": "wiki/pages/items/Elements/indium.md"
+            },
+            {
+              "title": "Tin (Sn)",
+              "id": "items_elements_tin",
+              "file": "wiki/pages/items/Elements/tin.md"
+            },
+            {
+              "title": "Antimony (Sb)",
+              "id": "items_elements_antimony",
+              "file": "wiki/pages/items/Elements/antimony.md"
+            },
+            {
+              "title": "Tellurium (Te)",
+              "id": "items_elements_tellurium",
+              "file": "wiki/pages/items/Elements/tellurium.md"
+            },
+            {
+              "title": "Iodine (I)",
+              "id": "items_elements_iodine",
+              "file": "wiki/pages/items/Elements/iodine.md"
+            },
+            {
+              "title": "Xenon (Xe)",
+              "id": "items_elements_xenon",
+              "file": "wiki/pages/items/Elements/xenon.md"
+            },
+            {
+              "title": "Cesium (Cs)",
+              "id": "items_elements_cesium",
+              "file": "wiki/pages/items/Elements/cesium.md"
+            },
+            {
+              "title": "Barium (Ba)",
+              "id": "items_elements_barium",
+              "file": "wiki/pages/items/Elements/barium.md"
+            },
+            {
+              "title": "Lanthanum (La)",
+              "id": "items_elements_lanthanum",
+              "file": "wiki/pages/items/Elements/lanthanum.md"
+            },
+            {
+              "title": "Cerium (Ce)",
+              "id": "items_elements_cerium",
+              "file": "wiki/pages/items/Elements/cerium.md"
+            },
+            {
+              "title": "Praseodymium (Pr)",
+              "id": "items_elements_praseodymium",
+              "file": "wiki/pages/items/Elements/praseodymium.md"
+            },
+            {
+              "title": "Neodymium (Nd)",
+              "id": "items_elements_neodymium",
+              "file": "wiki/pages/items/Elements/neodymium.md"
+            },
+            {
+              "title": "Promethium (Pm)",
+              "id": "items_elements_promethium",
+              "file": "wiki/pages/items/Elements/promethium.md"
+            },
+            {
+              "title": "Samarium (Sm)",
+              "id": "items_elements_samarium",
+              "file": "wiki/pages/items/Elements/samarium.md"
+            },
+            {
+              "title": "Europium (Eu)",
+              "id": "items_elements_europium",
+              "file": "wiki/pages/items/Elements/europium.md"
+            },
+            {
+              "title": "Gadolinium (Gd)",
+              "id": "items_elements_gadolinium",
+              "file": "wiki/pages/items/Elements/gadolinium.md"
+            },
+            {
+              "title": "Terbium (Tb)",
+              "id": "items_elements_terbium",
+              "file": "wiki/pages/items/Elements/terbium.md"
+            },
+            {
+              "title": "Dysprosium (Dy)",
+              "id": "items_elements_dysprosium",
+              "file": "wiki/pages/items/Elements/dysprosium.md"
+            },
+            {
+              "title": "Holmium (Ho)",
+              "id": "items_elements_holmium",
+              "file": "wiki/pages/items/Elements/holmium.md"
+            },
+            {
+              "title": "Erbium (Er)",
+              "id": "items_elements_erbium",
+              "file": "wiki/pages/items/Elements/erbium.md"
+            },
+            {
+              "title": "Thulium (Tm)",
+              "id": "items_elements_thulium",
+              "file": "wiki/pages/items/Elements/thulium.md"
+            },
+            {
+              "title": "Ytterbium (Yb)",
+              "id": "items_elements_ytterbium",
+              "file": "wiki/pages/items/Elements/ytterbium.md"
+            },
+            {
+              "title": "Lutetium (Lu)",
+              "id": "items_elements_lutetium",
+              "file": "wiki/pages/items/Elements/lutetium.md"
+            },
+            {
+              "title": "Hafnium (Hf)",
+              "id": "items_elements_hafnium",
+              "file": "wiki/pages/items/Elements/hafnium.md"
+            },
+            {
+              "title": "Tantalum (Ta)",
+              "id": "items_elements_tantalum",
+              "file": "wiki/pages/items/Elements/tantalum.md"
+            },
+            {
+              "title": "Tungsten (W)",
+              "id": "items_elements_tungsten",
+              "file": "wiki/pages/items/Elements/tungsten.md"
+            },
+            {
+              "title": "Rhenium (Re)",
+              "id": "items_elements_rhenium",
+              "file": "wiki/pages/items/Elements/rhenium.md"
+            },
+            {
+              "title": "Osmium (Os)",
+              "id": "items_elements_osmium",
+              "file": "wiki/pages/items/Elements/osmium.md"
+            },
+            {
+              "title": "Iridium (Ir)",
+              "id": "items_elements_iridium",
+              "file": "wiki/pages/items/Elements/iridium.md"
+            },
+            {
+              "title": "Platinum (Pt)",
+              "id": "items_elements_platinum",
+              "file": "wiki/pages/items/Elements/platinum.md"
+            },
+            {
+              "title": "Gold (Au)",
+              "id": "items_elements_gold",
+              "file": "wiki/pages/items/Elements/gold.md"
+            },
+            {
+              "title": "Mercury (Hg)",
+              "id": "items_elements_mercury",
+              "file": "wiki/pages/items/Elements/mercury.md"
+            },
+            {
+              "title": "Thallium (Tl)",
+              "id": "items_elements_thallium",
+              "file": "wiki/pages/items/Elements/thallium.md"
+            },
+            {
+              "title": "Lead (Pb)",
+              "id": "items_elements_lead",
+              "file": "wiki/pages/items/Elements/lead.md"
+            },
+            {
+              "title": "Bismuth (Bi)",
+              "id": "items_elements_bismuth",
+              "file": "wiki/pages/items/Elements/bismuth.md"
+            },
+            {
+              "title": "Polonium (Po)",
+              "id": "items_elements_polonium",
+              "file": "wiki/pages/items/Elements/polonium.md"
+            },
+            {
+              "title": "Astatine (At)",
+              "id": "items_elements_astatine",
+              "file": "wiki/pages/items/Elements/astatine.md"
+            },
+            {
+              "title": "Radon (Rn)",
+              "id": "items_elements_radon",
+              "file": "wiki/pages/items/Elements/radon.md"
+            },
+            {
+              "title": "Francium (Fr)",
+              "id": "items_elements_francium",
+              "file": "wiki/pages/items/Elements/francium.md"
+            },
+            {
+              "title": "Radium (Ra)",
+              "id": "items_elements_radium",
+              "file": "wiki/pages/items/Elements/radium.md"
+            },
+            {
+              "title": "Actinium (Ac)",
+              "id": "items_elements_actinium",
+              "file": "wiki/pages/items/Elements/actinium.md"
+            },
+            {
+              "title": "Thorium (Th)",
+              "id": "items_elements_thorium",
+              "file": "wiki/pages/items/Elements/thorium.md"
+            },
+            {
+              "title": "Protactinium (Pa)",
+              "id": "items_elements_protactinium",
+              "file": "wiki/pages/items/Elements/protactinium.md"
+            },
+            {
+              "title": "Uranium (U)",
+              "id": "items_elements_uranium",
+              "file": "wiki/pages/items/Elements/uranium.md"
+            },
+            {
+              "title": "Neptunium (Np)",
+              "id": "items_elements_neptunium",
+              "file": "wiki/pages/items/Elements/neptunium.md"
+            },
+            {
+              "title": "Plutonium (Pu)",
+              "id": "items_elements_plutonium",
+              "file": "wiki/pages/items/Elements/plutonium.md"
+            },
+            {
+              "title": "Americium (Am)",
+              "id": "items_elements_americium",
+              "file": "wiki/pages/items/Elements/americium.md"
+            },
+            {
+              "title": "Curium (Cm)",
+              "id": "items_elements_curium",
+              "file": "wiki/pages/items/Elements/curium.md"
+            },
+            {
+              "title": "Berkelium (Bk)",
+              "id": "items_elements_berkelium",
+              "file": "wiki/pages/items/Elements/berkelium.md"
+            },
+            {
+              "title": "Californium (Cf)",
+              "id": "items_elements_californium",
+              "file": "wiki/pages/items/Elements/californium.md"
+            },
+            {
+              "title": "Einsteinium (Es)",
+              "id": "items_elements_einsteinium",
+              "file": "wiki/pages/items/Elements/einsteinium.md"
+            },
+            {
+              "title": "Fermium (Fm)",
+              "id": "items_elements_fermium",
+              "file": "wiki/pages/items/Elements/fermium.md"
+            },
+            {
+              "title": "Mendelevium (Md)",
+              "id": "items_elements_mendelevium",
+              "file": "wiki/pages/items/Elements/mendelevium.md"
+            },
+            {
+              "title": "Nobelium (No)",
+              "id": "items_elements_nobelium",
+              "file": "wiki/pages/items/Elements/nobelium.md"
+            },
+            {
+              "title": "Lawrencium (Lr)",
+              "id": "items_elements_lawrencium",
+              "file": "wiki/pages/items/Elements/lawrencium.md"
+            },
+            {
+              "title": "Rutherfordium (Rf)",
+              "id": "items_elements_rutherfordium",
+              "file": "wiki/pages/items/Elements/rutherfordium.md"
+            },
+            {
+              "title": "Dubnium (Db)",
+              "id": "items_elements_dubnium",
+              "file": "wiki/pages/items/Elements/dubnium.md"
+            },
+            {
+              "title": "Seaborgium (Sg)",
+              "id": "items_elements_seaborgium",
+              "file": "wiki/pages/items/Elements/seaborgium.md"
+            },
+            {
+              "title": "Bohrium (Bh)",
+              "id": "items_elements_bohrium",
+              "file": "wiki/pages/items/Elements/bohrium.md"
+            },
+            {
+              "title": "Hassium (Hs)",
+              "id": "items_elements_hassium",
+              "file": "wiki/pages/items/Elements/hassium.md"
+            },
+            {
+              "title": "Meitnerium (Mt)",
+              "id": "items_elements_meitnerium",
+              "file": "wiki/pages/items/Elements/meitnerium.md"
+            },
+            {
+              "title": "Darmstadtium (Ds)",
+              "id": "items_elements_darmstadtium",
+              "file": "wiki/pages/items/Elements/darmstadtium.md"
+            },
+            {
+              "title": "Roentgenium (Rg)",
+              "id": "items_elements_roentgenium",
+              "file": "wiki/pages/items/Elements/roentgenium.md"
+            },
+            {
+              "title": "Copernicium (Cn)",
+              "id": "items_elements_copernicium",
+              "file": "wiki/pages/items/Elements/copernicium.md"
+            },
+            {
+              "title": "Nihonium (Nh)",
+              "id": "items_elements_nihonium",
+              "file": "wiki/pages/items/Elements/nihonium.md"
+            },
+            {
+              "title": "Flerovium (Fl)",
+              "id": "items_elements_flerovium",
+              "file": "wiki/pages/items/Elements/flerovium.md"
+            },
+            {
+              "title": "Moscovium (Mc)",
+              "id": "items_elements_moscovium",
+              "file": "wiki/pages/items/Elements/moscovium.md"
+            },
+            {
+              "title": "Livermorium (Lv)",
+              "id": "items_elements_livermorium",
+              "file": "wiki/pages/items/Elements/livermorium.md"
+            },
+            {
+              "title": "Tennessine (Ts)",
+              "id": "items_elements_tennessine",
+              "file": "wiki/pages/items/Elements/tennessine.md"
+            },
+            {
+              "title": "Oganesson (Og)",
+              "id": "items_elements_oganesson",
+              "file": "wiki/pages/items/Elements/oganesson.md"
+            }
+          ]
+        },
+        {
+          "title": "Materials",
+          "id": "items_materials",
+          "file": "wiki/pages/items/materials.md"
+        },
+        {
+          "title": "Scraps",
+          "id": "items_scraps",
+          "file": "wiki/pages/items/scraps.md"
+        },
+        {
+          "title": "Gadgets",
+          "id": "items_gadgets",
+          "file": "wiki/pages/items/gadgets.md"
+        },
+        {
+          "title": "Gear",
+          "id": "items_gear",
+          "file": "wiki/pages/items/gear.md"
+        },
+        {
+          "title": "Tools",
+          "id": "items_tools",
+          "file": "wiki/pages/items/tools.md",
+          "children": [
+            {
+              "title": "Refiners",
+              "id": "items_tools_refiners",
+              "file": "wiki/pages/items/tools/refiners.md"
+            },
+            {
+              "title": "Crafters",
+              "id": "items_tools_crafters",
+              "file": "wiki/pages/items/tools/crafters.md"
+            },
+            {
+              "title": "Empty soda can",
+              "id": "item_scrap_soda_can",
+              "file": "wiki/pages/items/entries/scrap_soda_can.md",
+              "hidden": true
+            },
+            {
+              "title": "Empty plastic bottle",
+              "id": "item_scrap_plastic_bottle",
+              "file": "wiki/pages/items/entries/scrap_plastic_bottle.md",
+              "hidden": true
+            },
+            {
+              "title": "Empty milk carton",
+              "id": "item_scrap_milk_carton",
+              "file": "wiki/pages/items/entries/scrap_milk_carton.md",
+              "hidden": true
+            },
+            {
+              "title": "Rusty Spoon",
+              "id": "item_scrap_rusty_spoon",
+              "file": "wiki/pages/items/entries/scrap_rusty_spoon.md",
+              "hidden": true
+            },
+            {
+              "title": "Dead USB drive",
+              "id": "item_scrap_usb_drive",
+              "file": "wiki/pages/items/entries/scrap_usb_drive.md",
+              "hidden": true
+            }
+          ]
+        },
+        {
+          "title": "Entries",
+          "id": "items_entries",
+          "hidden": true,
+          "children": [
+            {
+              "title": "Backpack Mk.I",
+              "id": "item_backpack_mk1",
+              "file": "wiki/pages/items/entries/backpack_mk1.md",
+              "hidden": true
+            },
+            {
+              "title": "Twinstrike Gloves",
+              "id": "item_twinstrike_gloves",
+              "file": "wiki/pages/items/entries/twinstrike_gloves.md",
+              "hidden": true
+            },
+            {
+              "title": "Basketball",
+              "id": "item_basketball",
+              "file": "wiki/pages/items/entries/basketball.md",
+              "hidden": true
+            },
+            {
+              "title": "Water Pistol",
+              "id": "item_water_pistol",
+              "file": "wiki/pages/items/entries/water_pistol.md",
+              "hidden": true
+            },
+            {
+              "title": "Mouthguard",
+              "id": "item_mouthguard",
+              "file": "wiki/pages/items/entries/mouthguard.md",
+              "hidden": true
+            },
+            {
+              "title": "Super Soaker",
+              "id": "item_super_soaker",
+              "file": "wiki/pages/items/entries/super_soaker.md",
+              "hidden": true
+            },
+            {
+              "title": "Work Cap",
+              "id": "item_work_cap",
+              "file": "wiki/pages/items/entries/work_cap.md",
+              "hidden": true
+            },
+            {
+              "title": "Utility Boots",
+              "id": "item_utility_boots",
+              "file": "wiki/pages/items/entries/utility_boots.md",
+              "hidden": true
+            },
+            {
+              "title": "Nerd Glasses",
+              "id": "item_nerd_glasses",
+              "file": "wiki/pages/items/entries/nerd_glasses.md",
+              "hidden": true
+            },
+            {
+              "title": "Running Shoes",
+              "id": "item_running_shoes",
+              "file": "wiki/pages/items/entries/running_shoes.md",
+              "hidden": true
+            },
+            {
+              "title": "Bulletproof Vest",
+              "id": "item_bulletproof_vest",
+              "file": "wiki/pages/items/entries/bulletproof_vest.md",
+              "hidden": true
+            },
+            {
+              "title": "Simple Ring",
+              "id": "item_simple_ring",
+              "file": "wiki/pages/items/entries/simple_ring.md",
+              "hidden": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Drafts",
+      "id": "drafts",
+      "devOnly": true,
+      "children": [
+        {
+          "title": "Draft Hub",
+          "id": "drafts_index",
+          "file": "wiki/pages/drafts/index.md",
+          "devOnly": true
+        },
+        {
+          "title": "How drafting works",
+          "id": "drafts_how_drafting_works",
+          "file": "wiki/pages/drafts/how_drafting_works.md",
+          "devOnly": true
+        },
+        {
+          "title": "Scenes",
+          "id": "drafts_scenes",
+          "file": "wiki/pages/drafts/scenes/index.md",
+          "devOnly": true,
+          "children": [
+            {
+              "title": "Draft Scene List",
+              "id": "drafts_scene_list",
+              "file": "wiki/pages/drafts/scenes/scene_list.md",
+              "devOnly": true
+            },
+            {
+              "title": "Scene template",
+              "id": "drafts_scene_template",
+              "file": "wiki/pages/drafts/scenes/scene_template.md",
+              "devOnly": true
+            }
+          ]
+        },
+        {
+          "title": "Characters",
+          "id": "drafts_characters",
+          "file": "wiki/pages/drafts/characters/index.md",
+          "devOnly": true
+        },
+        {
+          "title": "Worldbuilding",
+          "id": "drafts_worldbuilding",
+          "file": "wiki/pages/drafts/world/index.md",
+          "devOnly": true
+        },
+        {
+          "title": "Context pages",
+          "id": "drafts_context_pages",
+          "file": "wiki/pages/drafts/context/index.md",
+          "devOnly": true
+        }
+      ]
+    }
+  ]
+}

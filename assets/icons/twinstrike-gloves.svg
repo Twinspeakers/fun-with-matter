@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b10d0d"/>
+      <stop offset="0.55" stop-color="#8f0707"/>
+      <stop offset="1" stop-color="#5f0303"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd7d7" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- transparent background by default -->
+
+  <!-- Main claw-hand silhouette -->
+  <g filter="url(#softShadow)">
+    <!-- forearm stump -->
+    <path d="M64 172c6-30 10-48 30-70 14-16 32-26 50-30 25-6 46 2 58 18 10 14 13 33 7 53-6 22-21 41-44 57-21 14-44 22-73 24-16 1-26-4-28-12z"
+          fill="url(#skin)"/>
+
+    <!-- knuckle plates / ridges -->
+    <path d="M96 134c14-18 33-30 54-34 19-4 34 2 42 12"
+          fill="none" stroke="#3b0101" stroke-width="14" stroke-linecap="round" stroke-opacity="0.35"/>
+    <path d="M86 156c18-10 34-16 55-18 22-2 38 3 50 10"
+          fill="none" stroke="#3b0101" stroke-width="12" stroke-linecap="round" stroke-opacity="0.25"/>
+
+    <!-- claws (chunky, readable at small sizes) -->
+    <path d="M168 70c16-18 30-26 44-26 9 0 14 6 12 15-3 13-14 26-34 40-7 5-15 2-18-6-3-7-1-15-4-23z"
+          fill="#1a0a0a"/>
+    <path d="M142 62c12-20 24-32 38-36 9-3 16 2 16 11 0 13-10 29-30 48-6 6-14 4-18-2-5-7-6-13-6-21z"
+          fill="#1a0a0a"/>
+    <path d="M120 66c7-20 16-34 28-42 8-5 16-2 18 6 3 12-3 28-18 50-5 8-13 8-19 2-6-6-9-10-9-16z"
+          fill="#1a0a0a"/>
+    <path d="M192 102c18-12 32-16 44-12 8 3 10 10 5 18-7 12-23 21-50 28-9 2-16-4-16-12 0-8 6-14 17-22z"
+          fill="#140606"/>
+
+    <!-- small highlight sheen -->
+    <path d="M80 160c10-26 22-42 40-56 18-14 40-22 62-22 16 0 28 6 34 15"
+          fill="none" stroke="url(#shine)" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- subtle "twinstrike" slash marks -->
+    <path d="M190 164l36-16" stroke="#ffb0b0" stroke-width="10" stroke-linecap="round" stroke-opacity="0.28"/>
+    <path d="M184 180l44-18" stroke="#ffb0b0" stroke-width="10" stroke-linecap="round" stroke-opacity="0.20"/>
+  </g>
+</svg>

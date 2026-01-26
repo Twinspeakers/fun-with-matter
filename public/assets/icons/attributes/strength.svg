@@ -1,1 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Strength"><defs><filter id="shadow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#000000" flood-opacity="0.22" /></filter><linearGradient id="metal" x1="20" y1="34" x2="108" y2="92" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e5e7eb" /><stop offset="0.5" stop-color="#cbd5e1" /><stop offset="1" stop-color="#94a3b8" /></linearGradient><linearGradient id="grip" x1="48" y1="54" x2="80" y2="78" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#334155" /><stop offset="1" stop-color="#0f172a" /></linearGradient></defs><g filter="url(#shadow)"><rect x="18" y="40" width="22" height="48" rx="10" fill="url(#metal)" stroke="#0f172a" stroke-width="4" /><rect x="88" y="40" width="22" height="48" rx="10" fill="url(#metal)" stroke="#0f172a" stroke-width="4" /><rect x="36" y="46" width="14" height="36" rx="7" fill="url(#metal)" stroke="#0f172a" stroke-width="4" /><rect x="78" y="46" width="14" height="36" rx="7" fill="url(#metal)" stroke="#0f172a" stroke-width="4" /><rect x="48" y="56" width="32" height="16" rx="8" fill="url(#grip)" stroke="#0f172a" stroke-width="4" /><path d="M52 60 H76" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round" /></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Strength">
+  <defs>
+    <filter id="shadow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.26"/>
+    </filter>
+
+    <linearGradient id="plate" x1="16" y1="34" x2="52" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe08a"/>
+      <stop offset="0.45" stop-color="#ff7a18"/>
+      <stop offset="1" stop-color="#ef4444"/>
+    </linearGradient>
+
+    <linearGradient id="plate2" x1="76" y1="34" x2="112" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="0.45" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+
+    <linearGradient id="metal" x1="34" y1="46" x2="94" y2="82" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.5" stop-color="#cbd5e1"/>
+      <stop offset="1" stop-color="#64748b"/>
+    </linearGradient>
+
+    <linearGradient id="grip" x1="48" y1="54" x2="80" y2="78" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#334155"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+
+    <linearGradient id="shine" x1="36" y1="44" x2="60" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <!-- Plates -->
+    <rect x="16" y="38" width="24" height="52" rx="10" fill="url(#plate)" stroke="#0f172a" stroke-width="4"/>
+    <rect x="88" y="38" width="24" height="52" rx="10" fill="url(#plate2)" stroke="#0f172a" stroke-width="4"/>
+
+    <rect x="34" y="44" width="16" height="40" rx="8" fill="url(#metal)" stroke="#0f172a" stroke-width="4"/>
+    <rect x="78" y="44" width="16" height="40" rx="8" fill="url(#metal)" stroke="#0f172a" stroke-width="4"/>
+
+    <!-- Bar + grip -->
+    <rect x="44" y="56" width="40" height="16" rx="8" fill="url(#grip)" stroke="#0f172a" stroke-width="4"/>
+    <path d="M48 60 H80" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="3" stroke-linecap="round"/>
+    <path d="M52 64 H76" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Highlight -->
+    <path d="M20 48 C22 42 30 40 34 42 C30 44 28 48 26 54 C24 58 20 58 20 56 Z" fill="url(#shine)"/>
+  </g>
+</svg>

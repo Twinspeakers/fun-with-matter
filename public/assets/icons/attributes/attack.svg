@@ -1,1 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Attack"><defs><filter id="shadow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#000000" flood-opacity="0.22" /></filter><linearGradient id="blade" x1="38" y1="18" x2="90" y2="110" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7ff" /><stop offset="0.5" stop-color="#cfd9e8" /><stop offset="1" stop-color="#94a3b8" /></linearGradient><linearGradient id="edge" x1="50" y1="20" x2="74" y2="100" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff" stop-opacity="0.9" /><stop offset="1" stop-color="#ffffff" stop-opacity="0" /></linearGradient><linearGradient id="hilt" x1="44" y1="72" x2="84" y2="114" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2b3446" /><stop offset="1" stop-color="#0b1220" /></linearGradient><linearGradient id="gold" x1="40" y1="70" x2="88" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffd36a" /><stop offset="1" stop-color="#c48a17" /></linearGradient></defs><g filter="url(#shadow)"><path d="M66 14 L80 28 L70 38 L70 86 L58 98 L58 38 L48 28 L62 14 Z" fill="url(#blade)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" /><path d="M66 20 L73 27 L66 34 L66 86 L62 90 L62 34 L55 27 Z" fill="url(#edge)" /><rect x="44" y="86" width="40" height="12" rx="6" fill="url(#gold)" stroke="#0f172a" stroke-width="4" /><rect x="56" y="96" width="16" height="22" rx="8" fill="url(#hilt)" stroke="#0f172a" stroke-width="4" /><circle cx="64" cy="120" r="7" fill="url(#gold)" stroke="#0f172a" stroke-width="4" /></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Attack">
+  <defs>
+    <filter id="shadow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.26"/>
+    </filter>
+
+    <linearGradient id="blade" x1="38" y1="12" x2="92" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e0fbff"/>
+      <stop offset="0.35" stop-color="#4de1ff"/>
+      <stop offset="0.7" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+
+    <linearGradient id="edge" x1="54" y1="18" x2="74" y2="104" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="gold" x1="40" y1="72" x2="92" y2="98" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe8a3"/>
+      <stop offset="0.45" stop-color="#ffb703"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+
+    <linearGradient id="grip" x1="52" y1="92" x2="76" y2="122" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#334155"/>
+      <stop offset="1" stop-color="#0b1220"/>
+    </linearGradient>
+
+    <linearGradient id="gem" x1="56" y1="112" x2="72" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="0.55" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#60a5fa"/>
+    </linearGradient>
+
+    <linearGradient id="spark" x1="84" y1="20" x2="104" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <!-- Blade -->
+    <path d="M66 10 L82 26 L72 36 L72 88 L58 102 L58 36 L46 26 L62 10 Z"
+          fill="url(#blade)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M66 18 L74 26 L66 34 L66 88 L62 92 L62 34 L54 26 Z" fill="url(#edge)"/>
+
+    <!-- Guard -->
+    <rect x="42" y="86" width="44" height="13" rx="7"
+          fill="url(#gold)" stroke="#0f172a" stroke-width="4"/>
+
+    <!-- Grip -->
+    <rect x="56" y="97" width="16" height="20" rx="8"
+          fill="url(#grip)" stroke="#0f172a" stroke-width="4"/>
+    <path d="M59 103 H69 M59 108 H69 M59 113 H69"
+          stroke="#ffffff" stroke-opacity="0.18" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Pommel gem -->
+    <path d="M64 118 L72 124 L64 130 L56 124 Z" transform="translate(0,-4)"
+          fill="url(#gem)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+
+    <!-- Sparkle -->
+    <path d="M94 20 L97 28 L105 31 L97 34 L94 42 L91 34 L83 31 L91 28 Z"
+          fill="url(#spark)" stroke="#0f172a" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+</svg>

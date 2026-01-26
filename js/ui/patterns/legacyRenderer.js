@@ -703,7 +703,7 @@ function renderAttrInspector(){
     if (els.attrDesc) els.attrDesc.textContent = desc;
 
     const trainBtn = isTrainable
-      ? `<div style="margin-top:8px"><button class="trainPickBtn${isActive ? " active" : ""}" data-train="${k}">${isActive ? "Training Target" : "Set Training Target"} ⌖</button></div>`
+      ? `<div style="margin-top:8px"><button class="trainPickBtn${isActive ? " active" : ""}" data-train="${k}">${isActive ? "Training Target" : "Set Training Target"}<span class="trainStarIcon" aria-hidden="true"></span></button></div>`
       : "";
 
     if (els.attrSummary) els.attrSummary.innerHTML =
@@ -933,7 +933,7 @@ if (els.attrPageIcon){
     if (els.attrPageDesc) els.attrPageDesc.textContent = desc;
 
     const trainBtn = isTrainable
-      ? `<div style="margin-top:8px"><button class="trainPickBtn${isActive ? " active" : ""}" data-train="${k}">${isActive ? "Training Target" : "Set Training Target"} ⌖</button></div>`
+      ? `<div style="margin-top:8px"><button class="trainPickBtn${isActive ? " active" : ""}" data-train="${k}">${isActive ? "Training Target" : "Set Training Target"}<span class="trainStarIcon" aria-hidden="true"></span></button></div>`
       : "";
 
     if (els.attrPageSummary) els.attrPageSummary.innerHTML =

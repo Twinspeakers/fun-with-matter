@@ -1974,13 +1974,13 @@ body.fwm.tod-dusk .fwm .avatarFrame{
   min-height:64px;
   aspect-ratio:1 / 1;
   border-radius:18px;
-  background: rgba(255,255,255,0.55);
+  background: var(--a1-holo-bg);
   box-shadow: 0 0 0 1px rgba(15,23,42,0.10) inset;
 }
 body.fwm.tod-night .fwm .attrTile,
 body.fwm.tod-dusk .fwm .attrTile{
-  background: rgba(2,6,23,0.32);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+  background: var(--a1-holo-bg-dark);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset;
 }
 
 /* Icon should fill the tile like a background (but still centered & readable). */
@@ -3097,11 +3097,12 @@ body.fwm.tod-dawn .fwm .sortChip.is-active{
 
 .fwm .nodeCard--junkyard{
   border: none !important;
-  background: rgb(var(--ui-panel-rgb) / var(--ui-panel-a)) !important;
-
+  background-image: url("../assets/sprites/bg/junkyard_bg.webp");
+  background-size: cover;
+  background-position: 44% 55%;
   box-shadow: var(--ui-panel-shadow);
   border-radius: 20px;
-  
+  color: #000000!important;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -3109,64 +3110,7 @@ body.fwm.tod-dawn .fwm .sortChip.is-active{
   min-height: 138px;
 }
 
-/* Ghosted junkyard image */
-.fwm .nodeCard--junkyard::before{
-  content: "";
-  position: absolute;
-  inset: -18% -10% -18% -10%;
-  background-image: url("../assets/sprites/bg/junkyard_bg.webp");
-  background-size: cover;
-  background-position: 44% 55%;
-  filter: saturate(0.85) contrast(1.25);
 
-  /* Fade edges so it doesn't fight text */
-  -webkit-mask-image: radial-gradient(closest-side at 44% 55%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 92%);
-  mask-image: radial-gradient(closest-side at 44% 55%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 92%);
-}
-
-
-
-
-
-
-
-
-
-
-/* Day: full photo visibility */
-body.fwm.tod-day .fwm .nodeCard--junkyard::before{
-  opacity: 1 !important;
-}
-
-/* Gentle readability scrim (kept light so the photo still reads) */
-.fwm .nodeCard--junkyard::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  /* Light scrim + a subtle “frame” so the photo reads like a border */
-  background:
-    linear-gradient(180deg,
-      rgb(var(--ui-scrim-rgb) / 0.10) 0%,
-      transparent 45%,
-      rgb(var(--ui-scrim-rgb) / 0.14) 100%
-    ),
-    radial-gradient(120% 120% at 50% 40%,
-      transparent 0%,
-      transparent 58%,
-      rgb(var(--ui-scrim-rgb) / 0.18) 86%,
-      rgb(var(--ui-scrim-rgb) / 0.26) 100%
-    );
-  box-shadow:
-    0 0 0 1px rgb(var(--ui-border-rgb) / 0.14) inset,
-    0 16px 32px rgba(2,6,23,0.10);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.fwm .nodeCard--junkyard > *{
-  position: relative;
-  z-index: 1;
-}
 
 /* Top row: title + tagline/countdown on the same line, top-aligned */
 .fwm .nodeCard--junkyard .jyTopRow{
@@ -3219,7 +3163,7 @@ body.fwm.tod-dusk  .fwm .nodeCard--junkyard .nodeSubtitle{
   border: none !important;
   padding: 0;
   margin: 0;
-  color: rgb(var(--ui-text-rgb) / 0.88);
+  color: #000000!important;
   font-weight: 400;
   text-decoration: none !important;
   cursor: pointer;
@@ -3243,3 +3187,111 @@ body.fwm.tod-dusk  .fwm .nodeCard--junkyard .nodeSubtitle{
   text-shadow: none;
 }
 
+
+
+/* =====================
+   Icon polish: training target + locks
+   (Avoid mojibake glyphs; use SVG icons + filters)
+===================== */
+
+.fwm{
+  --fwm-train-star-icon: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2360a5fa%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220.5%22%20stop-color%3D%22%23a78bfa%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2334d399%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Cpath%20d%3D%22M12%202.6l2.85%205.77%206.37.56-4.82%204.17%201.44%206.25-5.84-3.16-5.84%203.16%201.44-6.25-4.82-4.17%206.37-.56z%22%0A%20%20%20%20%20%20%20%20fill%3D%22url%28%23g%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.65%29%22%20stroke-width%3D%220.7%22%20stroke-linejoin%3D%22round%22/%3E%0A%3C/svg%3E");
+  --fwm-lock-icon: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fbbf24%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220.45%22%20stop-color%3D%22%23f472b6%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2360a5fa%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Cpath%20d%3D%22M7.5%2010.2V8.2c0-2.6%202-4.7%204.5-4.7s4.5%202.1%204.5%204.7v2.0%22%0A%20%20%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22url%28%23g%29%22%20stroke-width%3D%222.1%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Crect%20x%3D%226.3%22%20y%3D%2210.1%22%20width%3D%2211.4%22%20height%3D%2210.2%22%20rx%3D%222.2%22%0A%20%20%20%20%20%20%20%20fill%3D%22url%28%23g%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.65%29%22%20stroke-width%3D%220.8%22/%3E%0A%20%20%3Cpath%20d%3D%22M12%2014.1c-1%200-1.8.8-1.8%201.8%200%20.7.4%201.3%201%201.6v1.8h1.6v-1.8c.6-.3%201-.9%201-1.6%200-1-.8-1.8-1.8-1.8z%22%0A%20%20%20%20%20%20%20%20fill%3D%22rgba%2815%2C23%2C42%2C0.55%29%22/%3E%0A%3C/svg%3E");
+}
+
+/* Training target: star icon (inactive = grayscale, active = vibrant) */
+.fwm .trainTarget{
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: grid;
+  place-items: center;
+  font-size: 0; /* hide any fallback glyphs */
+  line-height: 0;
+}
+.fwm .trainTarget::before{
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-image: var(--fwm-train-star-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: grayscale(1) saturate(0) brightness(1.05) opacity(0.78);
+}
+.fwm .trainTarget.active::before{
+  filter: none;
+}
+
+/* Train target button in inspectors/pages */
+.fwm .trainPickBtn .trainStarIcon{
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  vertical-align: -3px;
+  background-image: var(--fwm-train-star-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: grayscale(1) saturate(0) brightness(1.05) opacity(0.78);
+}
+.fwm .trainPickBtn.active .trainStarIcon{
+  filter: none;
+}
+
+/* Store + Inspector lock buttons: lock icon (unlocked = grayscale, locked = vibrant) */
+.fwm .lockBtn,
+.fwm #inspectLockBtn{
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none;
+  color: transparent !important; /* hide emoji if present */
+  font-size: 0;
+  line-height: 0;
+}
+.fwm .lockBtn::before,
+.fwm #inspectLockBtn::before{
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-image: var(--fwm-lock-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: grayscale(1) saturate(0) brightness(1.05) opacity(0.78);
+}
+.fwm .lockBtn.locked::before,
+.fwm #inspectLockBtn:not(.unlocked)::before{
+  filter: none;
+}
+/* =====================
+   Attr level badge: clean white HUD number (no pill)
+===================== */
+.fwm .attrTileLevel{
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  color: rgba(255,255,255,0.98) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,0.55),
+    0 0 10px rgba(0,0,0,0.28);
+}
+
+/* =====================
+   Nav row: distribute icons when there's spare width
+   - One row always (no wrap)
+   - If there aren't many icons, spread them across the bar
+   ===================== */
+.fwm .navRow{
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}

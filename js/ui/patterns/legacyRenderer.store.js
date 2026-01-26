@@ -15,15 +15,15 @@ const A1_STORE_GREETINGS = [
   "Everything has a price. Even patience.",
   "I can *hear* your backpack creaking from here.",
   "Clean deals. Messy world.",
-  "If youâ€™re here, you survived. Thatâ€™s worth something."
+  "If you're here, you survived. That's worth something."
 ];
 
 const A1_STORE_TALK_LINES = [
-  "A1â€™s eyes shift color for a heartbeat. â€˜Donâ€™t stare. Itâ€™s rude.â€™",
-  "â€˜I sell tools. I collect stories. Both cut deep.â€™",
-  "â€˜Locks are love. Use them.â€™",
-  "â€˜Bring me weird scrap. Iâ€™ll pretend Iâ€™m not impressed.â€™",
-  "He smiles â€” then someone elseâ€™s smile. â€˜Same sentiment.â€™"
+  "A1's eyes shift color for a heartbeat. 'Don't stare. It's rude.'",
+  "'I sell tools. I collect stories. Both cut deep.'",
+  "'Locks are love. Use them.'",
+  "'Bring me weird scrap. I'll pretend I'm not impressed.'",
+  "He smiles  -  then someone else's smile. 'Same sentiment.'"
 ];
 
 export function fmtMsCompact(ms){
@@ -67,9 +67,9 @@ function pickA1StoreLine(deps, reason){
   const lastSale = deps.state?.player?.lastSale;
 
   if (reason === "enter"){
-    if (credits <= 0) return "No MU? Thatâ€™s fine. Sell me something shiny â€” Iâ€™ll remember.";
+    if (credits <= 0) return "No MU? That's fine. Sell me something shiny  -  I'll remember.";
     if (credits < 10) return "Low on MU. Smart buying beats brave buying.";
-    if (credits >= 250) return "Heavy purse. Light conscience. Letâ€™s see what you want.";
+    if (credits >= 250) return "Heavy purse. Light conscience. Let's see what you want.";
     if (lastSale?.key) return "Still thinking about that last sale, huh?";
   }
 
@@ -80,7 +80,7 @@ function pickA1StoreLine(deps, reason){
 
 function setA1StoreLine(deps, text, { subline=null } = {}){
   if (!deps.els?.storeA1Line) return;
-  deps.els.storeA1Line.textContent = String(text || "â€¦");
+  deps.els.storeA1Line.textContent = String(text || "...");
   if (deps.els.storeA1Subline){
     const show = !!subline;
     deps.els.storeA1Subline.style.display = show ? "block" : "none";
@@ -227,7 +227,7 @@ export function openA1TransferModal(deps, { elementKey, maxGrams, remainingGrams
         </div>
         <div class="actionText">
           <div class="actionLine"><span class="actionItemName">${deps.escapeHtml(itemName)}</span></div>
-          <div class="actionMeta">From Distillery Cabinet â€¢ Available: ${Math.max(0, cabGrams)}g</div>
+          <div class="actionMeta">From Distillery Cabinet  -  Available: ${Math.max(0, cabGrams)}g</div>
           <div class="muted small">Remaining needed for current upgrade: ${Math.max(0, Math.floor(Number(remainingGrams) || 0))}g</div>
         </div>
       </div>
@@ -265,7 +265,7 @@ export function openA1TransferModal(deps, { elementKey, maxGrams, remainingGrams
           deps.closeActionModal();
           const res = deps.handlers?.onA1DepositFromCabinet?.(ek, n);
           if (res && res.ok){
-            try{ setA1StoreLine(deps, "â€˜Good.â€™ A1 pockets the sample.", { subline: "Transferred from the Distillery Cabinet." }); }catch(_){/* ignore */}
+            try{ setA1StoreLine(deps, "'Good.' A1 pockets the sample.", { subline: "Transferred from the Distillery Cabinet." }); }catch(_){/* ignore */}
           }
           deps.renderAll();
         }
@@ -398,7 +398,7 @@ export function renderStore(deps){
     const now = Date.now();
     const left = Math.max(0, (Number(st.nextRefreshAt) || 0) - now);
     els.storeA1Subline.style.display = "block";
-    els.storeA1Subline.textContent = `Slots: ${st.capacity}/${st.maxCapacity} â€¢ Next refresh in ${fmtMsCompact(left)}`;
+    els.storeA1Subline.textContent = `Slots: ${st.capacity}/${st.maxCapacity}  -  Next refresh in ${fmtMsCompact(left)}`;
   }
   renderA1UpgradePanel(deps);
 
@@ -482,7 +482,9 @@ export function renderStore(deps){
     const isLocked = !!state.player?.locks?.[key];
     lockBtn.className = "lockBtn" + (isLocked ? " locked" : " unlocked");
     lockBtn.title = state.player?.locks?.[key] ? "Locked (click to unlock)" : "Click to lock";
-    lockBtn.textContent = state.player?.locks?.[key] ? "ðŸ”’" : "ðŸ”“";
+    // Icon rendered via CSS (avoids mojibake/encoding issues)
+    lockBtn.textContent = "";
+    lockBtn.setAttribute("aria-label", isLocked ? "Locked" : "Unlocked");
     lockBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       handlers?.onToggleLock?.(key);

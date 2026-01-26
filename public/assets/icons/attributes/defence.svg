@@ -1,1 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Defence"><defs><filter id="shadow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#000000" flood-opacity="0.22" /></filter><linearGradient id="shield" x1="28" y1="18" x2="104" y2="118" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#67e8f9" /><stop offset="0.55" stop-color="#38bdf8" /><stop offset="1" stop-color="#1d4ed8" /></linearGradient><linearGradient id="rim" x1="36" y1="28" x2="92" y2="110" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f8fafc" /><stop offset="1" stop-color="#94a3b8" /></linearGradient></defs><g filter="url(#shadow)"><path d="M64 14 L108 32 V66 C108 92 90 110 64 118 C38 110 20 92 20 66 V32 L64 14 Z" fill="url(#shield)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" /><path d="M64 22 L100 36 V66 C100 88 85 102 64 109 C43 102 28 88 28 66 V36 L64 22 Z" fill="none" stroke="url(#rim)" stroke-width="4" stroke-linejoin="round" stroke-opacity="0.85" /><path d="M40 44 C46 34 60 30 74 34 C60 36 52 42 48 50 C46 54 42 55 40 52 Z" fill="#ffffff" fill-opacity="0.22" /></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Defence">
+  <defs>
+    <filter id="shadow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.26"/>
+    </filter>
+
+    <linearGradient id="shield" x1="24" y1="14" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="0.35" stop-color="#22d3ee"/>
+      <stop offset="0.7" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+
+    <linearGradient id="rim" x1="30" y1="20" x2="98" y2="114" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="0.45" stop-color="#cbd5e1" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#64748b" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <linearGradient id="emblem" x1="48" y1="44" x2="86" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe8a3"/>
+      <stop offset="0.5" stop-color="#ffb703"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+
+    <linearGradient id="gloss" x1="32" y1="26" x2="76" y2="78" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <path d="M64 12 L110 32 V66 C110 94 91 112 64 120 C37 112 18 94 18 66 V32 L64 12 Z"
+          fill="url(#shield)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M64 20 L102 36 V66 C102 90 85 104 64 111 C43 104 26 90 26 66 V36 L64 20 Z"
+          fill="none" stroke="url(#rim)" stroke-width="4" stroke-linejoin="round" opacity="0.9"/>
+
+    <!-- Center emblem (chevron + gem) -->
+    <path d="M64 40 L82 54 L64 68 L46 54 Z" fill="url(#emblem)" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="64" cy="54" r="6.5" fill="#ffffff" fill-opacity="0.22"/>
+    <circle cx="64" cy="54" r="5" fill="#0f172a" fill-opacity="0.12"/>
+
+    <!-- Gloss -->
+    <path d="M36 44 C42 30 62 24 78 30 C64 32 54 40 50 52 C48 57 41 58 36 54 Z" fill="url(#gloss)"/>
+  </g>
+</svg>

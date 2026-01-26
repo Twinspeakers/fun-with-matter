@@ -3171,6 +3171,47 @@ body.fwm.tod-dusk  .fwm .nodeCard--junkyard .nodeSubtitle{
   transition: transform 220ms ease, filter 220ms ease, text-shadow 220ms ease;
 }
 
+/* =========================================================
+   Restore "spread out when few" behaviour
+   - Top page nav icons
+   - Icon tiles in Store / Inventory (toolbelt) / Distillery grids
+   ========================================================= */
+
+/* Top nav: fill width, spread icons if there are only a few.
+   If the row is crowded, fall back to left-align so gaps don't get silly. */
+.fwm .navRow{
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 14px;
+  padding-right: 14px;
+  justify-content: space-between;
+}
+.fwm .navRow:has(.navBtn:nth-child(7)){
+  justify-content: flex-start;
+}
+
+/* Icon grids: use CSS grid so a small number of tiles distributes across the full width.
+   We intentionally avoid changing .grid16 (fixed-slot grids like backpack/blueprints). */
+.fwm .storeGrid{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(var(--tile-size), 1fr));
+  gap: var(--tile-gap);
+  align-items: start;
+  align-content: start;
+  justify-items: center;
+}
+
+/* Inventory toolbelt is a freeform icon grid too (Equipped uses fixed rows/cols). */
+.fwm .toolbeltGrid{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(var(--tile-size), 1fr));
+  gap: var(--tile-gap);
+  align-items: start;
+  align-content: start;
+  justify-items: center;
+}
+
+
 .fwm .nodeCard--junkyard .jyBtn:hover{
   font-weight: 400;
   transform: scale(1.06);
@@ -3283,15 +3324,4 @@ body.fwm.tod-dusk  .fwm .nodeCard--junkyard .nodeSubtitle{
   text-shadow:
     0 1px 2px rgba(0,0,0,0.55),
     0 0 10px rgba(0,0,0,0.28);
-}
-
-/* =====================
-   Nav row: distribute icons when there's spare width
-   - One row always (no wrap)
-   - If there aren't many icons, spread them across the bar
-   ===================== */
-.fwm .navRow{
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
 }

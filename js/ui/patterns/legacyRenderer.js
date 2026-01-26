@@ -3514,19 +3514,41 @@ function renderRepeatableEvents(){
   const t = Date.now();
   const endAt = Math.max(0, Math.floor(Number(j?.endAt) || 0));
   const isActive = !!j?.active && endAt > t;
+  const isFinishing = !!j?.active && endAt > 0 && endAt <= t;
   const remaining = Math.max(0, endAt - t);
 
   const card = document.createElement("div");
   card.className = "nodeCard nodeCard--junkyard";
+  card.dataset.jy = "card";
+  card.classList.toggle("jy--active", isActive);
+  card.classList.toggle("jy--finishing", isFinishing);
+  card.classList.toggle("jy--ready", !isActive && !isFinishing);
+
+  // Make the whole card the button (mouse + keyboard).
+  card.setAttribute("role", "button");
+  card.tabIndex = 0;
+  card.setAttribute("aria-label", "Scavenge in the Junkyard");
 
   const left = document.createElement("div");
   left.className = "nodeLeft";
+
+  const title = document.createElement("div");
+  title.className = "jyTitle";
+  title.textContent = "The Junkyard";
+
+  const meta = document.createElement("div");
+  meta.className = "jyMeta";
+
+  const dot = document.createElement("div");
+  dot.className = "jyDot";
+  dot.dataset.jy = "dot";
+  dot.hidden = (isActive || isFinishing);
 
   const subtitle = document.createElement("div");
   subtitle.className = "muted small nodeSubtitle";
   subtitle.dataset.jy = "subtitle";
 
-  // Junkyard subtitle format: idle shows a tagline, active shows ONLY the countdown (e.g. 0.20)
+  // Countdown format: m.ss (e.g., 0.20)
   const formatMdotSS = (ms) => {
     const s = Math.max(0, Math.ceil(ms / 1000));
     const m = Math.floor(s / 60);
@@ -3536,35 +3558,46 @@ function renderRepeatableEvents(){
 
   if (isActive){
     subtitle.textContent = `${formatMdotSS(remaining)}`;
-  } else if (j?.active && endAt <= t){
-    subtitle.textContent = `0.00`;
+  } else if (isFinishing){
+    subtitle.textContent = "0.00";
   } else {
-    subtitle.textContent = "RIPE FOR THE PICKING";
+    subtitle.textContent = "";
   }
 
-  // Title row: title (left) + subtitle (right), aligned to the top edge.
+  meta.appendChild(dot);
+  meta.appendChild(subtitle);
+
   const topRow = document.createElement("div");
   topRow.className = "jyTopRow";
-
-  const title = document.createElement("div");
-  title.className = "jyTitle";
-  title.textContent = "The Junkyard";
-
   topRow.appendChild(title);
-  topRow.appendChild(subtitle);
+  topRow.appendChild(meta);
 
   left.innerHTML = "";
   left.appendChild(topRow);
 
-  const btns = document.createElement("div");
-  btns.className = "nodeBtns";
+  // Click behaviour:
+  // - Idle/ready: start scavenging
+  // - Active/finishing: shake feedback only
+  const triggerShake = () => {
+    card.classList.remove("jy--shake");
+    // Force reflow so restarting the animation works.
+    void card.offsetWidth;
+    card.classList.add("jy--shake");
+    window.setTimeout(() => card.classList.remove("jy--shake"), 260);
+  };
 
-  const go = document.createElement("button");
-  go.dataset.jy = "btn";
-  go.className = "jyBtn";
-  go.textContent = "Scavenge";
-  go.disabled = isActive || (j?.active && endAt <= t);
-  go.addEventListener("click", () => {
+  const onActivate = () => {
+    const jj = state.jobs?.junkyard;
+    const tt = Date.now();
+    const ee = Math.max(0, Math.floor(Number(jj?.endAt) || 0));
+    const activeNow = !!jj?.active && ee > tt;
+    const finishingNow = !!jj?.active && ee > 0 && ee <= tt;
+
+    if (activeNow || finishingNow){
+      triggerShake();
+      return;
+    }
+
     const res = handlers?.onJunkyardScavenge?.();
     // If it failed, briefly surface the reason in the player status line.
     if (res && res.ok === false && res.reason){
@@ -3573,11 +3606,22 @@ function renderRepeatableEvents(){
       }catch(_){/* ignore */}
       renderAll();
     }
+  };
+
+  card.addEventListener("click", (e) => {
+    // Prevent accidental text selection/drags.
+    e.preventDefault();
+    onActivate();
   });
 
-  btns.appendChild(go);
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      onActivate();
+    }
+  });
+
   card.appendChild(left);
-  card.appendChild(btns);
   wrap.appendChild(card);
 }
 
@@ -4077,36 +4121,55 @@ export function renderTickUI(){
     }
   }
 
-  // Junkyard countdown on the Quick Scavenge panel (left column).
-  // This panel is visible across pages, so keep it fresh regardless of the active page.
-  if (els.repeatableEventsList){
-    const j = state.jobs?.junkyard;
-    const t = Date.now();
-    const endAt = Math.max(0, Math.floor(Number(j?.endAt) || 0));
-    const isActive = !!j?.active && endAt > t;
-    const remaining = Math.max(0, endAt - t);
+  
+// Junkyard countdown on the Quick Scavenge panel (left column).
+// This panel is visible across pages, so keep it fresh regardless of the active page.
+if (els.repeatableEventsList){
+  const j = state.jobs?.junkyard;
+  const t = Date.now();
+  const endAt = Math.max(0, Math.floor(Number(j?.endAt) || 0));
+  const isActive = !!j?.active && endAt > t;
+  const isFinishing = !!j?.active && endAt > 0 && endAt <= t;
+  const remaining = Math.max(0, endAt - t);
 
-    const sub = els.repeatableEventsList.querySelector('[data-jy="subtitle"]');
-    const btn = els.repeatableEventsList.querySelector('[data-jy="btn"]');
+  const card = els.repeatableEventsList.querySelector('[data-jy="card"]');
+  const sub = els.repeatableEventsList.querySelector('[data-jy="subtitle"]');
+  const dot = els.repeatableEventsList.querySelector('[data-jy="dot"]');
 
-    const subtitleText = isActive
-      ? `Scavenging… ${formatMMSS(remaining)}`
-      : (j?.active && endAt <= t) ? "Finishing…" : "Find scraps. 20s run.";
+  const formatMdotSS = (ms) => {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}.${String(r).padStart(2,'0')}`;
+  };
 
-    if (sub && sub.textContent !== subtitleText){
-      sub.textContent = subtitleText;
+  const subtitleText = isActive ? `${formatMdotSS(remaining)}` : (isFinishing ? "0.00" : "");
+
+  if (sub && sub.textContent !== subtitleText){
+    sub.textContent = subtitleText;
+    did = true;
+  }
+
+  if (dot){
+    const wantHidden = (isActive || isFinishing);
+    if (!!dot.hidden !== !!wantHidden){
+      dot.hidden = !!wantHidden;
       did = true;
-    }
-
-    if (btn){
-      const btnText = isActive ? `Scavenging (${formatMMSS(remaining)})` : "Scavenge";
-      const disabled = isActive || (j?.active && endAt <= t);
-      if (btn.textContent !== btnText){ btn.textContent = btnText; did = true; }
-      if (btn.disabled !== disabled){ btn.disabled = !!disabled; did = true; }
     }
   }
 
-  // Store refresh countdown (keeps A1 card feeling alive without full re-render)
+  if (card){
+    const wantActive = !!isActive;
+    const wantFinishing = !!isFinishing;
+    const wantReady = !wantActive && !wantFinishing;
+
+    if (card.classList.contains("jy--active") !== wantActive){ card.classList.toggle("jy--active", wantActive); did = true; }
+    if (card.classList.contains("jy--finishing") !== wantFinishing){ card.classList.toggle("jy--finishing", wantFinishing); did = true; }
+    if (card.classList.contains("jy--ready") !== wantReady){ card.classList.toggle("jy--ready", wantReady); did = true; }
+  }
+}
+
+// Store refresh countdown (keeps A1 card feeling alive without full re-render)
   if ((state?.ui?.activePage || "") === "store" && els.storeA1Subline){
     try{
       const st = getA1StoreUpgradeStatus();

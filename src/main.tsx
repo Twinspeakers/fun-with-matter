@@ -4,8 +4,14 @@ import "./tailwind.css";
 import "../css/app.css";
 import "../css/fwm-theme.css";
 
-// Make CSS able to reference the correct base path in both dev ('/') and GitHub Pages ('/fun-with-matter/')
-document.documentElement.style.setProperty("--fwm-base", import.meta.env.BASE_URL);
+
+// Expose the Vite base URL to CSS so assets in /public work in dev + GitHub Pages
+const __fwmBase = import.meta.env.BASE_URL;
+document.documentElement.style.setProperty("--fwm-base", __fwmBase);
+document.documentElement.style.setProperty(
+  "--fwm-junkyard-bg",
+  `url(${__fwmBase}assets/sprites/bg/junkyard_bg.webp)`
+);
 
 const root = document.getElementById("root");
 if (!root) {

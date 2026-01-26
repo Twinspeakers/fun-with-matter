@@ -10,21 +10,24 @@ tone_tags: []
 design_intent: []
 constraints: []
 tags: []
-related: []
+related:
+  - world_characters_jackson
+  - world_characters_victoria
+  - world_characters_colt
 ---
 
 # Lily
 
 > **Path:** World / Characters / Lily
 
-## In-world
+## Overview
 
-_Write the lore / flavour version here._
+Lily is the crew’s **conscience** and emotional truth-teller: the one who notices what everyone else is trying not to feel. She’s cautious, not because she’s weak, but because she can see consequences a few steps ahead — and she doesn’t want anyone to pretend the scary parts aren’t real. Her role is the grounding voice that asks the hard questions at the worst possible time (which is also the *best* possible time). She’s motivated by protecting the group’s humanity. Her fear is losing control of the situation… and realizing nobody can put the normal world back once it’s gone.
 
-## Under the hood
+## Allergies
 
-_Write the exact mechanics here (numbers, rules, edge cases)._
+None.
 
-## Related
+## Movepool
 
-- [[start_reference]]  <!-- replace with relevant pages -->
+Lily is not currently implemented as a playable combat character, so she has no movepool yet.

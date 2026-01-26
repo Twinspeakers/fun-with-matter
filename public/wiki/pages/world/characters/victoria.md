@@ -10,21 +10,24 @@ tone_tags: []
 design_intent: []
 constraints: []
 tags: []
-related: []
+related:
+  - world_characters_jackson
+  - world_characters_lily
+  - world_characters_colt
 ---
 
 # Victoria
 
 > **Path:** World / Characters / Victoria
 
-## In-world
+## Overview
 
-_Write the lore / flavour version here._
+Victoria is the crew’s **realist with spikes** — sharp tongue, sharper radar for danger, and a talent for saying what everyone else is thinking before they’ve built the courage to admit it. Her role in the group is to keep the plan honest: if something smells like a trap, she’s the first to call it. She’s motivated by control (and by not being the one caught off guard). Her fear is that the unknown is bigger than her confidence, and that no amount of attitude can keep the universe from taking what it wants.
 
-## Under the hood
+## Allergies
 
-_Write the exact mechanics here (numbers, rules, edge cases)._
+None.
 
-## Related
+## Movepool
 
-- [[start_reference]]  <!-- replace with relevant pages -->
+Victoria is not currently implemented as a playable combat character, so she has no movepool yet.

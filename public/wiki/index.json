@@ -57,6 +57,83 @@
               "file": "wiki/pages/systems/combat/mechanics.md"
             },
             {
+              "title": "Moves",
+              "id": "systems_combat_moves",
+              "file": "wiki/pages/systems/combat/moves.md",
+              "children": [
+                {
+                  "title": "Strike",
+                  "id": "systems_combat_moves_strike",
+                  "file": "wiki/pages/systems/combat/moves/strike.md"
+                },
+                {
+                  "title": "Twin Swing",
+                  "id": "systems_combat_moves_twin_swing",
+                  "file": "wiki/pages/systems/combat/moves/twin_swing.md"
+                },
+                {
+                  "title": "Feint",
+                  "id": "systems_combat_moves_feint",
+                  "file": "wiki/pages/systems/combat/moves/feint.md"
+                },
+                {
+                  "title": "Overcharge",
+                  "id": "systems_combat_moves_overcharge",
+                  "file": "wiki/pages/systems/combat/moves/overcharge.md"
+                },
+                {
+                  "title": "Show Off",
+                  "id": "systems_combat_moves_show_off",
+                  "file": "wiki/pages/systems/combat/moves/show_off.md"
+                },
+                {
+                  "title": "Spit",
+                  "id": "systems_combat_moves_spit",
+                  "file": "wiki/pages/systems/combat/moves/spit.md"
+                },
+                {
+                  "title": "Shoulder Charge",
+                  "id": "systems_combat_moves_shoulder_charge",
+                  "file": "wiki/pages/systems/combat/moves/shoulder_charge.md"
+                },
+                {
+                  "title": "Glare",
+                  "id": "systems_combat_moves_glare",
+                  "file": "wiki/pages/systems/combat/moves/glare.md"
+                },
+                {
+                  "title": "Clothesline",
+                  "id": "systems_combat_moves_clothesline",
+                  "file": "wiki/pages/systems/combat/moves/clothesline.md"
+                },
+                {
+                  "title": "Breakdown",
+                  "id": "systems_combat_moves_breakdown",
+                  "file": "wiki/pages/systems/combat/moves/breakdown.md"
+                },
+                {
+                  "title": "Resolve",
+                  "id": "systems_combat_moves_resolve",
+                  "file": "wiki/pages/systems/combat/moves/resolve.md"
+                },
+                {
+                  "title": "Zap",
+                  "id": "systems_combat_moves_zap",
+                  "file": "wiki/pages/systems/combat/moves/zap.md"
+                },
+                {
+                  "title": "Squirt",
+                  "id": "systems_combat_moves_squirt",
+                  "file": "wiki/pages/systems/combat/moves/squirt.md"
+                },
+                {
+                  "title": "Soak",
+                  "id": "systems_combat_moves_soak",
+                  "file": "wiki/pages/systems/combat/moves/soak.md"
+                }
+              ]
+            },
+            {
               "title": "HP",
               "id": "systems_combat_hp",
               "file": "wiki/pages/systems/combat/hp.md"
@@ -136,14 +213,7 @@
             {
               "title": "Jackson",
               "id": "world_characters_jackson",
-              "file": "wiki/pages/world/characters/jackson.md",
-              "children": [
-                {
-                  "title": "Movepool",
-                  "id": "world_characters_jackson_movepool",
-                  "file": "wiki/pages/world/characters/jackson/movepool.md"
-                }
-              ]
+              "file": "wiki/pages/world/characters/jackson.md"
             },
             {
               "title": "Colt",

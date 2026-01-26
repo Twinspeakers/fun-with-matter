@@ -3249,7 +3249,17 @@ function renderStory(){
   const cg = node.cg ?? null;
 
   // Normalize sprite paths so older content (vn/story subfolders) keeps working after refactors.
-  const __FWM_BASE_URL__ = (import.meta?.env?.BASE_URL) || "/";
+  const __fwmDetectBase__ = () => {
+    const viteBase = (import.meta?.env?.BASE_URL);
+    if (viteBase && viteBase !== "/") return viteBase;
+    try{
+      const p = String(window.location?.pathname || "/");
+      const parts = p.split("/").filter(Boolean);
+      if (parts.length >= 1) return `/${parts[0]}/`;
+    }catch(_){/* ignore */}
+    return "/";
+  };
+  const __FWM_BASE_URL__ = __fwmDetectBase__();
   const __fwmWithBase__ = (p) => {
     const s = String(p || "");
     if (!s) return s;
@@ -6012,7 +6022,6 @@ function syncWikiMount(){
     maybeRenderWiki(false);
   }
 }
-
 
 
 

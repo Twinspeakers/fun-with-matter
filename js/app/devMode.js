@@ -6,7 +6,20 @@
 
 
 // Base-aware URL helper (GitHub Pages subpath-safe)
-const __FWM_BASE_URL__ = (import.meta?.env?.BASE_URL) || "/";
+// (Mirrors wikiFS's behaviour so Dev Mode assets still resolve if Vite base ever drifts.)
+function __fwmDetectBase__(){
+  const viteBase = (import.meta?.env?.BASE_URL);
+  if (viteBase && viteBase !== "/") return viteBase;
+  try{
+    const p = String(window.location?.pathname || "/");
+    const parts = p.split("/").filter(Boolean);
+    if (parts.length >= 1) return `/${parts[0]}/`;
+  }catch(_){/* ignore */}
+  return "/";
+}
+
+const __FWM_BASE_URL__ = __fwmDetectBase__();
+
 function __fwmWithBase__(p){
   const s = String(p || "");
   if (!s) return s;

@@ -5,23 +5,32 @@
 
 
 // Base-aware URL helper (GitHub Pages subpath-safe)
-// NOTE: When GH Pages base config regresses (e.g., merge overwrote vite.config.ts),
-// import.meta.env.BASE_URL can fall back to '/'. This helper also detects the repo
-// subpath at runtime to prevent requests accidentally hitting https://<user>.github.io/wiki/...
-function __fwmBase__(){
-  const base = (import.meta?.env?.BASE_URL) || "/";
-  if (base && base !== "/") return base;
+//
+// Why this exists:
+// - GitHub Pages project sites live under a subpath, e.g. /fun-with-matter/
+// - If Vite "base" ever regresses (merge/pull, settings drift),
+//   import.meta.env.BASE_URL may incorrectly be "/" in production.
+// - The wiki loader is called from UI code that may re-render frequently; if
+//   a fetch fails, we must avoid hammering the network in a loop.
 
-  // Runtime fallback: detect GH Pages project path.
-  try {
-    const p = window?.location?.pathname || "/";
-    if (p.startsWith("/fun-with-matter/")) return "/fun-with-matter/";
-  } catch {
-    // ignore
-  }
+function __fwmDetectBase__(){
+  // Prefer Vite's injected base when available.
+  const viteBase = (import.meta?.env?.BASE_URL);
+  if (viteBase && viteBase !== "/") return viteBase;
+
+  // Fallback: detect GitHub Pages project-site base from the current pathname.
+  // Example pathname: /fun-with-matter/ or /fun-with-matter/index.html
+  try{
+    const p = String(window.location?.pathname || "/");
+    const parts = p.split("/").filter(Boolean);
+    // On a project site, the first segment is the repo name.
+    if (parts.length >= 1) return `/${parts[0]}/`;
+  }catch(_){/* ignore */}
 
   return "/";
 }
+
+const __FWM_BASE_URL__ = __fwmDetectBase__();
 
 function __fwmWithBase__(p){
   const s = String(p || "");
@@ -30,13 +39,12 @@ function __fwmWithBase__(p){
   if (/^(?:[a-z]+:)?\/\//i.test(s) || s.startsWith("data:") || s.startsWith("blob:")) return s;
   let out = s.replace(/^\.\//, "");
   if (out.startsWith("/")) out = out.slice(1);
-  const base = __fwmBase__();
-  // Use URL to avoid subtle path concatenation issues.
-  return new URL(out, `${window.location.origin}${base}`).toString();
+  return __FWM_BASE_URL__ + out;
 }
 let _state = {
   status: "idle", // idle | loading | ready | error
   error: null,
+  attempted: false,
   index: null,
   nav: [],
   pages: [],
@@ -44,9 +52,6 @@ let _state = {
   aliases: new Map(),
   pageCache: new Map() // id -> { meta, md }
 };
-
-// Prevent infinite retry loops if the FS fails to load (e.g., 404 while deploying).
-let _attempted = false;
 
 function buildAliases(){
   // Back-compat with older in-code ids
@@ -123,11 +128,12 @@ async function loadIndex(){
 
 export function ensureWikiFSLoaded(){
   if (_state.status === "ready" || _state.status === "loading") return _state;
-  if (_attempted && _state.status === "error") return _state;
-  _attempted = true;
+  // Prevent infinite retry loops if the UI calls this repeatedly.
+  if (_state.status === "error" || _state.attempted) return _state;
   buildAliases();
   _state.status = "loading";
   _state.error = null;
+  _state.attempted = true;
 
   loadIndex().then(() => {
     _state.status = "ready";

@@ -1111,6 +1111,14 @@ body.fwm.tod-dusk .fwm .wikiTable tbody tr:nth-child(even){
 .fwm .wikiApp.wikiSidebarClosed .wikiSidebar{ display: none; }
 .fwm .wikiApp.wikiSidebarClosed .wikiMain{ grid-template-columns: 1fr; }
 
+@media (max-width: 980px){
+  body.story-focus.fwm #paneMenu{ display: none !important; }
+  body.story-focus.fwm #paneGame{ display: flex !important; }
+  body.story-focus.fwm .mobilePaneUI{ display: none !important; }
+  body.story-focus.fwm #pageViewport.pageViewport{ padding: 10px; }
+  body.story-focus.fwm .navRow{ display: none; }
+}
+
 /* Nav buttons: subtle plates, not stark borders */
 .fwm .navBtn{
   border:none !important;

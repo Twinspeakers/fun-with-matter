@@ -4,12 +4,8 @@
 
 #pageStory .storyShell{display:flex;flex-direction:column;gap:12px}
 
-/* When a chapter is running, pin the stage to the top and float the top bar over it.
-   (Hub layout stays unchanged.) */
-body.story-playing #pageStory .storyShell{gap:12px;position:relative}
-body.story-playing #pageStory .storyTopBar{position:absolute;top:10px;left:10px;right:10px;z-index:30}
-body.story-playing #pageStory .storyStageWrap{position:relative}
-body.story-playing #pageStory .storyPlay{position:relative}
+/* Story layout tuning */
+body.story-playing #pageStory .storyShell{gap:12px}
 body.story-playing #pageStory .storyStage{border-radius:24px}
 body.story-playing #pageStory .storyDialog{margin-top:8px}
 
@@ -70,6 +66,12 @@ body.story-playing #pageStory .storyDialog{margin-top:8px}
 
 @media (max-width: 980px) and (orientation: landscape){
   #pageStory .storyStage{max-height:70vh}
+}
+
+@media (max-width: 980px){
+  body.story-focus #pageStory .storyStage{max-height:82vh}
+  body.story-focus #pageStory .storyDialog{margin-top:6px}
+  body.story-focus #pageStory .storyTopBar{margin-bottom:6px}
 }
 
 @media (prefers-reduced-motion: reduce){

@@ -1591,6 +1591,7 @@ pageRefining: document.getElementById("pageRefining"),
     storyHub: document.getElementById("storyHub"),
     storyPlay: document.getElementById("storyPlay"),
     storyBackBtn: document.getElementById("storyBackBtn"),
+    storyFocusBtn: document.getElementById("storyFocusBtn"),
     storyContinueCard: document.getElementById("storyContinueCard"),
     storyContinueMeta: document.getElementById("storyContinueMeta"),
     storyContinueBtn: document.getElementById("storyContinueBtn"),
@@ -1752,6 +1753,15 @@ els.storyBackBtn?.addEventListener("click", (e) => {
   e?.preventDefault?.();
   e?.stopPropagation?.();
   gotoStoryHub();
+});
+
+els.storyFocusBtn?.addEventListener("click", (e) => {
+  e?.preventDefault?.();
+  e?.stopPropagation?.();
+  if (!state.ui) state.ui = {};
+  state.ui.storyFocus = !state.ui.storyFocus;
+  saveGame();
+  renderAll();
 });
 
 els.storyContinueBtn?.addEventListener("click", (e) => {
@@ -3116,16 +3126,7 @@ function renderStory(){
   try{
     const isStoryActive = (state?.ui?.activePage === "story");
     document.body.classList.toggle("story-playing", isStoryActive);
-  }catch(_){/* ignore */}
-
-  // Always mount the Story top bar into the stage wrapper so it can float over the stage
-  // without pushing the stage down.
-  try{
-    const topBar = document.querySelector('#pageStory .storyTopBar');
-    const stageWrap = document.querySelector('#pageStory .storyStageWrap');
-    if (topBar && stageWrap && topBar.parentElement !== stageWrap){
-      stageWrap.prepend(topBar);
-    }
+    document.body.classList.toggle("story-focus", isStoryActive && !!state?.ui?.storyFocus);
   }catch(_){/* ignore */}
 
   // Story shell: stage is always visible; Hub content shows below it when inHub.
@@ -3136,6 +3137,10 @@ function renderStory(){
     const dialog = document.querySelector('#pageStory .storyDialog');
     if (dialog) setShown(dialog, !inHub, "block");
     if (els?.storyBackBtn) els.storyBackBtn.hidden = inHub;
+    if (els?.storyFocusBtn){
+      const focusOn = !!state?.ui?.storyFocus;
+      els.storyFocusBtn.textContent = focusOn ? "Exit Focus" : "Focus";
+    }
   }catch(_){/* ignore */}
 
 

@@ -4331,7 +4331,8 @@ export function renderAll(){
 // Mobile panes (Menu / Game / Wiki)
 // -----------------------------
 
-const MOBILE_BREAKPOINT = 900;
+// Keep in sync with CSS mobile breakpoint in css/fwm-theme.css
+const MOBILE_BREAKPOINT = 980;
 const PANE_ORDER = ["menu","game","wiki"];
 
 function isMobileLayout(){

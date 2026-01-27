@@ -618,6 +618,75 @@ body.fwm .app.fwm-app{
     width: min(980px, 96vw);
     padding: 10px;
   }
+
+  /* Mobile panes are mutually exclusive (Menu / Game / Wiki).
+     JS adds illuminate class `.isActive` and supports swipe + toggle.
+     Without this, panes stack vertically and the Wiki looks like it's "under" the game. */
+  .fwm .mobilePane{ display: none; }
+  .fwm .mobilePane.isActive{ display: block; }
+
+  /* Ensure internal scroll behaves: Menu/Wiki can scroll, Game delegates scroll to its viewport. */
+  .fwm #paneMenu,
+  .fwm #paneWiki{
+    height: calc(100dvh - 20px);
+    overflow: auto;
+  }
+  .fwm #paneGame{
+    height: calc(100dvh - 20px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .fwm #pageViewport{
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  /* Bottom pane UI: dots + ⇄ button */
+  .fwm .mobilePaneUI{
+    position: fixed;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgb(var(--ui-panel-rgb) / min(0.9, var(--ui-panel-a) + 0.25));
+    box-shadow: var(--ui-panel-shadow);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+  .fwm .paneDots{ display: flex; gap: 6px; }
+  .fwm .paneDot{
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgb(var(--ui-text-dim-rgb) / 0.35);
+    box-shadow: 0 0 0 1px rgb(var(--ui-border-rgb) / 0.25) inset;
+    cursor: pointer;
+  }
+  .fwm .paneDot.active{
+    background: rgb(var(--ui-accent-rgb) / 0.95);
+    box-shadow: 0 0 0 1px rgb(var(--ui-accent-rgb) / 0.55) inset;
+  }
+  .fwm .paneToggleBtn{
+    height: 30px;
+    min-width: 44px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgb(var(--ui-border-rgb) / 0.20);
+    background: rgb(var(--ui-scrim-rgb) / 0.25);
+    color: rgb(var(--ui-text-rgb));
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 981px){
+  .fwm .mobilePaneUI{ display: none; }
 }
 
 /* =====================

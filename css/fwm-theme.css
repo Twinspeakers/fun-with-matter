@@ -601,8 +601,10 @@ body.fwm .app.fwm-app{
 
 /* Mobile: wiki is a separate swipe pane. */
 @media (max-width: 980px){
-  .fwm #paneWiki{ display: block; }
+  /* On mobile, wiki is its own pane and is shown via .mobilePane.isActive */
+  .fwm #paneWiki{ display: none; }
 }
+
 
 
 /* Ensure panes can shrink properly inside the grid */
@@ -612,67 +614,26 @@ body.fwm .app.fwm-app{
   min-width: 0;
 }
 
-/* Mobile swipe layout (3 panes): Menu → Game → Wiki
-   This restores the original "swipe across columns" behaviour.
-   Implementation: horizontal scroll container + scroll-snap (no JS required).
-*/
 @media (max-width: 980px){
-  /* Mobile panes are JS-driven (swipe + dots).
-     We do NOT use a horizontal scroll container here because it can block
-     vertical scrolling on many mobile browsers. */
-
-  html, body.fwm{ height: 100%; }
-  /* Prevent the page itself from scrolling (avoids "panes stacked underneath").
-     Each pane handles its own vertical scrolling. */
-  body.fwm{ overflow: hidden; }
-
   .fwm .app.fwm-app{
-    height: 100dvh;
-    width: 100vw;
-    max-width: 100vw;
-    margin: 0;
-    padding: 0;
-    gap: 0;
-    display: block; /* one visible pane at a time */
+    grid-template-columns: 1fr;
+    width: min(980px, 96vw);
+    padding: 10px;
   }
+}
 
-  /* Hide all panes; JS toggles .isActive on the current one. */
-  .fwm .mobilePane{
-    display: none;
-    width: 100vw;
-    height: 100dvh;
-    min-height: 100dvh;
-  }
-  .fwm .mobilePane.isActive{ display: block; }
+@media (max-width: 980px){
+  /* Mobile panes: show only the active panel (Menu / Game / Wiki) */
+  .fwm .mobilePane{ display:none; }
+  .fwm .mobilePane.isActive{ display:block; }
 
-  /* Vertical scroll lives inside Menu + Wiki panes. */
+  /* Allow vertical scrolling inside Menu + Wiki; Game uses #pageViewport */
   .fwm #paneMenu,
   .fwm #paneWiki{
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 10px;
   }
-
-  /* Game pane uses its internal viewport scroll (#pageViewport). */
-  .fwm #paneGame{
-    height: 100dvh;
-    overflow: hidden;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .fwm #paneGame #pageViewport.pageViewport{
-    flex: 1 1 auto;
-    min-height: 0; /* critical for scrolling inside flex */
-    overflow: auto;
-  }
-
-  /* Panels should feel flush to the viewport edges on mobile */
-  .fwm #paneGame.panel,
-  .fwm #paneWiki.panel{
-    border-radius: 0 !important;
-  }
+  .fwm #paneGame{ overflow: hidden; }
 }
 
 

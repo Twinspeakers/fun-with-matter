@@ -755,10 +755,6 @@ function openAttributePage(key){
   // Close the floating inspector if it was open (we're replacing it).
   closeAttrInspector();
   state.ui.activePage = "attribute";
-  if (isMobileLayout()){
-    if (!state.ui) state.ui = {};
-    state.ui.mobilePane = "game";
-  }
   renderAll();
 }
 
@@ -2857,16 +2853,7 @@ els.a1LinkUpgradeBtn?.addEventListener("click", (e) => {
     btn.setAttribute("aria-label", p.label);
     btn.setAttribute("title", p.label);
     btn.innerHTML = `<span class="icon">${p.icon}</span>`;
-    // On mobile, Wiki lives in its own swipe pane (3rd panel).
-    // If the user taps the Glossary/Wiki icon, switch panes instead of navigating
-    // to the (desktop-only) glossary page which would appear to "flash" and vanish
-    // due to syncWikiMount moving the DOM.
     btn.addEventListener("click", () => {
-      if (p.id === "glossary" && isMobileLayout()){
-        setActivePane("wiki");
-        try{ syncWikiMount(); }catch(_){/* ignore */}
-        return;
-      }
       handlers?.onNavigate?.(p.id);
     });
     els.navRow.appendChild(btn);
@@ -4332,11 +4319,10 @@ export function renderAll(){
 
 
 // -----------------------------
-// Mobile panes (Menu / Game / Wiki)
+// Mobile layout helpers
 // -----------------------------
 
 const MOBILE_BREAKPOINT = 980;
-const PANE_ORDER = ["menu","game","wiki"];
 
 function isMobileLayout(){
   try{
@@ -4346,94 +4332,11 @@ function isMobileLayout(){
   }
 }
 
-function getActivePane(){
-  if (!state.ui) state.ui = {};
-  const cur = state.ui.mobilePane || "game";
-  if (!PANE_ORDER.includes(cur)) state.ui.mobilePane = "game";
-  return state.ui.mobilePane || "game";
-}
-
-function setActivePane(id){
-  if (!state.ui) state.ui = {};
-  if (!PANE_ORDER.includes(id)) id = "game";
-  state.ui.mobilePane = id;
-  saveGame();
-  renderAll();
-}
-
-function cyclePane(dir){
-  const cur = getActivePane();
-  let idx = PANE_ORDER.indexOf(cur);
-  idx = (idx + dir + PANE_ORDER.length) % PANE_ORDER.length;
-  setActivePane(PANE_ORDER[idx]);
-}
-
-let _touchStartX = 0;
-let _touchStartY = 0;
-let _touching = false;
-
-function initMobilePaneGestures(){
-  if (!els?.paneGame) return;
-
-  // Backup toggle button
-  if (els.paneToggleBtn && !els.paneToggleBtn.dataset.bound){
-    els.paneToggleBtn.dataset.bound = "1";
-    els.paneToggleBtn.addEventListener("click", () => cyclePane(+1));
-  }
-
-  // Swipe gesture (horizontal)
-  const target = document.body;
-  if (!target || target.dataset.paneSwipeBound) return;
-  target.dataset.paneSwipeBound = "1";
-
-  target.addEventListener("touchstart", (e) => {
-    if (!isMobileLayout()) return;
-    const t = e.touches && e.touches[0];
-    if (!t) return;
-
-    // Avoid starting swipe on form controls.
-    const el = e.target;
-    if (el && el.closest && el.closest("input, textarea, select, button")) return;
-
-    _touching = true;
-    _touchStartX = t.clientX;
-    _touchStartY = t.clientY;
-  }, { passive:true });
-
-  target.addEventListener("touchend", (e) => {
-    if (!isMobileLayout()) return;
-    if (!_touching) return;
-    _touching = false;
-
-    const t = e.changedTouches && e.changedTouches[0];
-    if (!t) return;
-
-    const dx = t.clientX - _touchStartX;
-    const dy = t.clientY - _touchStartY;
-
-    // Make it easy (not frantic), but avoid vertical scroll triggers.
-    const THRESH = 55;
-    const DOMINANCE = 1.8;
-
-    if (Math.abs(dx) < THRESH) return;
-    if (Math.abs(dx) < Math.abs(dy) * DOMINANCE) return;
-
-    if (dx < 0) cyclePane(+1);
-    else cyclePane(-1);
-  }, { passive:true });
-
-  // Resize -> re-apply pane classes
-  if (!window.__FWM_PANE_RESIZE){
-    window.__FWM_PANE_RESIZE = true;
-    window.addEventListener("resize", () => renderMobilePanes());
-  }
-}
-
 function renderMobilePanes(){
   if (!els?.paneMenu || !els?.paneGame) return;
 
   const mobile = isMobileLayout();
-  try{ document.body.classList.toggle("mobilePanes", mobile); }catch(_){/* ignore */}
+  try{ document.body.classList.remove("mobilePanes"); }catch(_){/* ignore */}
 
   // Apply desktop 'Focus Wiki' layout only while viewing the glossary page.
   try{
@@ -4442,40 +4345,10 @@ function renderMobilePanes(){
     document.body.classList.toggle("focusWiki", !mobile && onGlossary && !!w.focus);
   }catch(_){/* ignore */}
 
-  const active = getActivePane();
-
-  // Ensure gesture handlers exist
-  initMobilePaneGestures();
-
-  if (!mobile){
-    // Desktop: show normal layout. Wiki pane stays hidden via CSS (min-width).
-    els.paneMenu.classList.remove("isActive");
-    els.paneGame.classList.remove("isActive");
-    els.paneWiki?.classList.remove("isActive");
-    return;
-  }
-
-  const map = {
-    menu: els.paneMenu,
-    game: els.paneGame,
-    wiki: els.paneWiki
-  };
-  for (const [id, el] of Object.entries(map)){
-    if (!el) continue;
-    el.classList.toggle("isActive", id === active);
-  }
-
-  // Dots
-  if (els.paneDots){
-    els.paneDots.innerHTML = "";
-    PANE_ORDER.forEach(id => {
-      const d = document.createElement("div");
-      d.className = "paneDot" + (id === active ? " active" : "");
-      d.title = id.toUpperCase();
-      d.addEventListener("click", () => setActivePane(id));
-      els.paneDots.appendChild(d);
-    });
-  }
+  // Two-panel layout: leave both columns visible on mobile (stacked by CSS).
+  els.paneMenu.classList.remove("isActive");
+  els.paneGame.classList.remove("isActive");
+  els.paneWiki?.classList.remove("isActive");
 }
 
 
@@ -6009,15 +5882,13 @@ function syncWikiMount(){
   const refs = ensureWiki();
   if (!refs?.root) return;
 
-  const mobile = isMobileLayout();
   const activePage = (state?.ui?.activePage || "");
   const onGlossary = activePage === "glossary";
 
   // Determine whether the wiki DOM should be actively hosted in a pane.
-  // - Desktop: only on the Glossary page.
-  // - Mobile: only when the Wiki swipe pane is active.
-  const wantDesktopHost = !mobile && onGlossary;
-  const wantMobileHost = mobile && ((state?.ui?.mobilePane || "game") === "wiki");
+  // - Desktop/mobile: only on the Glossary page.
+  const wantDesktopHost = onGlossary;
+  const wantMobileHost = false;
 
   // Desktop Focus Wiki: make the wiki occupy both columns (left + right).
   // This is a layout mode (CSS-driven), not a modal overlay.
@@ -6026,30 +5897,8 @@ function syncWikiMount(){
     document.body.classList.toggle("focusWiki", wantDesktopHost && !!w.focus);
   }catch(_){/* ignore */}
 
-  // Mobile hint: if the user lands on the (desktop) Glossary page while in mobile layout,
-  // explain that the real wiki is the third swipe pane.
-  if (mobile && els.wikiDesktopMount){
-    if (onGlossary){
-      els.wikiDesktopMount.innerHTML = `
-        <div class="panel">
-          <div class="row" style="align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-            <div>
-              <div class="title" style="margin:0">Reference</div>
-              <div class="muted small">On mobile, the Wiki is a full swipe panel (third pane).</div>
-            </div>
-            <button id="openWikiPaneBtn" type="button">Open Reference</button>
-          </div>
-          <div class="muted small" style="margin-top:10px">Tip: swipe left/right to cycle MENU → GAME → WIKI.</div>
-        </div>
-      `;
-      const b = els.wikiDesktopMount.querySelector("#openWikiPaneBtn");
-      if (b && !b.dataset.bound){
-        b.dataset.bound = "1";
-        b.addEventListener("click", () => setActivePane("wiki"));
-      }
-    } else {
-      els.wikiDesktopMount.innerHTML = "";
-    }
+  if (els.wikiDesktopMount && !onGlossary){
+    els.wikiDesktopMount.innerHTML = "";
   }
 
   // Choose host for the real wiki DOM.
@@ -6066,9 +5915,5 @@ function syncWikiMount(){
     maybeRenderWiki(false);
   }
 }
-
-
-
-
 
 

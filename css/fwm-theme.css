@@ -642,7 +642,11 @@ body.fwm .app.fwm-app{
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
-    touch-action: pan-x;
+    /* IMPORTANT (mobile): do NOT force pan-x here.
+       It prevents vertical scrolling inside panes on many devices.
+       Leave touch-action as default so the browser can route gestures:
+       - horizontal pans scroll between panels
+       - vertical pans scroll within the active panel */
   }
 
   /* Each pane becomes a full-screen page */

@@ -28,7 +28,7 @@ Colt is the **catalyst** — the kid who turns fear into action by treating the 
 
 ## Allergies
 
-None.
+Pollen, Bees, Honey.
 
 ## Movepool
 

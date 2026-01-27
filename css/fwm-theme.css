@@ -608,9 +608,9 @@ body.fwm .app.fwm-app{
 .fwm .mobilePaneUI{ display: none; }
 
 @media (max-width: 980px){
-  body.fwm.mobilePanes .mobilePane{ display: none; }
+  body.fwm.mobilePanes .mobilePane{ display: none !important; }
   body.fwm.mobilePanes .mobilePane.isActive{
-    display: flex;
+    display: flex !important;
     flex-direction: column;
   }
 

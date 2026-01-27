@@ -599,12 +599,21 @@ body.fwm .app.fwm-app{
   .fwm #paneWiki{ display: none; }
 }
 
-/* Mobile: wiki is a separate swipe pane. */
+/* Mobile: panes are controlled by JS by toggling `.isActive`.
+   IMPORTANT: do not force-pane visibility here (e.g. `#paneWiki{display:block}`),
+   otherwise the panes will stack underneath each other.
+*/
 @media (max-width: 980px){
-  /* On mobile, wiki is its own pane and is shown via .mobilePane.isActive */
-  .fwm #paneWiki{ display: none; }
-}
+  .fwm .mobilePane{ display: none; }
+  .fwm .mobilePane.isActive{ display: block; }
 
+  /* Keep vertical scrolling working inside the active pane */
+  .fwm .mobilePane.isActive{ max-height: calc(100dvh - 20px); overflow-y: auto; }
+
+  /* The right column uses an internal viewport; let that be the scroller */
+  .fwm #paneGame.mobilePane.isActive{ overflow: hidden; }
+  .fwm #paneGame .pageViewport{ max-height: calc(100dvh - 20px); }
+}
 
 
 /* Ensure panes can shrink properly inside the grid */
@@ -621,21 +630,6 @@ body.fwm .app.fwm-app{
     padding: 10px;
   }
 }
-
-@media (max-width: 980px){
-  /* Mobile panes: show only the active panel (Menu / Game / Wiki) */
-  .fwm .mobilePane{ display:none; }
-  .fwm .mobilePane.isActive{ display:block; }
-
-  /* Allow vertical scrolling inside Menu + Wiki; Game uses #pageViewport */
-  .fwm #paneMenu,
-  .fwm #paneWiki{
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .fwm #paneGame{ overflow: hidden; }
-}
-
 
 /* =====================
    Surfaces

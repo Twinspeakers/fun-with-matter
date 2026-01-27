@@ -755,6 +755,10 @@ function openAttributePage(key){
   // Close the floating inspector if it was open (we're replacing it).
   closeAttrInspector();
   state.ui.activePage = "attribute";
+  if (isMobileLayout()){
+    if (!state.ui) state.ui = {};
+    state.ui.mobilePane = "game";
+  }
   renderAll();
 }
 
@@ -4429,6 +4433,7 @@ function renderMobilePanes(){
   if (!els?.paneMenu || !els?.paneGame) return;
 
   const mobile = isMobileLayout();
+  try{ document.body.classList.toggle("mobilePanes", mobile); }catch(_){/* ignore */}
 
   // Apply desktop 'Focus Wiki' layout only while viewing the glossary page.
   try{
@@ -4898,6 +4903,11 @@ function ensureWiki(){
   focusBtn.type = "button";
   focusBtn.textContent = "Expand";
 
+  const sidebarToggle = document.createElement("button");
+  sidebarToggle.className = "wikiSidebarToggle";
+  sidebarToggle.type = "button";
+  sidebarToggle.textContent = "List";
+
   const spacer = document.createElement("div");
   spacer.className = "wikiHeaderSpacer";
 
@@ -4909,6 +4919,7 @@ function ensureWiki(){
 
   headerTop.appendChild(back);
   headerTop.appendChild(title);
+  headerTop.appendChild(sidebarToggle);
   headerTop.appendChild(focusBtn);
   headerTop.appendChild(spacer);
   headerTop.appendChild(search);
@@ -4955,7 +4966,8 @@ function ensureWiki(){
     back,
     title,
     body,
-    focusBtn
+    focusBtn,
+    sidebarToggle
   };
 
   // Category chips
@@ -5007,6 +5019,14 @@ function ensureWiki(){
     saveGame();
     // syncWikiMount applies the body class; renderWiki updates labels
     try{ syncWikiMount(); }catch(_){/* ignore */}
+    renderWiki();
+  });
+
+  // Sidebar toggle (mobile landscape)
+  sidebarToggle.addEventListener("click", () => {
+    const w = getWikiState();
+    w.sidebarOpen = !w.sidebarOpen;
+    saveGame();
     renderWiki();
   });
 
@@ -5954,7 +5974,31 @@ function renderWikiPage(){
 }
 
 function renderWiki(){
-  ensureWiki();
+  const refs = ensureWiki();
+  const w = getWikiState();
+  const isLandscapeMobile = (() => {
+    try{
+      return window.matchMedia && window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px) and (orientation: landscape)`).matches;
+    }catch(_){
+      return false;
+    }
+  })();
+
+  if (isLandscapeMobile && typeof w.sidebarOpen !== "boolean"){
+    w.sidebarOpen = false;
+    saveGame();
+  }
+
+  if (refs?.root){
+    const closed = isLandscapeMobile ? (w.sidebarOpen === false) : false;
+    refs.root.classList.toggle("wikiSidebarClosed", closed);
+  }
+
+  if (refs?.sidebarToggle){
+    const label = (isLandscapeMobile && w.sidebarOpen === false) ? "Show List" : "Hide List";
+    refs.sidebarToggle.textContent = label;
+  }
+
   renderWikiList();
   renderWikiPage();
   _wikiEverRendered = true;
@@ -6022,11 +6066,6 @@ function syncWikiMount(){
     maybeRenderWiki(false);
   }
 }
-
-
-
-
-
 
 
 

@@ -599,37 +599,68 @@ body.fwm .app.fwm-app{
   .fwm #paneWiki{ display: none; }
 }
 
-/* Mobile panes: show only the active pane (Menu / Game / Wiki).
-   This prevents the other panes from stacking underneath and keeps vertical scrolling working. */
+/* Mobile: wiki is a separate swipe pane. */
 @media (max-width: 980px){
-  body.fwm{ overflow: hidden; }
+  .fwm #paneWiki{ display: block; }
+}
 
-  /* The app itself becomes the viewport; panes manage their own scrolling. */
-  .fwm .app.fwm-app{
-    height: 100dvh;
-    overflow: hidden;
+/* Mobile swipe panes (Menu / Game / Wiki) */
+.fwm .mobilePaneUI{ display: none; }
+
+@media (max-width: 980px){
+  body.fwm.mobilePanes .mobilePane{ display: none; }
+  body.fwm.mobilePanes .mobilePane.isActive{
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Hide all panes by default; JS toggles .isActive */
-  .fwm .mobilePane{ 
-    display: none;
-    height: 100%;
-    min-height: 0;
+  body.fwm.mobilePanes .mobilePaneUI{
+    position: fixed;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    z-index: 6000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgb(var(--ui-panel-rgb) / 0.75);
+    box-shadow: var(--ui-panel-shadow);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
-  .fwm .mobilePane.isActive{ display: block; }
 
-  /* Allow vertical scrolling in Menu + Wiki panes */
-  .fwm #paneMenu.mobilePane.isActive,
-  .fwm #paneWiki.mobilePane.isActive{
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  body.fwm.mobilePanes .paneDots{
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  /* Game pane uses its internal page viewport scroller */
-  .fwm #paneGame.mobilePane.isActive{
-    overflow: hidden;
+  body.fwm.mobilePanes .paneDot{
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgb(var(--ui-muted-rgb) / 0.5);
+  }
+
+  body.fwm.mobilePanes .paneDot.active{
+    background: rgb(var(--ui-text-rgb) / 0.9);
+    transform: scale(1.1);
+  }
+
+  body.fwm.mobilePanes .paneToggleBtn{
+    border: none;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgb(var(--ui-panel-rgb) / 0.85);
+    color: rgb(var(--ui-text-rgb));
+    font-size: 12px;
+    line-height: 1;
   }
 }
+
+
 /* Ensure panes can shrink properly inside the grid */
 .fwm #paneMenu,
 .fwm #paneGame,
@@ -843,6 +874,12 @@ body.fwm.tod-dusk .fwm .wikiSearch{
   height: 38px;
   border-radius: 12px;
   padding: 0 12px;
+}
+.fwm .wikiSidebarToggle{
+  height: 38px;
+  border-radius: 12px;
+  padding: 0 12px;
+  display: none;
 }
 .fwm .wikiFocusBtn.active{
   transform: translateY(-1px);
@@ -1072,6 +1109,16 @@ body.fwm.tod-dusk .fwm .wikiTable tbody tr:nth-child(even){
   .fwm .wikiContent{ padding: 14px; }
   .fwm .wikiBody{ max-width: 100%; }
 }
+
+@media (max-width: 980px) and (orientation: landscape){
+  .fwm .wikiMain{ grid-template-columns: minmax(180px, 32vw) minmax(0, 1fr); }
+  .fwm .wikiSidebar{ position: sticky; top: 0; max-height: calc(100vh - 120px); }
+  .fwm .wikiContent{ padding: 12px; }
+  .fwm .wikiSidebarToggle{ display: inline-flex; }
+}
+
+.fwm .wikiApp.wikiSidebarClosed .wikiSidebar{ display: none; }
+.fwm .wikiApp.wikiSidebarClosed .wikiMain{ grid-template-columns: 1fr; }
 
 /* Nav buttons: subtle plates, not stark borders */
 .fwm .navBtn{

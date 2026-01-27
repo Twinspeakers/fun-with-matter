@@ -68,6 +68,10 @@ body.story-playing #pageStory .storyDialog{margin-top:8px}
   #pageStory .storyStage{max-height:52vh}
 }
 
+@media (max-width: 980px) and (orientation: landscape){
+  #pageStory .storyStage{max-height:70vh}
+}
+
 @media (prefers-reduced-motion: reduce){
   #pageStory .storyStage::after{animation:none}
 }

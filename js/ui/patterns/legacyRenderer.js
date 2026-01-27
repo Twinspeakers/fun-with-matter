@@ -1445,8 +1445,8 @@ if (els.inspectCabinetActions){
 }
 
 const pages = [
-  // Story uses a custom icon asset.
-  { id: "story", label: "Story", icon: `<img class="navIconImg" src="./assets/icons/story-book.png" alt="" />` },
+  // Keep icons consistent across pages (emoji-style).
+  { id: "story", label: "Story", icon: "📜" },
   { id: "inventory", label: "Inventory", icon: "🎒" },
 { id: "gathering", label: "Gather", icon: "⛏️" },
   { id: "refining", label: "Distillery", icon: "🧪" },

@@ -170,7 +170,14 @@
 
     <!-- RIGHT COLUMN -->
     <div id="paneGame" class="panel mobilePane">
-      <div id="navRow" class="navRow"></div>
+      <nav class="navMachine" aria-label="Pages">
+        <div class="navMachine__frame">
+          <div id="navRow" class="navRow navMachine__viewport"></div>
+          <div class="navMachine__glassSheen" aria-hidden="true"></div>
+          <div class="navMachine__roller navMachine__roller--left" aria-hidden="true"></div>
+          <div class="navMachine__roller navMachine__roller--right" aria-hidden="true"></div>
+        </div>
+      </nav>
 
       <!-- Page viewport: active pages render inside this framed, scrollable area -->
       <div id="pageViewport" class="pageViewport">
@@ -414,6 +421,14 @@
         <div id="craftToolsGrid" class="storeGrid"></div>
         <div id="craftToolsEmpty" class="muted small" style="margin-top:8px;display:none">No tool blueprints yet.</div>
 
+
+        <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px">
+          <div class="title" style="margin:0">Blueprint Storage</div>
+          <div class="muted small">Stored blueprints you own.</div>
+        </div>
+        <div id="bpSlotsGrid" class="grid16" style="margin-top:10px"></div>
+        <div id="bpSlotsEmpty" class="muted small" style="margin-top:8px;display:none">No blueprints yet.</div>
+
       </div>
 
       <div id="pageStore" class="page">
@@ -496,36 +511,6 @@
           <div class="title" style="margin-bottom:6px">Sell</div>
 <div id="storeSellGrid" class="storeGrid"></div>
         </div>
-      </div>
-
-      <div id="pageBlueprints" class="page">
-        <div class="row">
-          <div class="title" style="margin:0">Blueprints</div>
-          <div class="muted small">Blueprint storage. Craft items on the Craft page.</div>
-        </div>
-
-        
-        <div class="row">
-          <div class="title" style="margin:0">Blueprint Storage</div>
-          <div class="muted small">16 slots</div>
-        </div>
-        <div id="bpSlotsGrid" class="grid16" style="margin-top:10px"></div>
-
-<div class="row" style="align-items:center;gap:10px;flex-wrap:wrap">
-  <div>
-    <div class="title" style="margin:0">Blueprint Library</div>
-    <div class="muted small">All blueprints in the game (owned + unowned).</div>
-  </div>
-  <div style="flex:1"></div>
-  <div class="muted small">Sort</div>
-  <select id="bpCatalogSort" class="selectSmall">
-    <option value="type">Type</option>
-    <option value="tier">Tier</option>
-    <option value="name">Name</option>
-  </select>
-</div>
-<div id="bpCatalogList" class="list" style="margin-top:10px"></div>
-
       </div>
 
       <div id="pageGlossary" class="page">

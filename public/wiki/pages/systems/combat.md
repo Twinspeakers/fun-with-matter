@@ -10,7 +10,7 @@ tone_tags: []
 design_intent:
   - "Explain how Monster Brawl works in-game and in-code."
 constraints:
-  - "Keep terminology player-facing (avoid direct RuneScape naming)."
+  - "Keep terminology player-facing (avoid direct third-party naming)."
 tags:
   - combat
   - monster-brawl

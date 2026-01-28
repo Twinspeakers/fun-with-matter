@@ -78,9 +78,8 @@ export function applyTailwindStaticSkin(){
   });
 
   // Nav buttons
-  // Nav: keep horizontal (no accidental vertical stacking). Scroll on small screens.
-  document.querySelectorAll(".navRow").forEach(el => twOnce(el, "mb-3 flex flex-nowrap gap-2 overflow-x-auto"));
-  document.querySelectorAll(".navBtn").forEach(el => twOnce(el, "relative grid h-11 w-11 place-items-center rounded-xl shadow-sm"));
+  // The nav "conveyor belt" is fully styled by css/fwm-theme.css.
+  // (Avoid Tailwind utilities here so we don't fight the design system.)
 
   // Inspectors
   const insp = document.getElementById("itemInspector");

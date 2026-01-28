@@ -1452,7 +1452,6 @@ const pages = [
   { id: "refining", label: "Distillery", icon: "🧪" },
   { id: "craft", label: "Craft", icon: "🛠️" },
   { id: "store", label: "General Store", icon: "🏪" },
-  { id: "blueprints", label: "Blueprints", icon: "🧩" },
   { id: "glossary", label: "Reference", icon: "📚" }
 ];
 
@@ -1470,7 +1469,6 @@ function ensurePagesInViewport(){
     "pageRefining",
     "pageCraft",
     "pageStore",
-    "pageBlueprints",
     "pageGlossary",
     "pageAttribute"
   ];
@@ -1548,7 +1546,6 @@ export function initUI(uiHandlers){
     pageGathering: document.getElementById("pageGathering"),
     pageInventory: document.getElementById("pageInventory"),
 pageRefining: document.getElementById("pageRefining"),
-    pageBlueprints: document.getElementById("pageBlueprints"),
     pageCraft: document.getElementById("pageCraft"),
     pageStore: document.getElementById("pageStore"),
     pageGlossary: document.getElementById("pageGlossary"),
@@ -1627,8 +1624,7 @@ invSlotsGrid: document.getElementById("invSlotsGrid"),
     distillerEmpty: document.getElementById("distillerEmpty"),
 
     bpSlotsGrid: document.getElementById("bpSlotsGrid"),
-    bpCatalogList: document.getElementById("bpCatalogList"),
-    bpCatalogSort: document.getElementById("bpCatalogSort"),
+    bpSlotsEmpty: document.getElementById("bpSlotsEmpty"),
     craftGearGrid: document.getElementById("craftGearGrid"),
     craftGadgetsGrid: document.getElementById("craftGadgetsGrid"),
     craftToolsGrid: document.getElementById("craftToolsGrid"),
@@ -2807,11 +2803,6 @@ els.storeBuySort?.addEventListener("change", () => {
   saveGame();
   renderAll();
 });
-els.bpCatalogSort?.addEventListener("change", () => {
-  state.ui.bpCatalogSort = els.bpCatalogSort.value;
-  saveGame();
-  renderAll();
-});
 
 // Mount game-styled sort chips (Store Buy + Distillery Cabinet)
 try{
@@ -2861,12 +2852,17 @@ els.a1LinkUpgradeBtn?.addEventListener("click", (e) => {
   els.navRow.innerHTML = "";
   pages.forEach(p => {
     const btn = document.createElement("button");
-        btn.className = "navBtn";
+    btn.className = "navBtn navMachine__item";
     btn.dataset.page = p.id;
     btn.dataset.label = p.label;
     btn.setAttribute("aria-label", p.label);
     btn.setAttribute("title", p.label);
-    btn.innerHTML = `<span class="icon">${p.icon}</span>`;
+    btn.innerHTML = `
+      <span class="navMachine__plate">
+        <span class="icon">${p.icon}</span>
+      </span>
+      <span class="navMachine__label">${p.label}</span>
+    `;
     btn.addEventListener("click", () => {
       handlers?.onNavigate?.(p.id);
     });
@@ -2941,13 +2937,14 @@ function renderPlayerMenu(){
 }
 
 function setActivePage(pageId){
+  // Blueprints are managed on the Craft page now.
+  if (pageId === "blueprints") pageId = "craft";
   state.ui.activePage = pageId;
   const map = {
     story: els.pageStory,
     gathering: els.pageGathering,
     inventory: els.pageInventory,
     refining: els.pageRefining,
-    blueprints: els.pageBlueprints,
     craft: els.pageCraft,
     store: els.pageStore,
     glossary: els.pageGlossary,
@@ -3875,86 +3872,37 @@ function renderDistiller(){
 }
 
 function renderBlueprints(){
-  // blueprint storage grid (16)
+  // Blueprint Storage: show only owned blueprints (no fixed empty slots).
+  if (!els.bpSlotsGrid) return;
   els.bpSlotsGrid.innerHTML = "";
-  const owned = state.player.blueprintsOwned ?? [];
-  const cap = 16;
-  for (let i=0;i<cap;i++){
+
+  const owned = Array.isArray(state.player.blueprintsOwned) ? state.player.blueprintsOwned : [];
+
+  if (els.bpSlotsEmpty){
+    els.bpSlotsEmpty.style.display = owned.length ? "none" : "block";
+  }
+
+  // Nothing to render beyond the empty state message.
+  if (!owned.length) return;
+
+  for (const key of owned){
     const slot = document.createElement("div");
     slot.className = "slot";
-    if (owned[i]){
-      const bp = blueprintCatalog.find(b => b.key === owned[i]);
-      const tier = Number(thingByKey[bp?.itemKey]?.tier) || null;
-      if (tier) slot.classList.add(`tier-${tier}`);
-      slot.innerHTML = `
-        <div class="slotTop">
-          <div class="icon">🧩</div>
-          <div class="count">1</div>
-        </div>
-        <div class="slotName">${bp?.label ?? owned[i]}</div>
-      `;
-    } else {
-      slot.classList.add("is-empty");
-      slot.innerHTML = "";
-    }
-    els.bpSlotsGrid.appendChild(slot);
-  }
-// Blueprint Library (all blueprints in code)
-if (els.bpCatalogList){
-  els.bpCatalogList.innerHTML = "";
-  const ownedSet = new Set(state.player.blueprintsOwned ?? []);
-  const bpSort = (state.ui.bpCatalogSort ?? "type");
-  if (els.bpCatalogSort) els.bpCatalogSort.value = bpSort;
 
-  const sortedBps = blueprintCatalog.slice().sort((a,b) => {
-    const ta = thingByKey[a.itemKey] || {};
-    const tb = thingByKey[b.itemKey] || {};
-    if (bpSort === "tier"){
-      const da = Number(ta.tier ?? 99);
-      const db = Number(tb.tier ?? 99);
-      if (da !== db) return da - db;
-      return String(ta.label ?? a.itemKey).localeCompare(String(tb.label ?? b.itemKey));
-    }
-    if (bpSort === "name"){
-      return String(ta.label ?? a.itemKey).localeCompare(String(tb.label ?? b.itemKey));
-    }
-    // type
-    const ka = String(ta.kind ?? "");
-    const kb = String(tb.kind ?? "");
-    const oa = kindOrder(ka);
-    const ob = kindOrder(kb);
-    if (oa !== ob) return oa - ob;
-    const na = String(ta.label ?? a.itemKey);
-    const nb = String(tb.label ?? b.itemKey);
-    if (na !== nb) return na.localeCompare(nb);
-    return String(a.key).localeCompare(String(b.key));
-  });
+    const bp = blueprintCatalog.find(b => b.key === key);
+    const tier = Number(thingByKey[bp?.itemKey]?.tier) || null;
+    if (tier) slot.classList.add(`tier-${tier}`);
 
-  sortedBps.forEach(bp => {
-    const row = document.createElement("div");
-    row.className = "itemRow";
-
-    const left = document.createElement("div");
-    left.style.flex = "1";
-    const owned = ownedSet.has(bp.key);
-
-    left.innerHTML = `
-      <div class="itemLeft">
-        <div class="icon">${symbolFor(bp.itemKey)}</div>
-        <div>
-          <div><span class="label">${thingByKey[bp.itemKey]?.label ?? bp.itemKey}</span> <span class="pill">${owned ? "OWNED" : "LOCKED"}</span></div>
-          <div class="muted small">${bp.description}</div>
-          <div class="muted small">Requires: ${Object.entries(bp.requires).map(([k,v]) => `${labelFor(k)} ${v}`).join(", ")}${bp.requiresTool ? ` • Tool: ${labelFor(bp.requiresTool)}` : ""}</div>
-          <div class="muted small">Time: ${formatTimeMs(bp.durationMs)}</div>
-        </div>
+    slot.innerHTML = `
+      <div class="slotTop">
+        <div class="icon">🧩</div>
+        <div class="count">1</div>
       </div>
+      <div class="slotName">${bp?.label ?? key}</div>
     `;
 
-    row.appendChild(left);
-    els.bpCatalogList.appendChild(row);
-  });
-}
-
+    els.bpSlotsGrid.appendChild(slot);
+  }
 }
 
 
@@ -4042,6 +3990,8 @@ function renderCraft(){
   renderBucket(els.craftToolsGrid, els.craftToolsEmpty, buckets.tools);
 
   renderCraftUtilities();
+  // Blueprint Storage panel lives inside the Craft page now.
+  renderBlueprints();
 }
 
 function renderCraftUtilities(){
@@ -4307,7 +4257,6 @@ export function renderAll(){
     case "gathering": renderGathering(); break;
     case "inventory": renderInventoryPage(); break;
     case "refining": renderRefining(); break;
-    case "blueprints": renderBlueprints(); break;
     case "craft": renderCraft(); break;
     case "store": renderStore(); break;
     case "attribute": renderAttributePage(); break;

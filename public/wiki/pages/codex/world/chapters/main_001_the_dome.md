@@ -19,23 +19,36 @@ Narrator:   Jackson
 
 **Hook**: After-school walk home; normal teen banter.
 
-**Inciting event**: A shimmering dome drops—instant alien battlefield flash. 
+**Inciting event**:
+
+A large dome surrounds the area - inside the dome is the headquarters of planet Astarr, *needs_name*, and it's facing ground and air attacks from the Vulkraine. The four teenagers are now trapped inside the battle.
+
 
 **Escalation**: They spot a fleeing robot being hunted; they intervene.
 
-- **A Vulkraine minion appears**. Jackson tells the others to fall behind and the enters a battle scene.
+- **A Vulkraine minion appears**. Jackson tells the others to fall behind and then enters a battle scene.
 
 - A modal appears prompting the user to choose which Attribute to train: Attack, Strength or Defence.
 
-- **On losing**: Choose another character to finish off the minion. 100 XP is equally shared between all of the characters who participated in the battle.
+- **On losing**: Choose another character to finish off the minion. '100 XP to the chosen skill + 25 XP to HP' is equally shared between all of the characters who participated in the battle.
 
-- **On winning**: Earn 100XP. Your chosen skill is level 2. Jackson is now level 2.
-
-
-**Climax**: Dome recedes back to Earth—robot saved, but now here. 
+- **On winning**: Jackson earns '100 XP to the chosen skill + 25 XP to HP'. Jackson's chosen skill is now level 2. Jackson is now level 2.
 
 
-**Aftermath**: A1 explains Starr/Astarr/Vulkraines + gifts matter-tech; invasion countdown begins. 
+**Climax**: Dome recedes back to Earth — A1 has been saved, but now he's here on Earth, and needs a place to hide. He has essentially 'teleported' which was his plan.
+
+
+**Aftermath**: A1 explains what's going on, he:
+- Confesses that this was a successful teleport and that he means to be here.
+- Introduces his home planet, Starr, as well as his people, the Astarr.
+- Speaks of their goals as a civilisation, to create portals inside of every liveable planet in the galaxy.
+- Hints at an unknown element that Earth is missing.
+- Speaks of the Vulkraine and their planet of the same name, and their plans to take dominance over the galaxy.
+- Warns that the Vulkraine know where he is, and that they're on their way.
+- Transforms back to his default Astarr self.
+- Offers Starr's most prized technology in exchange for shelter.
+- Invasion countdown begins.
+
 
 
 ## Cast
@@ -64,17 +77,20 @@ Suburb walk home → brief alien warzone snapshot → back to suburb (same spot,
 **Choice B**: Run - Colt steps up - Triggers fight scene: Colt vs. Vulkraine Minion Lvl 1.
 - Because Colt is weak to fire, he can't win. This plays into Jackson's biggest fear - of seeing a friend get hurt because he did nothing.
 
+
 ## Gameplay integration
 
 **System unlock**: The Distillery, The Junkyard
 
 **First reward**: Starter Kit (100 Oxygen, 100 Hydrogen, Distiller, “A1 Safety Manual”)
 
-8) Dialogue/voice notes
+
+## Dialogue/voice notes
 
 YA banter during the walk; terror snaps in during dome; post-dome = frantic whispered “what did we just see?”
 
-9) Scene list
+
+## Scene list
 
 Walk home (character voices)
 
@@ -86,14 +102,11 @@ Dome retracts (shock)
 
 A1 reveal + tech handoff (promise + threat)
 
-10) Chapter ending
 
-End on: “They’re coming.” + first successful transmutation that feels powerful and dangerous.
+## Chapter ending
 
-Quick idea triggers (pick any)
+End on: “They’re coming.”
 
-The dome leaves behind a scorch-circle on the ground that becomes a recurring landmark.
+The terrain has changed - not enough for anybody to notice right away. Some trees are missing. An unoccupied house is missing its roof which goes unnoticed for a while.
 
-A1 can’t stay in one form too long without “glitching” → fun character quirk + plot tension.
-
-“Missing element” could be literal (Earth lacks a catalyst) or social (Earth lacks a unifying exchange system like MU).
+“Missing element” is literal (Earth lacks a catalyst).

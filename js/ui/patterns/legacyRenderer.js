@@ -5415,7 +5415,12 @@ function inline(s){
     });
 
     // bold **x**
-    h = h.replace(/\*\*([^*]+)\*\*/g, '<span class="label">$1</span>');
+    // Use real <strong> so Markdown-style bold renders predictably.
+    h = h.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+    // italics *x* and _x_
+    h = h.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+    h = h.replace(/(^|[^_])_([^_\n]+)_(?!_)/g, '$1<em>$2</em>');
 
     // inline code `x`
     h = h.replace(/`([^`]+)`/g, "<code>$1</code>");

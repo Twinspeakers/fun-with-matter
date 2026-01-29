@@ -15,16 +15,4 @@ related: []
 
 # Minion loot pool
 
-> **Path:** Systems / Minion loot pool
-
-## In-world
-
-_Write the lore / flavour version here._
-
-## Under the hood
-
-_Write the exact mechanics here (numbers, rules, edge cases)._
-
-## Related
-
-- [[start_reference]]  <!-- replace with relevant pages -->
+> **Moved:** this page now lives at [[world_species_vulkraine_minion]].

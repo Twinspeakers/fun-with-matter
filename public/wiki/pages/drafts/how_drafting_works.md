@@ -1,8 +1,8 @@
----
-devOnly: true
+---devOnly: true
 canon: false
 status: Guide
 authority: Author
+section: Drafts
 ---
 
 # How drafting works

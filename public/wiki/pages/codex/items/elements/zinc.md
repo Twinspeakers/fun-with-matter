@@ -1,0 +1,34 @@
+---
+id: items_elements_zinc
+title: Zinc (Zn)
+section: Codex
+canon: false
+authority: medium
+status: seed
+tone_tags: []
+design_intent: []
+constraints: []
+tags: []
+related: []
+---
+# Zinc (Zn)
+
+**Element Key:** `zn`  **Handling Tier:** Stable (Tier 6)  **Commodity Reference:** **0.040 MU/g** (≈ **4.0 MU** per 100g)
+
+## Overview
+Protective metal—great for plating, corrosion resistance, and brass-like alloys.
+
+## Extraction Pace
+Pinned extraction (Gathering) produces **1g per tick** at the following baseline rates:
+
+- **Regular:** 5m per 1g
+- **Quick:** 1m 40s per 1g
+
+> If the matching Distillery Cabinet container is full, extraction pauses until space is freed.
+
+## Practical Uses
+- **Processing:** Common ingredient in upgrades and recipes that reference `zn` grams.
+- **Economy:** Can be bottled into **Test Tubes** to clear cabinet space and sold to the commodity buyer (low-margin by design).
+
+## Handling Notes
+- Higher-tier elements may require better containment and may be rarer in salvage and story rewards.

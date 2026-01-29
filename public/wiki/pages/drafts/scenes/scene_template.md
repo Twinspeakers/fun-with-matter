@@ -1,8 +1,8 @@
----
-devOnly: true
+---devOnly: true
 canon: false
 status: Template
 authority: Author
+section: Drafts
 ---
 
 # Scene Template

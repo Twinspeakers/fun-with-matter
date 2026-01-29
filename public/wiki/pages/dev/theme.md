@@ -1,8 +1,8 @@
----
-devOnly: true
+---devOnly: true
 canon: false
 status: Experimental
 authority: Local
+section: Dev
 ---
 
 # Dev Theme Overrides (local-only)

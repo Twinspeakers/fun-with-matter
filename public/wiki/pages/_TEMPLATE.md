@@ -1,7 +1,7 @@
 ---
 id: example_page_id
 title: Example Page Title
-section: Systems
+section: Codex
 canon: false
 authority: medium
 status: seed

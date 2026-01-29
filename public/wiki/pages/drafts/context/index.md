@@ -1,8 +1,8 @@
----
-devOnly: true
+---devOnly: true
 canon: false
 status: Drafting
 authority: Author
+section: Drafts
 ---
 
 # Draft Context Pages
